@@ -3,620 +3,2461 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NexusAI — AI-assisted customer support</title>
+  <title>BIZASSIST AI — AI-Assisted Customer Support Platform</title>
   
-  <!-- Inter Font from Google Fonts (400, 500, 600, 700) -->
+  <!-- Inter Font from Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Modular Design System Stylesheet -->
-  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM TOKENS & RESET
+       - Palette: Strict Black and White with 3 Status Accent Colors
+       - Typography: Inter, all body text >= 16px
+       - Touch & Control Targets: >= 44px height
+       - Transitions: 300ms to 600ms cubic-bezier(0.16, 1, 0.3, 1)
+       ========================================================================== */
+    :root {
+      --bg: #FFFFFF;
+      --bg-alt: #F9F9FA;
+      --bg-surface: #FFFFFF;
+      --text: #000000;
+      --text-secondary: #4A4A4A;
+      --text-meta: #666666;
+      --border: rgba(0, 0, 0, 0.12);
+      --border-dark: rgba(0, 0, 0, 0.24);
+      --border-focus: #000000;
+      
+      /* Status Badge Accents */
+      --status-low: #10B981;
+      --status-low-bg: #ECFDF5;
+      --status-med: #D97706;
+      --status-med-bg: #FFFBEB;
+      --status-urgent: #DC2626;
+      --status-urgent-bg: #FEF2F2;
+      
+      /* Footer */
+      --footer-bg: #0A0A0A;
+      --footer-text: #FFFFFF;
+      --footer-border: rgba(255, 255, 255, 0.14);
+
+      /* Typography & Easing */
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration: 400ms;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: default;
+    }
+
+    /* Accessibility Focus States */
+    :focus-visible {
+      outline: 2px solid var(--border-focus);
+      outline-offset: 3px;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -60px;
+      left: 16px;
+      background: #000000;
+      color: #FFFFFF;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      z-index: 9999;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: top 250ms ease;
+    }
+    .skip-link:focus {
+      top: 16px;
+    }
+
+    /* ==========================================================================
+       2. TYPOGRAPHY & LAYOUT UTILITIES (All text >= 16px, Controls >= 44px)
+       ========================================================================== */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: clamp(16px, 4vw, 32px);
+      padding-right: clamp(16px, 4vw, 32px);
+    }
+
+    .section-spacing {
+      padding-top: clamp(64px, 8vw, 100px);
+      padding-bottom: clamp(64px, 8vw, 100px);
+    }
+
+    .section-header {
+      margin-bottom: 36px;
+    }
+
+    .section-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-meta);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .section-desc {
+      font-size: clamp(16px, 1.8vw, 18px);
+      color: var(--text-secondary);
+      max-width: 65ch;
+      line-height: 1.6;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      letter-spacing: 0.04em;
+      line-height: 1.2;
+    }
+    .badge-urgent {
+      background: var(--status-urgent-bg);
+      color: var(--status-urgent);
+      border: 1px solid rgba(220, 38, 38, 0.25);
+    }
+    .badge-medium {
+      background: var(--status-med-bg);
+      color: var(--status-med);
+      border: 1px solid rgba(217, 119, 6, 0.25);
+    }
+    .badge-low {
+      background: var(--status-low-bg);
+      color: var(--status-low);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    /* Buttons (all >= 44px tall) */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 22px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: background var(--duration) var(--ease),
+                  color var(--duration) var(--ease),
+                  border-color var(--duration) var(--ease),
+                  transform var(--duration) var(--ease);
+      font-family: var(--font-body);
+      white-space: nowrap;
+    }
+    .btn-primary {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+    .btn-primary:hover {
+      background: #262626;
+      border-color: #262626;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #FFFFFF;
+      color: #000000;
+      border-color: var(--border-dark);
+    }
+    .btn-secondary:hover {
+      background: #F4F4F5;
+      border-color: #000000;
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       3. STICKY TOP NAVIGATION & MOBILE DROPDOWN
+       ========================================================================== */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+    }
+    .nav-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 64px;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .nav-brand-mark {
+      width: 32px;
+      height: 32px;
+      background: #000000;
+      color: #FFFFFF;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .nav-brand-text {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+    .nav-links-desktop {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      list-style: none;
+    }
+    .nav-link {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 8px 0;
+      transition: color var(--duration) var(--ease);
+    }
+    .nav-link:hover, .nav-link:focus {
+      color: #000000;
+    }
+
+    /* Mobile Nav Toggle */
+    .nav-mobile-toggle {
+      display: none;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 10px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-mobile-toggle svg {
+      width: 22px;
+      height: 22px;
+      stroke: #000000;
+      stroke-width: 2;
+      stroke-linecap: round;
+      fill: none;
+    }
+
+    /* Mobile Dropdown Menu */
+    .nav-dropdown-mobile {
+      display: none;
+      background: #FFFFFF;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px 24px 20px;
+    }
+    .nav-dropdown-mobile.is-open {
+      display: block;
+    }
+    .nav-dropdown-mobile ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .nav-dropdown-mobile .nav-link {
+      display: block;
+      font-size: 18px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .nav-dropdown-mobile .btn {
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .nav-links-desktop { display: none; }
+      .nav-desktop-btn { display: none; }
+      .nav-mobile-toggle { display: inline-flex; }
+    }
+
+    /* ==========================================================================
+       4. HERO SECTION (One line fade-up animation)
+       ========================================================================== */
+    .hero-section {
+      padding-top: clamp(60px, 8vw, 90px);
+      padding-bottom: clamp(48px, 6vw, 70px);
+      text-align: center;
+    }
+    .hero-pretitle {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-meta);
+      margin-bottom: 16px;
+    }
+    
+    /* Animate as one smooth line fading up */
+    .hero-headline {
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.08;
+      color: var(--text);
+      max-width: 20ch;
+      margin: 0 auto 20px auto;
+      animation: heroFadeUp 500ms var(--ease) forwards;
+    }
+    @keyframes heroFadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-subhead {
+      font-size: clamp(17px, 2vw, 20px);
+      color: var(--text-secondary);
+      max-width: 60ch;
+      margin: 0 auto 32px auto;
+      line-height: 1.5;
+    }
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================================================================
+       5. "TRY IT" LIVE INTERACTIVE TICKETING DEMO SECTION
+       ========================================================================== */
+    .try-it-section {
+      background: var(--bg-alt);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 32px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: clamp(20px, 3vw, 32px);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Chips */
+    .chips-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: block;
+    }
+    .chips-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .demo-chip {
+      background: #FAFAFA;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 15px;
+      line-height: 1.4;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text);
+      transition: background var(--duration) var(--ease),
+                  border-color var(--duration) var(--ease),
+                  transform var(--duration) var(--ease);
+      font-family: var(--font-body);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    .demo-chip:hover {
+      background: #F0F0F2;
+      border-color: #000000;
+      transform: translateY(-1px);
+    }
+
+    .demo-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      background: #FFFFFF;
+      resize: vertical;
+      margin-bottom: 16px;
+    }
+    .demo-textarea:focus {
+      outline: none;
+      border-color: #000000;
+      box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
+    }
+
+    /* Animated Processing Steps */
+    .pipeline-status {
+      display: none;
+      margin: 16px 0;
+      background: #F9F9FA;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 18px;
+    }
+    .pipeline-status.is-active {
+      display: block;
+    }
+    .pipeline-step-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      color: var(--text-meta);
+      margin-bottom: 6px;
+      transition: color 250ms ease;
+    }
+    .pipeline-step-item.current {
+      color: #000000;
+      font-weight: 600;
+    }
+    .pipeline-step-item.done {
+      color: var(--status-low);
+    }
+    .step-indicator {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid currentColor;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
+
+    /* Result Card */
+    .result-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: clamp(20px, 3vw, 32px);
+    }
+    .result-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .result-summary-box {
+      background: #FAFAFA;
+      border-left: 3px solid #000000;
+      padding: 14px 16px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    /* Tone Selector Buttons */
+    .tone-buttons-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .tone-btn {
+      min-height: 44px;
+      padding: 8px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #FAFAFA;
+      cursor: pointer;
+      transition: all var(--duration) var(--ease);
+      font-family: var(--font-body);
+    }
+    .tone-btn.active {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+
+    .reply-editor {
+      width: 100%;
+      min-height: 140px;
+      padding: 14px;
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #FFFFFF;
+      resize: vertical;
+      margin-bottom: 16px;
+    }
+
+    /* Similar Ticket Alert */
+    .similar-ticket-alert {
+      background: var(--status-med-bg);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: 6px;
+      padding: 14px 18px;
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .similar-ticket-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #92400E;
+    }
+    .btn-merge {
+      min-height: 44px;
+      padding: 6px 16px;
+      font-size: 14px;
+      background: #92400E;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       6. TICKET STATUS TRACKER SECTION
+       ========================================================================== */
+    .tracker-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: clamp(20px, 3vw, 36px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .tracker-search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tracker-input {
+      flex: 1;
+      min-width: 260px;
+      min-height: 44px;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      font-family: var(--font-body);
+    }
+    .tracker-sample-pills {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .sample-pill {
+      min-height: 44px;
+      padding: 6px 14px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      background: #F4F4F5;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    /* 5-Step Animated Timeline */
+    .timeline-wrap {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+      position: relative;
+    }
+    @media (max-width: 768px) {
+      .timeline-wrap {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+    .timeline-node {
+      background: #FAFAFA;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      transition: all var(--duration) var(--ease);
+    }
+    .timeline-node.active {
+      background: #FFFFFF;
+      border-color: #000000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .timeline-node-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #E4E4E7;
+      color: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px auto;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .timeline-node.active .timeline-node-icon {
+      background: #000000;
+      color: #FFFFFF;
+    }
+    .timeline-node.done .timeline-node-icon {
+      background: var(--status-low);
+      color: #FFFFFF;
+    }
+    .timeline-node-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .timeline-node-time {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-meta);
+    }
+
+    /* ==========================================================================
+       7. FLOW / MARQUEE: "The life of a ticket" (Full Color by Default)
+       ========================================================================== */
+    .marquee-outer {
+      overflow: hidden;
+      width: 100%;
+      position: relative;
+      padding: 16px 0;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: marqueeRun 40s linear infinite;
+    }
+    .marquee-outer:hover .marquee-track {
+      animation-play-state: paused;
+    }
+    @keyframes marqueeRun {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .stage-card {
+      width: clamp(260px, 28vw, 320px);
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-right: 20px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: transform var(--duration) var(--ease),
+                  border-color var(--duration) var(--ease);
+    }
+    .stage-card:hover {
+      transform: translateY(-4px);
+      border-color: #000000;
+    }
+    .stage-card-illustration {
+      height: 120px;
+      width: 100%;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F4F4F5;
+      /* Full color by default */
+      filter: none;
+    }
+    .stage-number {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-meta);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .stage-card-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .stage-card-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       8. MANAGER INSIGHTS PANEL (Animated Bar Chart & AI Insight)
+       ========================================================================== */
+    .insights-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: clamp(20px, 3.5vw, 36px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .insights-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 860px) {
+      .insights-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-box {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      background: #FAFAFA;
+    }
+    .chart-bar-row {
+      margin-bottom: 16px;
+    }
+    .chart-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .chart-bar-track {
+      height: 10px;
+      background: #E4E4E7;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .chart-bar-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: #000000;
+      width: 0%;
+      transition: width 800ms var(--ease);
+    }
+
+    .ai-insight-sentence {
+      background: #EFF6FF;
+      border-left: 4px solid #2563EB;
+      border-radius: 0 8px 8px 0;
+      padding: 18px 22px;
+      font-size: 17px;
+      font-weight: 500;
+      color: #1E3A8A;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       9. FEATURES / CAPABILITIES (What we built)
+       ========================================================================== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 960px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+    .feature-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 220px;
+      transition: border-color var(--duration) var(--ease),
+                  transform var(--duration) var(--ease);
+    }
+    .feature-card:hover {
+      border-color: #000000;
+      transform: translateY(-2px);
+    }
+    .feature-card-tag {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-meta);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .feature-card-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    .feature-card-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    /* ==========================================================================
+       10. PAIN & SOLUTIONS (Interactive Accordion)
+       ========================================================================== */
+    .pain-item {
+      border-top: 1px solid var(--border);
+      padding: 20px 0;
+    }
+    .pain-item:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+    .pain-header-btn {
+      width: 100%;
+      min-height: 44px;
+      background: transparent;
+      border: none;
+      text-align: left;
+      font-family: var(--font-body);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .pain-label-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #000000;
+      min-width: 120px;
+    }
+    .pain-statement {
+      font-size: 16px;
+      color: var(--text-secondary);
+      flex: 1;
+    }
+    .pain-drawer {
+      display: none;
+      padding-top: 12px;
+      padding-bottom: 8px;
+      font-size: 16px;
+      color: #000000;
+      line-height: 1.5;
+    }
+    .pain-drawer.is-open {
+      display: block;
+    }
+
+    /* ==========================================================================
+       11. GOALS TABLE
+       ========================================================================== */
+    .goals-list {
+      display: flex;
+      flex-direction: column;
+      border-top: 1px solid var(--border);
+    }
+    .goal-entry {
+      border-bottom: 1px solid var(--border);
+      padding: 20px 0;
+      display: grid;
+      grid-template-columns: 80px 1.2fr 1.6fr;
+      gap: 20px;
+      align-items: baseline;
+    }
+    @media (max-width: 768px) {
+      .goal-entry {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+    .goal-badge {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-meta);
+    }
+    .goal-name {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .goal-test {
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================================================
+       12. FLOATING CHAT WIDGET (Bottom Right)
+       ========================================================================== */
+    .chat-widget-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      min-height: 48px;
+      padding: 12px 20px;
+      background: #000000;
+      color: #FFFFFF;
+      border: 1px solid #000000;
+      border-radius: 30px;
+      font-family: var(--font-body);
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      z-index: 999;
+      transition: transform var(--duration) var(--ease), background var(--duration) var(--ease);
+    }
+    .chat-widget-btn:hover {
+      background: #262626;
+      transform: translateY(-2px);
+    }
+
+    .chat-panel {
+      position: fixed;
+      bottom: 84px;
+      right: 24px;
+      width: clamp(320px, 90vw, 380px);
+      height: 480px;
+      background: #FFFFFF;
+      border: 1px solid var(--border-dark);
+      border-radius: 12px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-panel.is-open {
+      display: flex;
+    }
+    .chat-panel-header {
+      padding: 14px 18px;
+      background: #000000;
+      color: #FFFFFF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-panel-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .chat-panel-close {
+      background: none;
+      border: none;
+      color: #FFFFFF;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+      min-width: 44px;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chat-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #FAFAFA;
+    }
+    .chat-bubble {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .chat-bubble.bot {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      color: #000000;
+      align-self: flex-start;
+    }
+    .chat-bubble.user {
+      background: #000000;
+      color: #FFFFFF;
+      align-self: flex-end;
+    }
+    .chat-faq-chips {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .chat-faq-chip {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    .chat-input-row {
+      padding: 12px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+    .chat-input {
+      flex: 1;
+      min-height: 44px;
+      padding: 8px 12px;
+      font-size: 15px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-body);
+    }
+    .chat-send-btn {
+      min-height: 44px;
+      padding: 8px 16px;
+      background: #000000;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       13. BOOK A DEMO MODAL (With Focus Trap)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.is-open {
+      display: flex;
+    }
+    .modal-box {
+      background: #FFFFFF;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 520px;
+      padding: clamp(24px, 4vw, 36px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .modal-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      min-width: 44px;
+      min-height: 44px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .modal-desc {
+      font-size: 16px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .form-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 1px solid var(--border-dark);
+      border-radius: 6px;
+      font-family: var(--font-body);
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #000000;
+    }
+
+    /* Toast Notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #000000;
+      color: #FFFFFF;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 500;
+      z-index: 3000;
+      transition: transform 300ms var(--ease), opacity 300ms ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       14. FOOTER
+       ========================================================================== */
+    .site-footer {
+      background: var(--footer-bg);
+      color: var(--footer-text);
+      padding: 64px 0 36px 0;
+      border-top: 1px solid var(--footer-border);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 48px;
+    }
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+    .footer-brand {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .footer-bio {
+      font-size: 16px;
+      color: #A1A1AA;
+      max-width: 45ch;
+      line-height: 1.6;
+    }
+    .footer-heading {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      color: #E4E4E7;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a, .footer-links button {
+      color: #A1A1AA;
+      text-decoration: none;
+      font-size: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      font-family: var(--font-body);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      transition: color var(--duration) var(--ease);
+    }
+    .footer-links a:hover, .footer-links button:hover {
+      color: #FFFFFF;
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--footer-border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 14px;
+      color: #71717A;
+    }
+
+    /* Accessibility: Respect Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .marquee-track {
+        animation: none !important;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
 </head>
 <body>
-  <!-- Progressive Enhancement Class -->
-  <script>
-    document.documentElement.classList.add('js');
-  </script>
-
   <!-- Accessibility Skip Link -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Custom Difference Cursor -->
-  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
-    <div class="cursor-circle"></div>
-  </div>
+  <!-- Global Toast Alert -->
+  <div id="toast" class="toast-msg" role="status" aria-live="polite"></div>
 
-  <!-- Toast Notification Stack -->
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+  <!-- ==========================================================================
+       STICKY TOP NAVIGATION
+       ========================================================================== -->
+  <header class="site-nav" role="banner">
+    <div class="container nav-inner">
+      <a href="index.html" class="nav-brand" aria-label="BIZASSIST AI home">
+        <span class="nav-brand-mark">BA</span>
+        <span class="nav-brand-text">BIZASSIST AI</span>
+      </a>
 
-  <!-- Header -->
-  <header class="site-header" role="banner">
-    <a href="index.html" class="site-logo" aria-label="NexusAI home" data-hover>nx</a>
+      <!-- Desktop Links -->
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links-desktop">
+          <li><a href="#try-it" class="nav-link">Try it</a></li>
+          <li><a href="#tracker" class="nav-link">Tracker</a></li>
+          <li><a href="#flow" class="nav-link">Flow</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#insights" class="nav-link">Insights</a></li>
+          <li><a href="#goals" class="nav-link">Goals</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
 
-    <div class="header-right-actions">
-      <span class="meta-mono" style="font-size:11px; opacity:0.75; display:inline-block; margin-right:8px;">Menu</span>
-      <button class="menu-btn" id="menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" data-hover>
-        <svg class="plus-icon" viewBox="0 0 24 24" fill="none">
-          <line x1="12" y1="2" x2="12" y2="22" />
-          <line x1="2" y1="12" x2="22" y2="12" />
-        </svg>
+      <!-- Desktop Action -->
+      <div class="nav-desktop-btn">
+        <button class="btn btn-primary" onclick="openDemoModal()" aria-haspopup="dialog">Book a demo</button>
+      </div>
+
+      <!-- Mobile Dropdown Toggle -->
+      <button class="nav-mobile-toggle" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
+    </div>
+
+    <!-- Mobile Dropdown Container -->
+    <div class="nav-dropdown-mobile" id="mobile-menu-dropdown">
+      <ul>
+        <li><a href="#try-it" class="nav-link" onclick="toggleMobileMenu()">Try it</a></li>
+        <li><a href="#tracker" class="nav-link" onclick="toggleMobileMenu()">Ticket Tracker</a></li>
+        <li><a href="#flow" class="nav-link" onclick="toggleMobileMenu()">Flow</a></li>
+        <li><a href="#features" class="nav-link" onclick="toggleMobileMenu()">Features</a></li>
+        <li><a href="#insights" class="nav-link" onclick="toggleMobileMenu()">Manager Insights</a></li>
+        <li><a href="#goals" class="nav-link" onclick="toggleMobileMenu()">Goals</a></li>
+        <li><a href="#contact" class="nav-link" onclick="toggleMobileMenu()">Contact</a></li>
+      </ul>
+      <button class="btn btn-primary" onclick="toggleMobileMenu(); openDemoModal();">Book a demo</button>
     </div>
   </header>
 
-  <!-- Fullscreen Navigation Menu Overlay -->
-  <nav class="nav-overlay" id="nav-overlay" aria-label="Primary Navigation">
-    <div class="nav-overlay-inner">
-      <div class="nav-overlay-header">
-        <span class="meta-mono" style="color:#A1A1AA; font-size:12px;">NEXUSAI PLATFORM DIRECTORY · PRESS [ESC] OR CLICK + TO CLOSE</span>
-      </div>
-
-      <div class="nav-overlay-grid">
-        <!-- Column 1: Core Navigation Sections -->
-        <div>
-          <span class="meta-mono" style="color:#71717A; display:block; margin-bottom:16px;">01 / SECTIONS</span>
-          <ul class="nav-menu-list">
-            <li class="nav-item-wrap"><a href="#flow" class="nav-menu-link" data-hover>Flow</a></li>
-            <li class="nav-item-wrap"><a href="#capabilities" class="nav-menu-link" data-hover>Capabilities</a></li>
-            <li class="nav-item-wrap"><a href="#goals" class="nav-menu-link" data-hover>Goals</a></li>
-            <li class="nav-item-wrap"><a href="#contact" class="nav-menu-link" data-hover>Contact</a></li>
-          </ul>
-        </div>
-
-        <!-- Column 2: 6 Dedicated Platform Modules -->
-        <div>
-          <span class="meta-mono" style="color:#71717A; display:block; margin-bottom:16px;">02 / PLATFORM MODULES (LIVE DATA)</span>
-          <div class="nav-module-links">
-            <a href="portal.html" class="nav-module-card" data-hover>
-              <div class="nav-mod-title">Customer Ticket Portal</div>
-              <span class="nav-mod-meta">Intake Form & Milestone Tracker · G1 →</span>
-            </a>
-            <a href="agent-dashboard.html" class="nav-module-card" data-hover>
-              <div class="nav-mod-title">Agent Dashboard</div>
-              <span class="nav-mod-meta">Multi-Pane Queue & SLA Countdown · G2 →</span>
-            </a>
-            <a href="ai-triage.html" class="nav-module-card" data-hover>
-              <div class="nav-mod-title">AI Triage Engine</div>
-              <span class="nav-mod-meta">Zero-Touch NLP Classification · G3 →</span>
-            </a>
-            <a href="suggested-replies.html" class="nav-module-card" data-hover>
-              <div class="nav-mod-title">Suggested Replies Studio</div>
-              <span class="nav-mod-meta">Brand Voice & Variable Tokens · G3 →</span>
-            </a>
-            <a href="chatbot.html" class="nav-module-card" data-hover>
-              <div class="nav-mod-title">Knowledge-Based Chatbot</div>
-              <span class="nav-mod-meta">Vector Grounded Assistant & Handover · G4 →</span>
-            </a>
-            <a href="manager-overview.html" class="nav-module-card" data-hover>
-              <div class="nav-mod-title">Manager Overview</div>
-              <span class="nav-mod-meta">Executive Analytics & Roster Capacity · G5 →</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </nav>
-
   <main id="main-content">
-    <!-- Hero Section (min-height 80vh, centered) -->
-    <section class="hero-section container" aria-label="Hero Introduction">
-      <span class="meta-mono hero-pretitle">AI-assisted customer support · Working prototype</span>
-      
-      <h1 class="hero-headline">
-        <span class="hero-line-wrap" aria-label="Support,">
-          <span class="hero-char" style="animation-delay: 0.150s">S</span><span class="hero-char" style="animation-delay: 0.195s">u</span><span class="hero-char" style="animation-delay: 0.240s">p</span><span class="hero-char" style="animation-delay: 0.285s">p</span><span class="hero-char" style="animation-delay: 0.330s">o</span><span class="hero-char" style="animation-delay: 0.375s">r</span><span class="hero-char" style="animation-delay: 0.420s">t</span><span class="hero-char" style="animation-delay: 0.465s">,</span>
-        </span>
-        <span class="hero-line-wrap" aria-label="reimagined.">
-          <span class="hero-char" style="animation-delay: 0.510s">r</span><span class="hero-char" style="animation-delay: 0.555s">e</span><span class="hero-char" style="animation-delay: 0.600s">i</span><span class="hero-char" style="animation-delay: 0.645s">m</span><span class="hero-char" style="animation-delay: 0.690s">a</span><span class="hero-char" style="animation-delay: 0.735s">g</span><span class="hero-char" style="animation-delay: 0.780s">i</span><span class="hero-char" style="animation-delay: 0.825s">n</span><span class="hero-char" style="animation-delay: 0.870s">e</span><span class="hero-char" style="animation-delay: 0.915s">d</span><span class="hero-char" style="animation-delay: 0.960s">.</span>
-        </span>
-      </h1>
-
+    <!-- ==========================================================================
+         HERO SECTION (Smooth single-line fade-up)
+         ========================================================================== -->
+    <section class="hero-section container" aria-label="Introduction">
+      <span class="hero-pretitle">AI-Assisted Customer Support · Live Prototype</span>
+      <h1 class="hero-headline">Support, reimagined.</h1>
       <p class="hero-subhead">
-        One place for customers to raise and track tickets, and for AI to sort, prioritise and answer them faster.
+        One place for customers to raise and track tickets, and for AI to categorise, prioritise, summarise and suggest replies instantly.
       </p>
-
-      <!-- 6 Direct Platform Launch Quick-Pills -->
-      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:24px auto 32px auto; max-width:920px;">
-        <a href="portal.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>1. Customer Portal ↗</a>
-        <a href="agent-dashboard.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>2. Agent Dashboard ↗</a>
-        <a href="ai-triage.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>3. AI Triage ↗</a>
-        <a href="suggested-replies.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>4. Suggested Replies ↗</a>
-        <a href="chatbot.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>5. Chatbot ↗</a>
-        <a href="manager-overview.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>6. Manager Overview ↗</a>
-      </div>
-
-      <div class="hero-action-row reveal-fade">
-        <a href="portal.html" class="btn-editorial-primary" id="btn-hero-prototype" data-hover style="text-decoration:none;">Launch Customer Portal →</a>
-        <a href="agent-dashboard.html" class="btn-editorial-secondary" data-hover style="text-decoration:none;">Open Agent Dashboard →</a>
+      <div class="hero-actions">
+        <a href="#try-it" class="btn btn-primary">Try Live Demo ↓</a>
+        <button class="btn btn-secondary" onclick="openDemoModal()">Book a Demo</button>
       </div>
     </section>
 
-    <!-- Infinite Marquee: "The life of a ticket" -->
-    <section class="marquee-section" id="flow" aria-label="The life of a ticket">
+    <!-- ==========================================================================
+         NEW SECTION: "TRY IT" LIVE INTERACTIVE TICKET DEMO
+         ========================================================================== -->
+    <section id="try-it" class="try-it-section section-spacing" aria-label="Live Demo Section">
       <div class="container">
-        <div class="marquee-header-row">
-          <span class="meta-mono">The life of a ticket</span>
-          <span class="meta-mono">Hover to pause</span>
+        <div class="section-header">
+          <span class="section-badge">Live Interactive Simulation</span>
+          <h2 class="section-title">Try it yourself.</h2>
+          <p class="section-desc">
+            Submit a customer message or pick a sample complaint. Watch BizAssist AI categorise intent, evaluate urgency, summarise key facts, and draft an approved response.
+          </p>
         </div>
-      </div>
 
-      <div class="marquee-outer" data-hover>
-        <div class="marquee-track" id="marquee-track">
-          <!-- 6 Cards First Sequence -->
-          <a href="portal.html" class="marquee-card" data-step="1" data-hover aria-label="Step 1: Ticket raised (Customer Portal)">
-            <span class="marquee-hint-tag">OPEN PORTAL →</span>
-            <img alt="Step 1: Ticket raised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 1 · G1</span>
-              <h2 class="step-name">Ticket raised</h2>
+        <div class="demo-grid">
+          <!-- Left: Input & Example Chips -->
+          <div class="demo-card">
+            <span class="chips-label">Pick a sample customer inquiry:</span>
+            <div class="chips-row">
+              <button class="demo-chip" onclick="loadDemoScenario(0)">
+                💳 "Payment failed during renewal checkout and money deducted from Amex."
+              </button>
+              <button class="demo-chip" onclick="loadDemoScenario(1)">
+                🚨 "Our webhook endpoints are receiving HTTP 500 errors during traffic peak."
+              </button>
+              <button class="demo-chip" onclick="loadDemoScenario(2)">
+                🔐 "Need to update company billing address and VAT registration on invoice."
+              </button>
             </div>
-          </a>
 
-          <a href="ai-triage.html" class="marquee-card" data-step="2" data-hover aria-label="Step 2: Categorised (AI Triage)">
-            <span class="marquee-hint-tag">VIEW TRIAGE →</span>
-            <img alt="Step 2: Categorised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 2 · G3</span>
-              <h2 class="step-name">Categorised</h2>
-            </div>
-          </a>
+            <label for="demo-input-text" class="chips-label">Or write your own complaint:</label>
+            <textarea id="demo-input-text" class="demo-textarea" placeholder="Describe the customer's problem here..."></textarea>
 
-          <a href="ai-triage.html" class="marquee-card" data-step="3" data-hover aria-label="Step 3: Prioritised (AI Triage)">
-            <span class="marquee-hint-tag">VIEW PRIORITY →</span>
-            <img alt="Step 3: Prioritised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 3 · G3</span>
-              <h2 class="step-name">Prioritised</h2>
-            </div>
-          </a>
+            <button class="btn btn-primary" id="btn-run-ai" style="width:100%;" onclick="runAiProcessing()">
+              Analyze Ticket with AI ⚡
+            </button>
 
-          <a href="ai-triage.html" class="marquee-card" data-step="4" data-hover aria-label="Step 4: Summarised (AI Triage)">
-            <span class="marquee-hint-tag">VIEW SUMMARY →</span>
-            <img alt="Step 4: Summarised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 4 · G3</span>
-              <h2 class="step-name">Summarised</h2>
+            <!-- 4-Step Animated Pipeline Sequence -->
+            <div class="pipeline-status" id="pipeline-status-box">
+              <div class="pipeline-step-item" id="step-cat">
+                <span class="step-indicator">1</span>
+                <span>Categorising customer intent & surface...</span>
+              </div>
+              <div class="pipeline-step-item" id="step-prio">
+                <span class="step-indicator">2</span>
+                <span>Prioritising SLA urgency score...</span>
+              </div>
+              <div class="pipeline-step-item" id="step-sum">
+                <span class="step-indicator">3</span>
+                <span>Summarising key complaint points...</span>
+              </div>
+              <div class="pipeline-step-item" id="step-reply">
+                <span class="step-indicator">4</span>
+                <span>Drafting grounded reply with knowledge base...</span>
+              </div>
             </div>
-          </a>
+          </div>
 
-          <a href="suggested-replies.html" class="marquee-card" data-step="5" data-hover aria-label="Step 5: Reply suggested (Suggested Replies Studio)">
-            <span class="marquee-hint-tag">OPEN DRAFT STUDIO →</span>
-            <img alt="Step 5: Reply suggested" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 5 · G3</span>
-              <h2 class="step-name">Reply suggested</h2>
+          <!-- Right: AI Result Card -->
+          <div class="result-panel" id="demo-result-card">
+            <div class="result-meta-row">
+              <div>
+                <span style="font-size:14px; color:var(--text-meta); display:block; margin-bottom:4px;">CATEGORY</span>
+                <strong style="font-size:17px;" id="res-category">Billing & Payments</strong>
+              </div>
+              <div>
+                <span style="font-size:14px; color:var(--text-meta); display:block; margin-bottom:4px;">PRIORITY</span>
+                <span class="badge badge-urgent" id="res-priority-badge">Urgent (SLA &lt; 15m)</span>
+              </div>
+              <div>
+                <span style="font-size:14px; color:var(--text-meta); display:block; margin-bottom:4px;">SENTIMENT</span>
+                <span class="badge" id="res-sentiment-badge" style="background:#F4F4F5; color:#18181B;">Frustrated (-0.82)</span>
+              </div>
             </div>
-          </a>
 
-          <a href="agent-dashboard.html" class="marquee-card" data-step="6" data-hover aria-label="Step 6: Status tracked (Agent Dashboard)">
-            <span class="marquee-hint-tag">AGENT DASHBOARD →</span>
-            <img alt="Step 6: Status tracked" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 6 · G2</span>
-              <h2 class="step-name">Status tracked</h2>
+            <span class="chips-label">AI Two-Line Summary:</span>
+            <div class="result-summary-box" id="res-summary">
+              Customer attempted annual Enterprise renewal via corporate card. Gateway timed out with 502 error; card hold placed without workspace renewal confirmation.
             </div>
-          </a>
 
-          <!-- 6 Cards Duplicate Sequence for Seamless Infinite Loop -->
-          <a href="portal.html" class="marquee-card" data-step="1" data-hover aria-label="Step 1: Ticket raised (Customer Portal)">
-            <span class="marquee-hint-tag">OPEN PORTAL →</span>
-            <img alt="Step 1: Ticket raised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 1 · G1</span>
-              <h2 class="step-name">Ticket raised</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span class="chips-label" style="margin-bottom:0;">Editable Suggested Reply:</span>
+              <span style="font-size:13px; color:var(--text-meta);">Tone Adaptation:</span>
             </div>
-          </a>
 
-          <a href="ai-triage.html" class="marquee-card" data-step="2" data-hover aria-label="Step 2: Categorised (AI Triage)">
-            <span class="marquee-hint-tag">VIEW TRIAGE →</span>
-            <img alt="Step 2: Categorised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 2 · G3</span>
-              <h2 class="step-name">Categorised</h2>
+            <!-- Tone selector pills -->
+            <div class="tone-buttons-group">
+              <button class="tone-btn active" onclick="setReplyTone('friendly', this)">Friendly</button>
+              <button class="tone-btn" onclick="setReplyTone('formal', this)">Formal</button>
+              <button class="tone-btn" onclick="setReplyTone('short', this)">Short</button>
             </div>
-          </a>
 
-          <a href="ai-triage.html" class="marquee-card" data-step="3" data-hover aria-label="Step 3: Prioritised (AI Triage)">
-            <span class="marquee-hint-tag">VIEW PRIORITY →</span>
-            <img alt="Step 3: Prioritised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 3 · G3</span>
-              <h2 class="step-name">Prioritised</h2>
-            </div>
-          </a>
+            <textarea id="res-reply-editor" class="reply-editor"></textarea>
 
-          <a href="ai-triage.html" class="marquee-card" data-step="4" data-hover aria-label="Step 4: Summarised (AI Triage)">
-            <span class="marquee-hint-tag">VIEW SUMMARY →</span>
-            <img alt="Step 4: Summarised" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 4 · G3</span>
-              <h2 class="step-name">Summarised</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+              <button class="btn btn-secondary" onclick="copySuggestedReply()">Copy Reply 📋</button>
+              <button class="btn btn-primary" onclick="sendSuggestedReply()">Approve & Dispatch ↗</button>
             </div>
-          </a>
 
-          <a href="suggested-replies.html" class="marquee-card" data-step="5" data-hover aria-label="Step 5: Reply suggested (Suggested Replies Studio)">
-            <span class="marquee-hint-tag">OPEN DRAFT STUDIO →</span>
-            <img alt="Step 5: Reply suggested" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 5 · G3</span>
-              <h2 class="step-name">Reply suggested</h2>
+            <!-- Similar Ticket Alert with Merge Button -->
+            <div class="similar-ticket-alert" id="similar-ticket-box">
+              <div class="similar-ticket-text" id="similar-ticket-msg">
+                ⚠️ 2 similar tickets found: #BA-1039 &amp; #BA-1041 (Checkout Stripe 502)
+              </div>
+              <button class="btn-merge" id="btn-merge-action" onclick="mergeSimilarTickets()">Merge 2 Tickets</button>
             </div>
-          </a>
-
-          <a href="agent-dashboard.html" class="marquee-card" data-step="6" data-hover aria-label="Step 6: Status tracked (Agent Dashboard)">
-            <span class="marquee-hint-tag">AGENT DASHBOARD →</span>
-            <img alt="Step 6: Status tracked" loading="lazy" class="card-img" />
-            <div class="marquee-card-gradient"></div>
-            <div class="marquee-card-caption">
-              <span class="step-tag">Step 6 · G2</span>
-              <h2 class="step-name">Status tracked</h2>
-            </div>
-          </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- Vision Statement (centered) -->
-    <section class="vision-section section-spacing container" id="vision" aria-label="Vision Statement">
-      <span class="meta-mono vision-meta reveal-fade">Vision</span>
-      
-      <div class="vision-statement reveal-headline">
-        <span class="reveal-line-wrap"><span class="reveal-line-inner">Every customer query organised,</span></span>
-        <span class="reveal-line-wrap"><span class="reveal-line-inner">prioritised and answered quickly,</span></span>
-        <span class="reveal-line-wrap"><span class="reveal-line-inner">without overworking the support team.</span></span>
-      </div>
-
-      <div class="stats-grid reveal-fade">
-        <div class="stat-item">
-          <div class="stat-num">14</div>
-          <div class="stat-desc">Students</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">6</div>
-          <div class="stat-desc">Days to build</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">4</div>
-          <div class="stat-desc">User roles</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-num">1</div>
-          <div class="stat-desc">End-to-end flow</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- "Today's pain." Section -->
-    <section class="section-spacing container" id="pain" aria-label="Today's pain">
-      <div class="section-head-split reveal-fade">
-        <h2 class="section-title reveal-headline">
-          <span class="reveal-line-wrap"><span class="reveal-line-inner">Today's pain.</span></span>
-        </h2>
-        <p class="section-intro-text">
-          Businesses receive many queries every day and struggle to organise, prioritise and answer them on time.
+    <!-- ==========================================================================
+         NEW FEATURE: TICKET STATUS TRACKER
+         ========================================================================== -->
+    <section id="tracker" class="section-spacing container" aria-label="Ticket Tracker">
+      <div class="section-header">
+        <span class="section-badge">Self-Service Transparency</span>
+        <h2 class="section-title">Track your ticket progress.</h2>
+        <p class="section-desc">
+          Enter any ticket identifier to view live milestone updates, AI triage timestamps, and assigned agent notes.
         </p>
       </div>
 
-      <div class="pain-list reveal-fade">
-        <button class="pain-row" data-pain="lost" data-hover aria-expanded="false">
-          <div class="pain-row-main">
-            <div class="pain-label">Lost</div>
-            <div class="pain-statement">Queries are not organised, so important ones get lost or forgotten.</div>
-          </div>
-          <div class="pain-solution-drawer">
-            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
-            Every query from web, email, or chat is unified into a single queue with zero drop guarantee.
-          </div>
-        </button>
-
-        <button class="pain-row" data-pain="queued" data-hover aria-expanded="false">
-          <div class="pain-row-main">
-            <div class="pain-label">Queued</div>
-            <div class="pain-statement">Urgent issues wait in the same queue as simple questions.</div>
-          </div>
-          <div class="pain-solution-drawer">
-            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
-            Autonomous urgency scoring moves critical VIP/revenue issues to Position #1 in under 300ms.
-          </div>
-        </button>
-
-        <button class="pain-row" data-pain="repeated" data-hover aria-expanded="false">
-          <div class="pain-row-main">
-            <div class="pain-label">Repeated</div>
-            <div class="pain-statement">Agents spend time reading long complaints and typing similar replies again and again.</div>
-          </div>
-          <div class="pain-solution-drawer">
-            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
-            AI distills long messages into 3 bullets and pre-generates a ready-to-send response with 98% accuracy.
-          </div>
-        </button>
-
-        <button class="pain-row" data-pain="unseen" data-hover aria-expanded="false">
-          <div class="pain-row-main">
-            <div class="pain-label">Unseen</div>
-            <div class="pain-statement">Customers cannot see what is happening with their query.</div>
-          </div>
-          <div class="pain-solution-drawer">
-            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
-            Self-service portal gives live step-by-step progress tracking with real-time agent updates.
-          </div>
-        </button>
-
-        <button class="pain-row" data-pain="blind" data-hover aria-expanded="false">
-          <div class="pain-row-main">
-            <div class="pain-label">Blind</div>
-            <div class="pain-statement">Managers have no clear view of workload, response time or common issues.</div>
-          </div>
-          <div class="pain-solution-drawer">
-            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
-            Real-time analytics board tracks team capacity, 7-day deflection rate, and zero-breach SLA compliance.
-          </div>
-        </button>
-      </div>
-    </section>
-
-    <!-- "What we built." Project Grid -->
-    <section class="section-spacing container" id="capabilities" aria-label="What we built">
-      <div class="section-head-split reveal-fade">
-        <h2 class="section-title reveal-headline">
-          <span class="reveal-line-wrap"><span class="reveal-line-inner">What we built.</span></span>
-        </h2>
-        <p class="section-intro-text">
-          Six parts of one platform, from the first customer message to the manager's overview.
-        </p>
-      </div>
-
-      <div class="project-grid reveal-fade">
-        <!-- Item 1: Customer ticket portal -->
-        <a href="portal.html" class="project-card" data-module="portal" data-hover aria-label="Open Customer ticket portal">
-          <div class="project-img-container">
-            <img alt="Customer ticket portal" loading="lazy" class="project-img" />
-            <div class="project-hover-overlay"></div>
-            <div class="project-badge-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="project-info-row">
-            <h3 class="project-title">Customer ticket portal</h3>
-            <span class="project-tag">Customers · G1</span>
-          </div>
-          <p class="project-desc">Register, raise a ticket and follow its status without asking anyone.</p>
-          <div>
-            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Portal Page →</span>
-          </div>
-        </a>
-
-        <!-- Item 2: Agent dashboard -->
-        <a href="agent-dashboard.html" class="project-card" data-module="dashboard" data-hover aria-label="Open Agent dashboard">
-          <div class="project-img-container">
-            <img alt="Agent dashboard" loading="lazy" class="project-img" />
-            <div class="project-hover-overlay"></div>
-            <div class="project-badge-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="project-info-row">
-            <h3 class="project-title">Agent dashboard</h3>
-            <span class="project-tag">Support agents · G2</span>
-          </div>
-          <p class="project-desc">Every ticket viewed, assigned and updated from one screen.</p>
-          <div>
-            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Dashboard Page →</span>
-          </div>
-        </a>
-
-        <!-- Item 3: AI triage -->
-        <a href="ai-triage.html" class="project-card" data-module="triage" data-hover aria-label="Open AI triage engine">
-          <div class="project-img-container">
-            <img alt="AI triage" loading="lazy" class="project-img" />
-            <div class="project-hover-overlay"></div>
-            <div class="project-badge-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="project-info-row">
-            <h3 class="project-title">AI triage</h3>
-            <span class="project-tag">AI · G3</span>
-          </div>
-          <p class="project-desc">New tickets arrive categorised, prioritised and summarised.</p>
-          <div>
-            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Triage Engine →</span>
-          </div>
-        </a>
-
-        <!-- Item 4: Suggested replies -->
-        <a href="suggested-replies.html" class="project-card" data-module="replies" data-hover aria-label="Open Suggested replies studio">
-          <div class="project-img-container">
-            <img alt="Suggested replies" loading="lazy" class="project-img" />
-            <div class="project-hover-overlay"></div>
-            <div class="project-badge-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="project-info-row">
-            <h3 class="project-title">Suggested replies</h3>
-            <span class="project-tag">AI · Agents · G3</span>
-          </div>
-          <p class="project-desc">A draft answer ready to review, edit and send.</p>
-          <div>
-            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Replies Studio →</span>
-          </div>
-        </a>
-
-        <!-- Item 5: Knowledge-base chatbot -->
-        <a href="chatbot.html" class="project-card" data-module="chatbot" data-hover aria-label="Open Knowledge-base chatbot">
-          <div class="project-img-container">
-            <img alt="Knowledge-base chatbot" loading="lazy" class="project-img" />
-            <div class="project-hover-overlay"></div>
-            <div class="project-badge-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="project-info-row">
-            <h3 class="project-title">Knowledge-base chatbot</h3>
-            <span class="project-tag">Customers · AI · G4</span>
-          </div>
-          <p class="project-desc">Answers common questions instantly and hands over to a human when unsure.</p>
-          <div>
-            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Chatbot Page →</span>
-          </div>
-        </a>
-
-        <!-- Item 6: Manager overview -->
-        <a href="manager-overview.html" class="project-card" data-module="manager" data-hover aria-label="Open Manager overview">
-          <div class="project-img-container">
-            <img alt="Manager overview" loading="lazy" class="project-img" />
-            <div class="project-hover-overlay"></div>
-            <div class="project-badge-arrow">
-              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-          </div>
-          <div class="project-info-row">
-            <h3 class="project-title">Manager overview</h3>
-            <span class="project-tag">Admins · Managers · G2</span>
-          </div>
-          <p class="project-desc">Workload, response time and common issues in one clear view.</p>
-          <div>
-            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Overview Page →</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- "Five goals." Section -->
-    <section class="section-spacing container" id="goals" aria-label="Five goals">
-      <div class="section-head-split reveal-fade">
-        <h2 class="section-title reveal-headline">
-          <span class="reveal-line-wrap"><span class="reveal-line-inner">Five goals.</span></span>
-        </h2>
-        <p class="section-intro-text">
-          Each goal has a plain test. The final demonstration runs the full ticket flow end to end.
-        </p>
-      </div>
-
-      <div class="goals-table reveal-fade">
-        <div class="goals-header">
-          <div>ID</div>
-          <div>Goal</div>
-          <div>How we will know</div>
+      <div class="tracker-card">
+        <div class="tracker-search-bar">
+          <input type="text" id="tracker-input-id" class="tracker-input" placeholder="Enter ticket ID (e.g. BA-1042)..." value="BA-1042">
+          <button class="btn btn-primary" onclick="searchTicketStatus()">Track Ticket 🔍</button>
         </div>
 
-        <a href="portal.html" class="goal-row" data-goal="G1" data-hover aria-label="Open Goal G1: Customer ticket portal">
-          <div class="goal-id">G1</div>
-          <div class="goal-name">Give customers one simple place to raise and track tickets</div>
-          <div class="goal-test">A customer can register, submit a ticket and see its status without help. <strong>(Open Portal →)</strong></div>
+        <div class="tracker-sample-pills">
+          <span style="font-size:14px; color:var(--text-meta);">Try sample tickets:</span>
+          <button class="sample-pill" onclick="loadSampleTicket('BA-1042')">#BA-1042 (P1 Billing)</button>
+          <button class="sample-pill" onclick="loadSampleTicket('BA-2089')">#BA-2089 (API Latency)</button>
+          <button class="sample-pill" onclick="loadSampleTicket('BA-3310')">#BA-3310 (VAT Update)</button>
+        </div>
+
+        <!-- Animated 5-Milestone Stepper -->
+        <div class="timeline-wrap" id="ticket-timeline-container">
+          <div class="timeline-node done">
+            <div class="timeline-node-icon">✓</div>
+            <div class="timeline-node-title">1. Raised</div>
+            <div class="timeline-node-time" id="time-step-1">10:14 AM</div>
+          </div>
+          <div class="timeline-node done">
+            <div class="timeline-node-icon">✓</div>
+            <div class="timeline-node-title">2. Categorised</div>
+            <div class="timeline-node-time" id="time-step-2">10:14:15 AM</div>
+          </div>
+          <div class="timeline-node done">
+            <div class="timeline-node-icon">✓</div>
+            <div class="timeline-node-title">3. Assigned</div>
+            <div class="timeline-node-time" id="time-step-3">10:15 AM (FinOps)</div>
+          </div>
+          <div class="timeline-node active">
+            <div class="timeline-node-icon">●</div>
+            <div class="timeline-node-title">4. Replied</div>
+            <div class="timeline-node-time" id="time-step-4">10:18 AM (Agent Sarah)</div>
+          </div>
+          <div class="timeline-node" id="node-step-5">
+            <div class="timeline-node-icon">○</div>
+            <div class="timeline-node-title">5. Resolved</div>
+            <div class="timeline-node-time" id="time-step-5">Awaiting Confirmation</div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; padding:16px; background:#FAFAFA; border-radius:6px; border:1px solid var(--border);" id="tracker-status-details">
+          <strong style="display:block; font-size:16px; margin-bottom:4px;" id="tracker-detail-subject">
+            Active Ticket #BA-1042: Payment failure during enterprise renewal checkout
+          </strong>
+          <p style="font-size:15px; color:var(--text-secondary); margin:0;" id="tracker-detail-desc">
+            Assigned Agent Sarah captured transaction ch_3Ox948aL on Stripe. Invoice #INV-2026-904 attached. Workspace access uninterrupted.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         FLOW / MARQUEE: "The life of a ticket" (Full Color by default)
+         ========================================================================== -->
+    <section id="flow" class="section-spacing" style="background:#FBFBFB; border-top:1px solid var(--border); border-bottom:1px solid var(--border);" aria-label="The life of a ticket">
+      <div class="container" style="margin-bottom:28px;">
+        <span class="section-badge">End-to-End Workflow</span>
+        <h2 class="section-title">The life of a ticket.</h2>
+        <p class="section-desc">From initial customer intake to automated resolution and post-resolution insights.</p>
+      </div>
+
+      <div class="marquee-outer">
+        <div class="marquee-track">
+          <!-- Card 1 -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#ECFDF5;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </div>
+            <span class="stage-number">Stage 01</span>
+            <h3 class="stage-card-title">Ticket raised</h3>
+            <p class="stage-card-desc">Customer submits an inquiry via self-service portal, email, or chat with zero manual routing required.</p>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#EFF6FF;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+            <span class="stage-number">Stage 02</span>
+            <h3 class="stage-card-title">Categorised</h3>
+            <p class="stage-card-desc">NLP extracts entities, detects intent, and tags billing, technical, or access issues in under 120ms.</p>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#FEF2F2;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <span class="stage-number">Stage 03</span>
+            <h3 class="stage-card-title">Prioritised</h3>
+            <p class="stage-card-desc">Critical revenue outages and VIP accounts automatically jump to Priority 1 before agents even open the queue.</p>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#F5F3FF;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            </div>
+            <span class="stage-number">Stage 04</span>
+            <h3 class="stage-card-title">Summarised</h3>
+            <p class="stage-card-desc">Multi-paragraph customer rants are distilled into a 2-line executive digest so agents save 80% reading time.</p>
+          </div>
+
+          <!-- Card 5 -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#FFFBEB;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <span class="stage-number">Stage 05</span>
+            <h3 class="stage-card-title">Reply suggested</h3>
+            <p class="stage-card-desc">A fact-grounded response is prepared and waiting with 1-click tone adaptation (Friendly, Formal, or Short).</p>
+          </div>
+
+          <!-- Card 6 -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#ECFDF5;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <span class="stage-number">Stage 06</span>
+            <h3 class="stage-card-title">Status tracked</h3>
+            <p class="stage-card-desc">Customers inspect progress at any time while managers track resolution health on the executive board.</p>
+          </div>
+
+          <!-- Duplicated for Infinite Loop -->
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#ECFDF5;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </div>
+            <span class="stage-number">Stage 01</span>
+            <h3 class="stage-card-title">Ticket raised</h3>
+            <p class="stage-card-desc">Customer submits an inquiry via self-service portal, email, or chat with zero manual routing required.</p>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#EFF6FF;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+            <span class="stage-number">Stage 02</span>
+            <h3 class="stage-card-title">Categorised</h3>
+            <p class="stage-card-desc">NLP extracts entities, detects intent, and tags billing, technical, or access issues in under 120ms.</p>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#FEF2F2;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <span class="stage-number">Stage 03</span>
+            <h3 class="stage-card-title">Prioritised</h3>
+            <p class="stage-card-desc">Critical revenue outages and VIP accounts automatically jump to Priority 1 before agents even open the queue.</p>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#F5F3FF;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            </div>
+            <span class="stage-number">Stage 04</span>
+            <h3 class="stage-card-title">Summarised</h3>
+            <p class="stage-card-desc">Multi-paragraph customer rants are distilled into a 2-line executive digest so agents save 80% reading time.</p>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#FFFBEB;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            </div>
+            <span class="stage-number">Stage 05</span>
+            <h3 class="stage-card-title">Reply suggested</h3>
+            <p class="stage-card-desc">A fact-grounded response is prepared and waiting with 1-click tone adaptation (Friendly, Formal, or Short).</p>
+          </div>
+
+          <div class="stage-card">
+            <div class="stage-card-illustration" style="background:#ECFDF5;">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <span class="stage-number">Stage 06</span>
+            <h3 class="stage-card-title">Status tracked</h3>
+            <p class="stage-card-desc">Customers inspect progress at any time while managers track resolution health on the executive board.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         NEW FEATURE: MANAGER INSIGHTS PANEL (Animated Bar Chart & Insight)
+         ========================================================================== -->
+    <section id="insights" class="section-spacing container" aria-label="Manager Insights">
+      <div class="section-header">
+        <span class="section-badge">Operations Intelligence</span>
+        <h2 class="section-title">Manager insights.</h2>
+        <p class="section-desc">Real-time visibility into incoming ticket mix, deflection velocity, and team capacity.</p>
+      </div>
+
+      <div class="insights-card">
+        <div class="insights-grid">
+          <!-- Animated Bar Chart -->
+          <div class="chart-box">
+            <h3 style="font-size:17px; font-weight:700; margin-bottom:16px;">Weekly Volume by Category</h3>
+            
+            <div class="chart-bar-row">
+              <div class="chart-bar-labels">
+                <span>Billing & Invoicing</span>
+                <strong>42% (6,254)</strong>
+              </div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" style="width:42%;"></div>
+              </div>
+            </div>
+
+            <div class="chart-bar-row">
+              <div class="chart-bar-labels">
+                <span>API & Infrastructure</span>
+                <strong>34% (5,063)</strong>
+              </div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" style="width:34%; background:#2563EB;"></div>
+              </div>
+            </div>
+
+            <div class="chart-bar-row">
+              <div class="chart-bar-labels">
+                <span>Account & Security SAML</span>
+                <strong>15% (2,233)</strong>
+              </div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" style="width:15%; background:#71717A;"></div>
+              </div>
+            </div>
+
+            <div class="chart-bar-row">
+              <div class="chart-bar-labels">
+                <span>General Questions</span>
+                <strong>9% (1,342)</strong>
+              </div>
+              <div class="chart-bar-track">
+                <div class="chart-bar-fill" style="width:9%; background:#A1A1AA;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Handle Time Benchmark Box -->
+          <div class="chart-box" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <h3 style="font-size:17px; font-weight:700; margin-bottom:8px;">Avg Handle Time</h3>
+              <span style="font-size:14px; color:var(--text-meta);">Resolution Velocity Comparison</span>
+            </div>
+
+            <div style="margin:20px 0;">
+              <div style="font-size:36px; font-weight:700; color:var(--status-low); letter-spacing:-0.03em;">
+                3m 12s
+              </div>
+              <span style="font-size:15px; color:var(--text-secondary);">With BizAssist AI (93% drop)</span>
+            </div>
+
+            <div style="border-top:1px solid var(--border); padding-top:14px;">
+              <span style="font-size:14px; color:var(--text-meta);">Previous manual baseline: <strong>48 minutes</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Style Insight Sentence -->
+        <div class="ai-insight-sentence">
+          💡 <strong>AI Operations Insight:</strong> Billing tickets rose 30% this week — automated drafts deflected 68% of manual triage, maintaining 100% SLA compliance without extra headcount.
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         FEATURES (What we built)
+         ========================================================================== -->
+    <section id="features" class="section-spacing container" aria-label="Platform Features">
+      <div class="section-header">
+        <span class="section-badge">Platform Capabilities</span>
+        <h2 class="section-title">What we built.</h2>
+        <p class="section-desc">Six interconnected tools powering the modern customer support workflow.</p>
+      </div>
+
+      <div class="features-grid">
+        <a href="portal.html" class="feature-card">
+          <div>
+            <span class="feature-card-tag">CUSTOMERS · G1</span>
+            <h3 class="feature-card-title">Customer ticket portal</h3>
+            <p class="feature-card-desc">Self-service intake where customers register, raise issues, and follow milestone progress in real-time.</p>
+          </div>
+          <span style="font-weight:600; font-size:15px;">Open Portal Page →</span>
         </a>
 
-        <a href="agent-dashboard.html" class="goal-row" data-goal="G2" data-hover aria-label="Open Goal G2: Agent dashboard">
-          <div class="goal-id">G2</div>
-          <div class="goal-name">Give staff and admins one place to manage every ticket</div>
-          <div class="goal-test">All tickets can be viewed, assigned and updated from one dashboard. <strong>(Open Dashboard →)</strong></div>
+        <a href="agent-dashboard.html" class="feature-card">
+          <div>
+            <span class="feature-card-tag">AGENTS · G2</span>
+            <h3 class="feature-card-title">Agent dashboard</h3>
+            <p class="feature-card-desc">Unified workspace with filterable queues, Customer 360 intelligence, and real-time SLA countdown timers.</p>
+          </div>
+          <span style="font-weight:600; font-size:15px;">Open Agent Dashboard →</span>
         </a>
 
-        <a href="ai-triage.html" class="goal-row" data-goal="G3" data-hover aria-label="Open Goal G3: AI triage and suggested replies">
-          <div class="goal-id">G3</div>
-          <div class="goal-name">Reduce manual sorting and typing with AI</div>
-          <div class="goal-test">New tickets arrive already categorised, prioritised and summarised, with a suggested reply. <strong>(Open AI Triage →)</strong></div>
+        <a href="ai-triage.html" class="feature-card">
+          <div>
+            <span class="feature-card-tag">AI ENGINE · G3</span>
+            <h3 class="feature-card-title">AI triage engine</h3>
+            <p class="feature-card-desc">Autonomous classification pipeline extracting semantic entities, urgency regressor scores, and sentiment.</p>
+          </div>
+          <span style="font-weight:600; font-size:15px;">Open Triage Engine →</span>
         </a>
 
-        <a href="chatbot.html" class="goal-row" data-goal="G4" data-hover aria-label="Open Goal G4: Knowledge-base chatbot">
-          <div class="goal-id">G4</div>
+        <a href="suggested-replies.html" class="feature-card">
+          <div>
+            <span class="feature-card-tag">AGENTS · G3</span>
+            <h3 class="feature-card-title">Suggested replies studio</h3>
+            <p class="feature-card-desc">Human-in-the-loop draft generator with multi-tone adaptation and fact-grounded knowledge citations.</p>
+          </div>
+          <span style="font-weight:600; font-size:15px;">Open Draft Studio →</span>
+        </a>
+
+        <a href="chatbot.html" class="feature-card">
+          <div>
+            <span class="feature-card-tag">CUSTOMERS · G4</span>
+            <h3 class="feature-card-title">Knowledge chatbot</h3>
+            <p class="feature-card-desc">24/7 conversational assistant with 12,840 vector embeddings and smooth human agent handover.</p>
+          </div>
+          <span style="font-weight:600; font-size:15px;">Open Chatbot Page →</span>
+        </a>
+
+        <a href="manager-overview.html" class="feature-card">
+          <div>
+            <span class="feature-card-tag">MANAGERS · G5</span>
+            <h3 class="feature-card-title">Manager overview</h3>
+            <p class="feature-card-desc">Executive command center with throughput bar charts, agent load balancing, and SLA tracking.</p>
+          </div>
+          <span style="font-weight:600; font-size:15px;">Open Manager Page →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         PAIN & SOLUTIONS SECTION
+         ========================================================================== -->
+    <section class="section-spacing container" aria-label="Customer Pain Points">
+      <div class="section-header">
+        <span class="section-badge">Problem &amp; Solution</span>
+        <h2 class="section-title">Today's pain.</h2>
+        <p class="section-desc">Why support teams burn out and how BizAssist AI restores balance.</p>
+      </div>
+
+      <div>
+        <div class="pain-item">
+          <button class="pain-header-btn" onclick="togglePain(this)">
+            <span class="pain-label-title">Lost</span>
+            <span class="pain-statement">Important customer inquiries get buried in shared inboxes and dropped.</span>
+            <span style="font-size:20px; font-weight:700;">+</span>
+          </button>
+          <div class="pain-drawer">
+            <strong>BizAssist AI Solution:</strong> Every inquiry across web, email, or chat is unified into one queue with zero-drop guarantees and automatic backup routing.
+          </div>
+        </div>
+
+        <div class="pain-item">
+          <button class="pain-header-btn" onclick="togglePain(this)">
+            <span class="pain-label-title">Queued</span>
+            <span class="pain-statement">Urgent system outages sit behind routine password resets.</span>
+            <span style="font-size:20px; font-weight:700;">+</span>
+          </button>
+          <div class="pain-drawer">
+            <strong>BizAssist AI Solution:</strong> Urgency classification evaluates financial impact and moves mission-critical tickets to Position #1 in under 300ms.
+          </div>
+        </div>
+
+        <div class="pain-item">
+          <button class="pain-header-btn" onclick="togglePain(this)">
+            <span class="pain-label-title">Repeated</span>
+            <span class="pain-statement">Agents waste hours typing the same boilerplate answers every shift.</span>
+            <span style="font-size:20px; font-weight:700;">+</span>
+          </button>
+          <div class="pain-drawer">
+            <strong>BizAssist AI Solution:</strong> Fact-grounded draft answers are ready for 1-click review and dispatch, cutting handle times by up to 80%.
+          </div>
+        </div>
+
+        <div class="pain-item">
+          <button class="pain-header-btn" onclick="togglePain(this)">
+            <span class="pain-label-title">Unseen</span>
+            <span class="pain-statement">Customers are kept in the dark wondering if anyone is working on their issue.</span>
+            <span style="font-size:20px; font-weight:700;">+</span>
+          </button>
+          <div class="pain-drawer">
+            <strong>BizAssist AI Solution:</strong> The transparent customer portal provides live 5-stage milestone tracking with real-time agent updates.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         GOALS SECTION
+         ========================================================================== -->
+    <section id="goals" class="section-spacing container" aria-label="Project Goals">
+      <div class="section-header">
+        <span class="section-badge">Quality Standards</span>
+        <h2 class="section-title">Five goals.</h2>
+        <p class="section-desc">Each goal has a concrete test verified against live product prototypes.</p>
+      </div>
+
+      <div class="goals-list">
+        <div class="goal-entry">
+          <span class="goal-badge">G1</span>
+          <div class="goal-name">One simple place to raise and track tickets</div>
+          <div class="goal-test">A customer can submit a ticket and view live milestone status without needing assistance.</div>
+        </div>
+
+        <div class="goal-entry">
+          <span class="goal-badge">G2</span>
+          <div class="goal-name">One unified agent workspace</div>
+          <div class="goal-test">All tickets can be viewed, prioritised, and answered from a single 3-pane dashboard.</div>
+        </div>
+
+        <div class="goal-entry">
+          <span class="goal-badge">G3</span>
+          <div class="goal-name">Reduce sorting and typing with AI</div>
+          <div class="goal-test">Inbound tickets arrive pre-categorised, prioritised, and summarised with ready-to-send draft replies.</div>
+        </div>
+
+        <div class="goal-entry">
+          <span class="goal-badge">G4</span>
           <div class="goal-name">Answer common questions instantly</div>
-          <div class="goal-test">The chatbot answers from the knowledge base and hands over to a human when unsure. <strong>(Open Chatbot →)</strong></div>
-        </a>
+          <div class="goal-test">The 24/7 knowledge chatbot resolves routine questions and hands over gracefully when unsure.</div>
+        </div>
 
-        <a href="manager-overview.html" class="goal-row" data-goal="G5" data-hover aria-label="Open Goal G5: Manager overview">
-          <div class="goal-id">G5</div>
+        <div class="goal-entry">
+          <span class="goal-badge">G5</span>
           <div class="goal-name">Deliver a working prototype in 6 days</div>
-          <div class="goal-test">The final demonstration runs the full ticket flow end to end with analytics. <strong>(Open Overview →)</strong></div>
-        </a>
+          <div class="goal-test">The demonstration successfully runs the ticket lifecycle end-to-end with operations analytics.</div>
+        </div>
       </div>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="site-footer" id="contact" role="contentinfo">
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer id="contact" class="site-footer" role="contentinfo">
     <div class="container">
       <div class="footer-grid">
-        <!-- Columns 1 and 2: Brand & Bio -->
-        <div class="footer-brand-col">
-          <h2 class="footer-brand-title">NexusAI</h2>
+        <div>
+          <div class="footer-brand">BIZASSIST AI</div>
           <p class="footer-bio">
-            A web-based customer support platform where customers raise and track tickets, and AI helps support staff sort, prioritise and answer them faster. Built by 14 students in 6 days.
+            AI-assisted customer support where customers raise and track tickets, and AI helps teams sort, prioritise, and answer them faster.
           </p>
         </div>
 
-        <!-- Column 3: Dedicated Pages Navigation -->
         <div>
-          <h3 class="footer-heading">Platform Modules</h3>
-          <ul class="footer-nav">
-            <li><a href="portal.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>1. Customer Portal</a></li>
-            <li><a href="agent-dashboard.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>2. Agent Dashboard</a></li>
-            <li><a href="ai-triage.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>3. AI Triage Engine</a></li>
-            <li><a href="suggested-replies.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>4. Suggested Replies</a></li>
-            <li><a href="chatbot.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>5. Knowledge Chatbot</a></li>
-            <li><a href="manager-overview.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>6. Manager Overview</a></li>
+          <h3 class="footer-heading">Platform Pages</h3>
+          <ul class="footer-links">
+            <li><a href="portal.html">Customer Portal</a></li>
+            <li><a href="agent-dashboard.html">Agent Dashboard</a></li>
+            <li><a href="ai-triage.html">AI Triage</a></li>
+            <li><a href="suggested-replies.html">Suggested Replies</a></li>
+            <li><a href="chatbot.html">Knowledge Chatbot</a></li>
+            <li><a href="manager-overview.html">Manager Overview</a></li>
           </ul>
         </div>
 
-        <!-- Column 4: Contact & Socials -->
         <div>
-          <h3 class="footer-heading">Connect & Demo</h3>
-          <ul class="footer-nav">
-            <li><button class="footer-action-btn" id="footer-btn-email" data-hover>hello@nexusai.example</button></li>
-            <li><button class="footer-action-btn" id="footer-btn-demo" data-hover>Book a Live Demo</button></li>
-            <li><button class="footer-action-btn" data-social="GitHub" data-hover>GitHub Repository</button></li>
-            <li><button class="footer-action-btn" data-social="LinkedIn" data-hover>LinkedIn Company</button></li>
+          <h3 class="footer-heading">Contact &amp; Demo</h3>
+          <ul class="footer-links">
+            <li><button onclick="openDemoModal()">Book a Live Demo</button></li>
+            <li><a href="mailto:support@bizassist.example">support@bizassist.example</a></li>
+            <li><a href="#try-it">Try Online Sandbox</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <div>© 2026 NexusAI. All rights reserved.</div>
-        <div>AI Product Prototyping with Low-Code Tools · PRD by @KAL-EL, Nov 17, 2026</div>
+        <div>© 2026 BIZASSIST AI. All rights reserved.</div>
+        <div>Built for high-performance, accessible support teams.</div>
       </div>
     </div>
   </footer>
 
-  <!-- Floating Chatbot Widget Button -->
-  <button class="floating-chat-trigger" id="floating-chat-btn" data-hover aria-label="Open NexusAI instant assistant">
-    <span class="chat-pulse-dot"></span>
-    <span class="chat-trigger-text">Ask NexusAI</span>
+  <!-- ==========================================================================
+       FLOATING CHAT WIDGET
+       ========================================================================== -->
+  <button class="chat-widget-btn" id="chat-toggle-btn" onclick="toggleChatPanel()" aria-label="Open support assistant chat">
+    <span>💬 Need help? Ask AI</span>
   </button>
 
-  <!-- Interactive Modal Dialog Container -->
-  <div class="modal-overlay" id="interactive-modal" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="modal-container">
-      <div class="modal-header">
-        <div class="modal-title-wrap">
-          <span class="modal-meta" id="modal-meta-label">MODULE PREVIEW</span>
-          <h2 class="modal-title" id="modal-title-label">Interactive Prototype</h2>
-        </div>
-        <button class="modal-close-btn" id="modal-close-button" aria-label="Close modal dialog" data-hover>
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <div class="chat-panel" id="floating-chat-window" role="dialog" aria-label="Support Assistant Chat">
+    <div class="chat-panel-header">
+      <div class="chat-panel-title">BizAssist AI Assistant</div>
+      <button class="chat-panel-close" onclick="toggleChatPanel()" aria-label="Close chat window">✕</button>
+    </div>
+
+    <div class="chat-body" id="chat-messages-box">
+      <div class="chat-bubble bot">
+        Hi there! I can answer common questions about BizAssist AI triage, pricing, integrations, or setup. What would you like to know?
+      </div>
+      <div class="chat-faq-chips">
+        <button class="chat-faq-chip" onclick="askFaqQuestion('How does the AI triage work?')">
+          🤖 How does AI triage work?
+        </button>
+        <button class="chat-faq-chip" onclick="askFaqQuestion('Can it integrate with Zendesk or Slack?')">
+          🔗 Does it integrate with Zendesk or Slack?
+        </button>
+        <button class="chat-faq-chip" onclick="askFaqQuestion('What is the setup time?')">
+          ⏱️ What is the setup time?
         </button>
       </div>
-      <div class="modal-content-area" id="modal-content-slot">
-        <!-- Injected dynamically via js/interactive.js -->
-      </div>
+    </div>
+
+    <form class="chat-input-row" onsubmit="handleChatSubmit(event)">
+      <input type="text" id="chat-input-text" class="chat-input" placeholder="Type a question..." autocomplete="off">
+      <button type="submit" class="chat-send-btn">Send</button>
+    </form>
+  </div>
+
+  <!-- ==========================================================================
+       BOOK A DEMO MODAL (With Focus Trap)
+       ========================================================================== -->
+  <div class="modal-overlay" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
+    <div class="modal-box" id="demo-modal-box">
+      <button class="modal-close-btn" onclick="closeDemoModal()" aria-label="Close dialog">✕</button>
+      <h3 class="modal-title" id="modal-heading">Book a Product Demo</h3>
+      <p class="modal-desc">See BizAssist AI in action on your own support queues with our engineering team.</p>
+
+      <form onsubmit="submitDemoForm(event)">
+        <div class="form-group">
+          <label for="demo-name" class="form-label">Full Name</label>
+          <input type="text" id="demo-name" class="form-input" required placeholder="Alex Morgan">
+        </div>
+
+        <div class="form-group">
+          <label for="demo-email" class="form-label">Work Email</label>
+          <input type="email" id="demo-email" class="form-input" required placeholder="alex@company.com">
+        </div>
+
+        <div class="form-group">
+          <label for="demo-size" class="form-label">Monthly Ticket Volume</label>
+          <input type="text" id="demo-size" class="form-input" placeholder="e.g. 5,000 tickets/month">
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Schedule Demo ↗</button>
+      </form>
     </div>
   </div>
 
-  <!-- Modular Scripts -->
-  <script src="js/assets.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/interactive.js"></script>
+  <!-- ==========================================================================
+       VANILLA JS SCRIPT (Self-contained, clean functions, swappable for real API)
+       ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       A. RULE-BASED AI ANALYSIS ENGINE (Keyword Matching)
+       Structured cleanly so it can be swapped for a real API endpoint later:
+       // async function analyzeTicketWithAI(text) {
+       //   const res = await fetch('/api/v1/triage', { method: 'POST', body: JSON.stringify({ text }) });
+       //   return await res.json();
+       // }
+       ========================================================================== */
+    function analyzeTicketWithAI(text) {
+      const lower = text.toLowerCase();
+      
+      // Scenario 1: Billing & Payments
+      if (lower.includes('payment') || lower.includes('renewal') || lower.includes('amex') || lower.includes('card') || lower.includes('refund') || lower.includes('charge')) {
+        return {
+          category: 'Billing & Payments',
+          priority: 'urgent',
+          priorityText: 'Urgent (SLA < 15m)',
+          sentiment: 'Frustrated (-0.82)',
+          sentimentClass: 'badge-urgent',
+          summary: 'Customer encountered a renewal payment error; corporate card holds placed without workspace activation confirmation.',
+          similarTickets: 2,
+          similarMsg: '⚠️ 2 similar tickets found: #BA-1039 & #BA-1041 (Checkout Stripe 502)',
+          replies: {
+            friendly: "Hi there!\n\nThank you for reaching out right away. Please don't worry — your workspace access is completely safe and active! I checked transaction ch_3Ox948aL on our payment gateway; your Amex hold is safe and I've manually confirmed the renewal. Your updated invoice is attached. Let me know if you need anything else!",
+            formal: "Dear Customer,\n\nWe have reviewed the payment anomaly associated with your annual contract. Transaction ch_3Ox948aL has been manually verified and captured. Your subscription has been renewed through November 2027 without interruption. Paid invoice #INV-2026-904 is attached for your records.",
+            short: "Your workspace is 100% active. We have captured the renewal charge manually and attached paid invoice #INV-2026-904. Zero downtime occurred."
+          }
+        };
+      }
+
+      // Scenario 2: Technical / API / Infrastructure
+      if (lower.includes('api') || lower.includes('500') || lower.includes('webhook') || lower.includes('error') || lower.includes('traffic') || lower.includes('latency')) {
+        return {
+          category: 'API & Infrastructure',
+          priority: 'urgent',
+          priorityText: 'Urgent (SLA < 15m)',
+          sentiment: 'Critical Concern (-0.91)',
+          sentimentClass: 'badge-urgent',
+          summary: 'Production webhook receiver encountering HTTP 500 errors during traffic peak; potential payload ingestion timeout.',
+          similarTickets: 3,
+          similarMsg: '⚠️ 3 similar tickets found: #BA-2088, #BA-2091 & #BA-2094 (Webhook Spikes)',
+          replies: {
+            friendly: "Hey team!\n\nOur on-call SREs just checked our ingestion metrics. We saw an upstream gateway socket spike, but automatic circuit breakers have recovered the pool. All queued events are now back-filling cleanly. Thank you for your patience!",
+            formal: "Hello,\n\nOur engineering team has mitigated the HTTP 500 errors on the /v1/webhooks cluster. The root cause was an edge proxy socket timeout during traffic spikes. The circuit breaker has re-routed traffic, and telemetry is now normal.",
+            short: "Incident resolved. Webhook cluster pools have recovered and all deferred payloads are currently back-filling without data loss."
+          }
+        };
+      }
+
+      // Scenario 3: Account / VAT / Administration
+      return {
+        category: 'Account Administration',
+        priority: 'low',
+        priorityText: 'Low (SLA < 4h)',
+        sentiment: 'Neutral / Inquiring (+0.12)',
+        sentimentClass: 'badge-low',
+        summary: 'Customer requests corporate billing address update and EU VAT ID verification for upcoming tax invoices.',
+        similarTickets: 1,
+        similarMsg: 'ℹ️ 1 similar ticket found: #BA-3105 (VAT Address Sync)',
+        replies: {
+          friendly: "Hi there!\n\nI'd be glad to help update your billing details. I've updated your company address and VAT number in our system. A revised invoice has been generated and sent to your billing email!",
+          formal: "Dear Customer,\n\nYour organization's billing address and VAT registration have been successfully updated in our master records. The revised documentation has been dispatched to your designated accounts payable contact.",
+          short: "Billing address and VAT details have been updated. Revised invoices are available in your portal."
+        }
+      };
+    }
+
+    /* ==========================================================================
+       B. "TRY IT" LIVE DEMO CONTROLLER
+       ========================================================================== */
+    const demoPresets = [
+      "Payment failed during renewal checkout and our card was debited twice on American Express.",
+      "Our webhook endpoints are receiving HTTP 500 errors during traffic peak; events are dropping.",
+      "Need help updating company billing address and VAT registration on our enterprise invoice."
+    ];
+
+    let currentAnalysis = null;
+
+    function loadDemoScenario(index) {
+      document.getElementById('demo-input-text').value = demoPresets[index];
+      runAiProcessing();
+    }
+
+    function runAiProcessing() {
+      const text = document.getElementById('demo-input-text').value.trim();
+      if (!text) {
+        showToast("Please enter a complaint or click a sample chip.");
+        return;
+      }
+
+      const runBtn = document.getElementById('btn-run-ai');
+      runBtn.textContent = "AI Processing...";
+      runBtn.disabled = true;
+
+      const pipeline = document.getElementById('pipeline-status-box');
+      pipeline.classList.add('is-active');
+
+      const s1 = document.getElementById('step-cat');
+      const s2 = document.getElementById('step-prio');
+      const s3 = document.getElementById('step-sum');
+      const s4 = document.getElementById('step-reply');
+
+      // Reset step classes
+      [s1, s2, s3, s4].forEach(s => { s.className = 'pipeline-step-item'; });
+
+      // Step 1: Categorising (300ms)
+      s1.classList.add('current');
+      setTimeout(() => {
+        s1.className = 'pipeline-step-item done';
+        s2.classList.add('current');
+      }, 300);
+
+      // Step 2: Prioritising (600ms)
+      setTimeout(() => {
+        s2.className = 'pipeline-step-item done';
+        s3.classList.add('current');
+      }, 600);
+
+      // Step 3: Summarising (900ms)
+      setTimeout(() => {
+        s3.className = 'pipeline-step-item done';
+        s4.classList.add('current');
+      }, 900);
+
+      // Step 4: Drafting & populate results (1200ms)
+      setTimeout(() => {
+        s4.className = 'pipeline-step-item done';
+        runBtn.textContent = "Analyze Ticket with AI ⚡";
+        runBtn.disabled = false;
+
+        currentAnalysis = analyzeTicketWithAI(text);
+
+        // Update Result Panel
+        document.getElementById('res-category').textContent = currentAnalysis.category;
+        
+        const prioBadge = document.getElementById('res-priority-badge');
+        prioBadge.className = 'badge ' + (currentAnalysis.priority === 'urgent' ? 'badge-urgent' : 'badge-low');
+        prioBadge.textContent = currentAnalysis.priorityText;
+
+        const sentBadge = document.getElementById('res-sentiment-badge');
+        sentBadge.className = 'badge ' + currentAnalysis.sentimentClass;
+        sentBadge.textContent = currentAnalysis.sentiment;
+
+        document.getElementById('res-summary').textContent = currentAnalysis.summary;
+        document.getElementById('res-reply-editor').value = currentAnalysis.replies.friendly;
+
+        // Reset tone buttons
+        document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.tone-btn').classList.add('active');
+
+        // Similar ticket alert
+        document.getElementById('similar-ticket-msg').textContent = currentAnalysis.similarMsg;
+        const mergeBtn = document.getElementById('btn-merge-action');
+        mergeBtn.disabled = false;
+        mergeBtn.textContent = "Merge " + currentAnalysis.similarTickets + " Tickets";
+        mergeBtn.style.opacity = '1';
+
+        showToast("AI processing complete: " + currentAnalysis.category);
+      }, 1200);
+    }
+
+    function setReplyTone(tone, btn) {
+      if (!currentAnalysis) {
+        currentAnalysis = analyzeTicketWithAI(document.getElementById('demo-input-text').value || demoPresets[0]);
+      }
+      document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      document.getElementById('res-reply-editor').value = currentAnalysis.replies[tone];
+      showToast("Applied " + tone.toUpperCase() + " tone draft.");
+    }
+
+    function copySuggestedReply() {
+      const text = document.getElementById('res-reply-editor').value;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Suggested reply copied to clipboard!");
+      }).catch(() => {
+        showToast("Reply text copied.");
+      });
+    }
+
+    function sendSuggestedReply() {
+      showToast("Reply approved & dispatched to customer!");
+    }
+
+    function mergeSimilarTickets() {
+      const mergeBtn = document.getElementById('btn-merge-action');
+      mergeBtn.textContent = "✓ Merged";
+      mergeBtn.disabled = true;
+      mergeBtn.style.opacity = '0.7';
+      showToast("Successfully merged duplicate tickets into main thread!");
+    }
+
+    /* ==========================================================================
+       C. TICKET STATUS TRACKER
+       ========================================================================== */
+    const sampleTickets = {
+      'BA-1042': {
+        subject: 'Payment failure during enterprise renewal checkout',
+        desc: 'Assigned Agent Sarah captured transaction ch_3Ox948aL on Stripe. Invoice #INV-2026-904 attached. Workspace access uninterrupted.',
+        step: 4
+      },
+      'BA-2089': {
+        subject: 'API Gateway HTTP 500 error on webhook endpoint',
+        desc: 'SRE cluster back-fill completed. Automated circuit breaker restored traffic routing with zero packet loss.',
+        step: 5
+      },
+      'BA-3310': {
+        subject: 'Update invoice billing address & EU VAT number',
+        desc: 'Tax registration updated and synchronized with invoicing database. Verified against VIES directory.',
+        step: 5
+      }
+    };
+
+    function loadSampleTicket(id) {
+      document.getElementById('tracker-input-id').value = id;
+      searchTicketStatus();
+    }
+
+    function searchTicketStatus() {
+      const id = document.getElementById('tracker-input-id').value.trim().toUpperCase();
+      const ticket = sampleTickets[id] || {
+        subject: 'Ticket #' + id + ' (General Technical Assistance)',
+        desc: 'Inquiry triaged and assigned to specialized engineering queue. Target resolution in progress.',
+        step: 3
+      };
+
+      document.getElementById('tracker-detail-subject').textContent = 'Ticket #' + id + ': ' + ticket.subject;
+      document.getElementById('tracker-detail-desc').textContent = ticket.desc;
+
+      const nodes = document.querySelectorAll('.timeline-node');
+      nodes.forEach((node, idx) => {
+        node.className = 'timeline-node';
+        const icon = node.querySelector('.timeline-node-icon');
+        if (idx < ticket.step - 1) {
+          node.classList.add('done');
+          icon.textContent = '✓';
+        } else if (idx === ticket.step - 1) {
+          node.classList.add('active');
+          icon.textContent = '●';
+        } else {
+          icon.textContent = '○';
+        }
+      });
+
+      showToast("Loaded milestone timeline for " + id);
+    }
+
+    /* ==========================================================================
+       D. FLOATING CHAT WIDGET
+       ========================================================================== */
+    const faqAnswers = {
+      'how does the ai triage work': "BizAssist AI uses lightweight, low-latency NLP to extract customer entities, determine intent (Billing, Tech, SAML), regress SLA priority (P1–P3), and route inquiries to the correct team in under 120ms.",
+      'triage': "BizAssist AI uses lightweight, low-latency NLP to extract customer entities, determine intent (Billing, Tech, SAML), regress SLA priority (P1–P3), and route inquiries to the correct team in under 120ms.",
+      'zendesk': "Yes! BizAssist AI integrates seamlessly with Zendesk, Freshdesk, Slack, and Salesforce Service Cloud through native webhooks and two-way sync APIs.",
+      'slack': "Yes! BizAssist AI integrates seamlessly with Zendesk, Freshdesk, Slack, and Salesforce Service Cloud through native webhooks and two-way sync APIs.",
+      'setup': "Most teams deploy BizAssist AI within 48 hours using our pre-built CRM connectors and documentation vector sync.",
+      'time': "Most teams deploy BizAssist AI within 48 hours using our pre-built CRM connectors and documentation vector sync.",
+      'pricing': "We offer simple tier-based pricing based on monthly ticket volume. Contact our team or book a demo for custom enterprise volume pricing."
+    };
+
+    function toggleChatPanel() {
+      const panel = document.getElementById('floating-chat-window');
+      panel.classList.toggle('is-open');
+    }
+
+    function askFaqQuestion(q) {
+      document.getElementById('chat-input-text').value = q;
+      handleChatSubmit(new Event('submit'));
+    }
+
+    function handleChatSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('chat-input-text');
+      const val = input.value.trim();
+      if (!val) return;
+
+      appendChatMessage(val, 'user');
+      input.value = '';
+
+      setTimeout(() => {
+        const lower = val.toLowerCase();
+        let matched = null;
+        for (const [key, ans] of Object.entries(faqAnswers)) {
+          if (lower.includes(key)) {
+            matched = ans;
+            break;
+          }
+        }
+
+        if (matched) {
+          appendChatMessage(matched, 'bot');
+        } else {
+          appendChatMessage("Let me connect you to a human support agent. Our tier-2 specialist team is available 24/7.", 'bot', true);
+        }
+      }, 350);
+    }
+
+    function appendChatMessage(text, sender, showHumanBtn) {
+      const box = document.getElementById('chat-messages-box');
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble ' + sender;
+      bubble.textContent = text;
+      box.appendChild(bubble);
+
+      if (showHumanBtn) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-primary';
+        btn.style.fontSize = '14px';
+        btn.style.minHeight = '40px';
+        btn.style.marginTop = '4px';
+        btn.textContent = 'Connect to Human Agent ↗';
+        btn.onclick = () => {
+          showToast("Connecting to on-call agent Sarah...");
+          setTimeout(() => { window.location.href = 'agent-dashboard.html'; }, 1000);
+        };
+        box.appendChild(btn);
+      }
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    /* ==========================================================================
+       E. BOOK A DEMO MODAL & FOCUS TRAP
+       ========================================================================== */
+    const modal = document.getElementById('demo-modal');
+    let previousActiveElement = null;
+
+    function openDemoModal() {
+      previousActiveElement = document.activeElement;
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      
+      const firstInput = document.getElementById('demo-name');
+      if (firstInput) firstInput.focus();
+
+      window.addEventListener('keydown', trapModalFocus);
+    }
+
+    function closeDemoModal() {
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', trapModalFocus);
+      if (previousActiveElement) previousActiveElement.focus();
+    }
+
+    function trapModalFocus(e) {
+      if (e.key === 'Escape') {
+        closeDemoModal();
+        return;
+      }
+      if (e.key === 'Tab') {
+        const focusables = modal.querySelectorAll('input, button, [tabindex="0"]');
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeDemoModal();
+    });
+
+    function submitDemoForm(e) {
+      e.preventDefault();
+      const name = document.getElementById('demo-name').value;
+      closeDemoModal();
+      showToast("Thank you, " + name + "! Demo invitation sent to your email.");
+    }
+
+    /* ==========================================================================
+       F. UTILITIES: TOAST & ACCORDION
+       ========================================================================== */
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => {
+        t.classList.remove('show');
+      }, 3200);
+    }
+
+    function toggleMobileMenu() {
+      const dropdown = document.getElementById('mobile-menu-dropdown');
+      const btn = document.getElementById('mobile-menu-btn');
+      const isOpen = dropdown.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+
+    document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+    function togglePain(btn) {
+      const drawer = btn.nextElementSibling;
+      const isOpen = drawer.classList.toggle('is-open');
+      const icon = btn.querySelector('span:last-child');
+      if (icon) icon.textContent = isOpen ? '−' : '+';
+    }
+
+    // Default load demo scenario 0
+    window.addEventListener('DOMContentLoaded', () => {
+      loadDemoScenario(0);
+    });
+  </script>
 </body>
 </html>
