@@ -40,15 +40,50 @@ The project code is separated into clean, modular files for easy maintenance and
 
 ```
 nexusai/
-├── index.html              # Semantic HTML5 entry page with all sections
+├── index.html              # Main landing page with full navigation to all 6 modules
+├── portal.html             # Customer Ticket Portal (Ticket intake, live milestone tracker, search)
+├── agent-dashboard.html    # Agent Dashboard (Split-pane inbox queue, customer 360, SLA countdown)
+├── ai-triage.html          # AI Triage Engine (Real-time NLP classification, entity extractor, routing)
+├── suggested-replies.html  # Suggested Replies Studio (Tone switcher, variable chips, RAG citations)
+├── chatbot.html            # Knowledge-Based Chatbot (Vector doc index, AI chat, human handover)
+├── manager-overview.html   # Manager Overview & Analytics (KPIs, 7-day throughput chart, agent roster)
 ├── css/
 │   └── styles.css          # Design system tokens, typography, layout, and animations
 ├── js/
 │   ├── assets.js           # Vector SVG illustrations & data URI generation
 │   ├── main.js             # Core UI controller (custom difference cursor, nav, toasts, reveals)
-│   └── interactive.js      # Working prototype simulations, modals & form handlers
+│   └── interactive.js      # Working prototype simulations, routing & form handlers
 ├── .gitignore              # Standard Git ignore rules
 └── README.md               # Project documentation and guide
+```
+
+---
+
+## 🌐 6 Dedicated Platform Modules & Links
+
+Each of the 6 platform modules has its own dedicated page with live data, interactive forms, and direct actions:
+
+| Module | File | Local HTTP Link | Description |
+|---|---|---|---|
+| **1. Customer Ticket Portal** | [`portal.html`](file:///d:/zeni/portal.html) | [http://localhost:3000/portal.html](http://localhost:3000/portal.html) | Self-service intake form, active milestone tracker (Submitted → Triaged → Fix Approved → Resolved), knowledge base search bar, and ticket history. |
+| **2. Agent Dashboard** | [`agent-dashboard.html`](file:///d:/zeni/agent-dashboard.html) | [http://localhost:3000/agent-dashboard.html](http://localhost:3000/agent-dashboard.html) | 3-pane agent workspace, filterable queue (P1/P2/Resolved), Customer 360 card, SLA countdown timer, AI draft injector, and Tier-3 escalation. |
+| **3. AI Triage Engine** | [`ai-triage.html`](file:///d:/zeni/ai-triage.html) | [http://localhost:3000/ai-triage.html](http://localhost:3000/ai-triage.html) | Interactive NLP workbench with sample presets, entity tagger, confidence breakdown bar chart, priority regressor, and live streaming event log. |
+| **4. Suggested Replies Studio** | [`suggested-replies.html`](file:///d:/zeni/suggested-replies.html) | [http://localhost:3000/suggested-replies.html](http://localhost:3000/suggested-replies.html) | Human-in-the-loop draft studio, 4 tone pills (*Empathetic*, *Concise*, *Executive*, *Technical*), dynamic variable tokens, and RAG citations. |
+| **5. Knowledge-Based Chatbot** | [`chatbot.html`](file:///d:/zeni/chatbot.html) | [http://localhost:3000/chatbot.html](http://localhost:3000/chatbot.html) | Conversational assistant grounded in 12,840 vector embeddings, quick chips, formatted code/guidelines, feedback buttons, and 1-click human agent handover. |
+| **6. Manager Overview** | [`manager-overview.html`](file:///d:/zeni/manager-overview.html) | [http://localhost:3000/manager-overview.html](http://localhost:3000/manager-overview.html) | Executive analytics command center, 24h/7d/30d/90d toggles, 5 KPI cards, interactive 7-day ingestion/deflection bar chart, and 6-agent roster table. |
+
+---
+
+## 🐙 Uploading to GitHub
+
+To upload this project to your GitHub account:
+
+```bash
+# 1. Create a new repository on github.com (e.g. "nexusai-platform")
+# 2. In your terminal inside d:\zeni:
+git remote add origin https://github.com/<your-username>/<repo-name>.git
+git branch -M main
+git push -u origin main
 ```
 
 ---
