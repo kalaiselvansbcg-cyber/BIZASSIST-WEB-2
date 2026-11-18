@@ -33,17 +33,9 @@
   <!-- Header -->
   <header class="site-header" role="banner">
     <a href="index.html" class="site-logo" aria-label="NexusAI home" data-hover>nx</a>
-    
-    <nav class="header-desktop-nav" style="display:flex; gap:20px; align-items:center;">
-      <a href="portal.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Portal</a>
-      <a href="agent-dashboard.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Agent Dashboard</a>
-      <a href="ai-triage.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>AI Triage</a>
-      <a href="suggested-replies.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Suggested Replies</a>
-      <a href="chatbot.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Chatbot</a>
-      <a href="manager-overview.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Manager Overview</a>
-    </nav>
 
     <div class="header-right-actions">
+      <span class="meta-mono" style="font-size:11px; opacity:0.75; display:inline-block; margin-right:8px;">Menu</span>
       <button class="menu-btn" id="menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" data-hover>
         <svg class="plus-icon" viewBox="0 0 24 24" fill="none">
           <line x1="12" y1="2" x2="12" y2="22" />
@@ -55,14 +47,55 @@
 
   <!-- Fullscreen Navigation Menu Overlay -->
   <nav class="nav-overlay" id="nav-overlay" aria-label="Primary Navigation">
-    <ul class="nav-menu-list">
-      <li class="nav-item-wrap"><a href="portal.html" class="nav-menu-link" data-hover>1. Customer Ticket Portal</a></li>
-      <li class="nav-item-wrap"><a href="agent-dashboard.html" class="nav-menu-link" data-hover>2. Agent Dashboard</a></li>
-      <li class="nav-item-wrap"><a href="ai-triage.html" class="nav-menu-link" data-hover>3. AI Triage Engine</a></li>
-      <li class="nav-item-wrap"><a href="suggested-replies.html" class="nav-menu-link" data-hover>4. Suggested Replies Studio</a></li>
-      <li class="nav-item-wrap"><a href="chatbot.html" class="nav-menu-link" data-hover>5. Knowledge-Based Chatbot</a></li>
-      <li class="nav-item-wrap"><a href="manager-overview.html" class="nav-menu-link" data-hover>6. Manager Overview & Analytics</a></li>
-    </ul>
+    <div class="nav-overlay-inner">
+      <div class="nav-overlay-header">
+        <span class="meta-mono" style="color:#A1A1AA; font-size:12px;">NEXUSAI PLATFORM DIRECTORY · PRESS [ESC] OR CLICK + TO CLOSE</span>
+      </div>
+
+      <div class="nav-overlay-grid">
+        <!-- Column 1: Core Navigation Sections -->
+        <div>
+          <span class="meta-mono" style="color:#71717A; display:block; margin-bottom:16px;">01 / SECTIONS</span>
+          <ul class="nav-menu-list">
+            <li class="nav-item-wrap"><a href="#flow" class="nav-menu-link" data-hover>Flow</a></li>
+            <li class="nav-item-wrap"><a href="#capabilities" class="nav-menu-link" data-hover>Capabilities</a></li>
+            <li class="nav-item-wrap"><a href="#goals" class="nav-menu-link" data-hover>Goals</a></li>
+            <li class="nav-item-wrap"><a href="#contact" class="nav-menu-link" data-hover>Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: 6 Dedicated Platform Modules -->
+        <div>
+          <span class="meta-mono" style="color:#71717A; display:block; margin-bottom:16px;">02 / PLATFORM MODULES (LIVE DATA)</span>
+          <div class="nav-module-links">
+            <a href="portal.html" class="nav-module-card" data-hover>
+              <div class="nav-mod-title">Customer Ticket Portal</div>
+              <span class="nav-mod-meta">Intake Form & Milestone Tracker · G1 →</span>
+            </a>
+            <a href="agent-dashboard.html" class="nav-module-card" data-hover>
+              <div class="nav-mod-title">Agent Dashboard</div>
+              <span class="nav-mod-meta">Multi-Pane Queue & SLA Countdown · G2 →</span>
+            </a>
+            <a href="ai-triage.html" class="nav-module-card" data-hover>
+              <div class="nav-mod-title">AI Triage Engine</div>
+              <span class="nav-mod-meta">Zero-Touch NLP Classification · G3 →</span>
+            </a>
+            <a href="suggested-replies.html" class="nav-module-card" data-hover>
+              <div class="nav-mod-title">Suggested Replies Studio</div>
+              <span class="nav-mod-meta">Brand Voice & Variable Tokens · G3 →</span>
+            </a>
+            <a href="chatbot.html" class="nav-module-card" data-hover>
+              <div class="nav-mod-title">Knowledge-Based Chatbot</div>
+              <span class="nav-mod-meta">Vector Grounded Assistant & Handover · G4 →</span>
+            </a>
+            <a href="manager-overview.html" class="nav-module-card" data-hover>
+              <div class="nav-mod-title">Manager Overview</div>
+              <span class="nav-mod-meta">Executive Analytics & Roster Capacity · G5 →</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </nav>
 
   <main id="main-content">

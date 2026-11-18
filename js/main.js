@@ -85,7 +85,7 @@
   // 3. Header & Navigation Overlay
   const menuBtn = document.getElementById('menu-btn');
   const navOverlay = document.getElementById('nav-overlay');
-  const navLinks = document.querySelectorAll('.nav-menu-link');
+  const navLinks = document.querySelectorAll('.nav-menu-link, .nav-module-card');
 
   function openMenu() {
     menuBtn.classList.add('is-active');
