@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Overview & Analytics — NexusAI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .header-nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .header-nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 500ms var(--ease);
+    }
+    .header-nav-link:hover, .header-nav-link.active {
+      color: #000000;
+    }
+
+    .analytics-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 40px 32px 80px 32px;
+    }
+
+    .timeframe-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .time-tabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #FAFAFA;
+    }
+    .time-tab {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      transition: all 250ms var(--ease);
+    }
+    .time-tab.active {
+      background: #000000;
+      color: #FFFFFF;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 1100px) {
+      .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .kpi-val {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin: 8px 0 4px 0;
+      color: #000000;
+    }
+    .kpi-delta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .kpi-delta.up { color: #059669; }
+    .kpi-delta.down { color: #2563EB; }
+
+    .chart-section-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (max-width: 900px) {
+      .chart-section-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+    }
+
+    .roster-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    .roster-table th {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-meta);
+      background: #FAFAFA;
+    }
+    .roster-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13.5px;
+    }
+    .roster-table tr:hover {
+      background: #FAFAFA;
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .status-dot.active { background: #10B981; }
+    .status-dot.break { background: #F59E0B; }
+    .status-dot.busy { background: #6366F1; }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Header Navigation -->
+  <header class="page-header">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
+      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
+        Manager Overview · G6
+      </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#059669; font-weight:600; background:#ECFDF5; padding:2px 8px; border-radius:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Team Health: 99.8% SLA Met
+      </span>
+    </div>
+    <nav>
+      <ul class="header-nav-links">
+        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
+        <li><a href="portal.html" class="header-nav-link" data-hover>Portal</a></li>
+        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
+        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
+        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
+        <li><a href="chatbot.html" class="header-nav-link" data-hover>Chatbot</a></li>
+        <li><a href="manager-overview.html" class="header-nav-link active" data-hover>Manager Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="analytics-container">
+    <!-- Header Timeframe Filter -->
+    <div class="timeframe-bar">
+      <div>
+        <span class="meta-mono">Executive Command Center</span>
+        <h1 style="font-size:clamp(30px, 3.5vw, 48px); font-weight:700; letter-spacing:-0.05em; line-height:1.0; margin-top:4px;">
+          Operations & Team Analytics
+        </h1>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <div class="time-tabs">
+          <button class="time-tab" onclick="switchTimeframe('24h', this)">24 Hours</button>
+          <button class="time-tab active" onclick="switchTimeframe('7d', this)">Last 7 Days</button>
+          <button class="time-tab" onclick="switchTimeframe('30d', this)">30 Days</button>
+          <button class="time-tab" onclick="switchTimeframe('90d', this)">Quarterly</button>
+        </div>
+        <button class="interactive-btn-primary" onclick="exportReport()">Export CSV ⤓</button>
+      </div>
+    </div>
+
+    <!-- 5 KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="meta-mono" style="font-size:11px;">Total Volume</span>
+        <div class="kpi-val" id="kpi-vol">14,892</div>
+        <span class="kpi-delta up">↑ +18.4% vs last period</span>
+      </div>
+      <div class="kpi-card">
+        <span class="meta-mono" style="font-size:11px;">AI Deflection Rate</span>
+        <div class="kpi-val" id="kpi-deflect" style="color:#059669;">68.4%</div>
+        <span class="kpi-delta up">↑ +6.2% zero-touch</span>
+      </div>
+      <div class="kpi-card">
+        <span class="meta-mono" style="font-size:11px;">Avg Handle Time</span>
+        <div class="kpi-val" id="kpi-aht">3m 12s</div>
+        <span class="kpi-delta down">↓ -42m vs manual</span>
+      </div>
+      <div class="kpi-card">
+        <span class="meta-mono" style="font-size:11px;">First Contact Res</span>
+        <div class="kpi-val" id="kpi-fcr">91.8%</div>
+        <span class="kpi-delta up">↑ +3.1% one-touch</span>
+      </div>
+      <div class="kpi-card">
+        <span class="meta-mono" style="font-size:11px;">CSAT Score</span>
+        <div class="kpi-val" id="kpi-csat">4.92 / 5.0</div>
+        <span class="kpi-delta up">★ 98.7% Positive</span>
+      </div>
+    </div>
+
+    <!-- Middle: Ingestion Chart & Category Distribution -->
+    <div class="chart-section-grid">
+      <!-- Ingestion & Deflection 7-Day Chart -->
+      <div class="chart-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div>
+            <span class="meta-mono">Ingestion & Autonomous Deflection</span>
+            <h2 style="font-size:16px; font-weight:700; margin-top:2px;">7-Day Ticket Throughput</h2>
+          </div>
+          <div style="display:flex; gap:16px; font-size:12px; font-family:var(--font-mono);">
+            <span style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; background:#000000; border-radius:2px;"></span> Total Tickets
+            </span>
+            <span style="display:flex; align-items:center; gap:6px;">
+              <span style="width:10px; height:10px; background:#10B981; border-radius:2px;"></span> AI Deflected
+            </span>
+          </div>
+        </div>
+
+        <!-- SVG Bar Chart -->
+        <div style="height:220px; width:100%; position:relative;">
+          <svg viewBox="0 0 700 200" style="width:100%; height:100%;" preserveAspectRatio="none">
+            <!-- Gridlines -->
+            <line x1="0" y1="40" x2="700" y2="40" stroke="#F4F4F5" stroke-width="1"/>
+            <line x1="0" y1="90" x2="700" y2="90" stroke="#F4F4F5" stroke-width="1"/>
+            <line x1="0" y1="140" x2="700" y2="140" stroke="#F4F4F5" stroke-width="1"/>
+            <line x1="0" y1="190" x2="700" y2="190" stroke="#E4E4E7" stroke-width="1"/>
+
+            <!-- Mon -->
+            <rect x="40" y="50" width="30" height="140" rx="3" fill="#000000" onclick="barClick('Mon: 1,840 Total, 1,220 Deflected')"/>
+            <rect x="40" y="90" width="30" height="100" rx="3" fill="#10B981" onclick="barClick('Mon: 1,840 Total, 1,220 Deflected')"/>
+            <text x="55" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Mon</text>
+
+            <!-- Tue -->
+            <rect x="135" y="30" width="30" height="160" rx="3" fill="#000000" onclick="barClick('Tue: 2,120 Total, 1,480 Deflected')"/>
+            <rect x="135" y="70" width="30" height="120" rx="3" fill="#10B981" onclick="barClick('Tue: 2,120 Total, 1,480 Deflected')"/>
+            <text x="150" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Tue</text>
+
+            <!-- Wed -->
+            <rect x="230" y="20" width="30" height="170" rx="3" fill="#000000" onclick="barClick('Wed: 2,410 Total, 1,690 Deflected')"/>
+            <rect x="230" y="60" width="30" height="130" rx="3" fill="#10B981" onclick="barClick('Wed: 2,410 Total, 1,690 Deflected')"/>
+            <text x="245" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Wed</text>
+
+            <!-- Thu -->
+            <rect x="325" y="35" width="30" height="155" rx="3" fill="#000000" onclick="barClick('Thu: 2,050 Total, 1,410 Deflected')"/>
+            <rect x="325" y="75" width="30" height="115" rx="3" fill="#10B981" onclick="barClick('Thu: 2,050 Total, 1,410 Deflected')"/>
+            <text x="340" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Thu</text>
+
+            <!-- Fri -->
+            <rect x="420" y="15" width="30" height="175" rx="3" fill="#000000" onclick="barClick('Fri: 2,680 Total, 1,890 Deflected')"/>
+            <rect x="420" y="55" width="30" height="135" rx="3" fill="#10B981" onclick="barClick('Fri: 2,680 Total, 1,890 Deflected')"/>
+            <text x="435" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Fri</text>
+
+            <!-- Sat -->
+            <rect x="515" y="80" width="30" height="110" rx="3" fill="#000000" onclick="barClick('Sat: 1,320 Total, 990 Deflected')"/>
+            <rect x="515" y="110" width="30" height="80" rx="3" fill="#10B981" onclick="barClick('Sat: 1,320 Total, 990 Deflected')"/>
+            <text x="530" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Sat</text>
+
+            <!-- Sun -->
+            <rect x="610" y="90" width="30" height="100" rx="3" fill="#000000" onclick="barClick('Sun: 1,180 Total, 890 Deflected')"/>
+            <rect x="610" y="120" width="30" height="70" rx="3" fill="#10B981" onclick="barClick('Sun: 1,180 Total, 890 Deflected')"/>
+            <text x="625" y="210" text-anchor="middle" font-family="Inter" font-size="11" fill="#71717A">Sun</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Categories & Health Card -->
+      <div class="chart-card">
+        <span class="meta-mono">Intent Mix</span>
+        <h2 style="font-size:16px; font-weight:700; margin-top:2px; margin-bottom:16px;">Ticket Categories</h2>
+
+        <div style="margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+            <span>Billing & Invoicing</span>
+            <strong>42% (6,254)</strong>
+          </div>
+          <div style="height:6px; background:#F4F4F5; border-radius:3px; overflow:hidden;">
+            <div style="width:42%; height:100%; background:#000000;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+            <span>API & Infrastructure</span>
+            <strong>34% (5,063)</strong>
+          </div>
+          <div style="height:6px; background:#F4F4F5; border-radius:3px; overflow:hidden;">
+            <div style="width:34%; height:100%; background:#2563EB;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+            <span>Identity / SAML SSO</span>
+            <strong>15% (2,233)</strong>
+          </div>
+          <div style="height:6px; background:#F4F4F5; border-radius:3px; overflow:hidden;">
+            <div style="width:15%; height:100%; background:#71717A;"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
+            <span>General Account Inquiries</span>
+            <strong>9% (1,342)</strong>
+          </div>
+          <div style="height:6px; background:#F4F4F5; border-radius:3px; overflow:hidden;">
+            <div style="width:9%; height:100%; background:#D4D4D8;"></div>
+          </div>
+        </div>
+
+        <div style="margin-top:24px; padding-top:16px; border-top:1px solid var(--border);">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="meta-mono" style="font-size:11px;">Model Accuracy</span>
+            <strong style="color:#059669; font-size:13px;">99.4% Validated</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+            <span class="meta-mono" style="font-size:11px;">Inference Median</span>
+            <strong style="font-family:var(--font-mono); font-size:12px;">98ms</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: Team Roster & Live Capacity -->
+    <div class="chart-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <div>
+          <span class="meta-mono">Live Roster & Workload Distribution</span>
+          <h2 style="font-size:16px; font-weight:700; margin-top:2px;">Support Operations Team (6 On-Duty)</h2>
+        </div>
+        <button class="interactive-btn-secondary" style="font-size:12px;" onclick="rebalanceWorkload()">
+          Auto-Rebalance Queue ⚖
+        </button>
+      </div>
+
+      <table class="roster-table">
+        <thead>
+          <tr>
+            <th>Agent Name</th>
+            <th>Role & Tier</th>
+            <th>Status</th>
+            <th>Active Tickets</th>
+            <th>Avg Handle Time</th>
+            <th>CSAT</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Agent Kala (You)</strong></td>
+            <td>Tier-2 Senior Lead</td>
+            <td><span class="status-dot active"></span> Active</td>
+            <td><strong>6</strong> (2 Urgent)</td>
+            <td>2m 45s</td>
+            <td><strong style="color:#059669;">5.0 / 5.0</strong></td>
+            <td><a href="agent-dashboard.html" class="interactive-btn-secondary" style="font-size:11px; padding:3px 8px; text-decoration:none;">Open Queue →</a></td>
+          </tr>
+          <tr>
+            <td><strong>Elena Rostova</strong></td>
+            <td>Tier-2 FinOps Specialist</td>
+            <td><span class="status-dot busy"></span> In Call</td>
+            <td><strong>4</strong></td>
+            <td>3m 15s</td>
+            <td><strong style="color:#059669;">4.95 / 5.0</strong></td>
+            <td><button class="interactive-btn-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.NexusShowToast('Delegated 1 ticket to Elena.')">Assign +1</button></td>
+          </tr>
+          <tr>
+            <td><strong>Marcus Vance</strong></td>
+            <td>Tier-1 Billing Agent</td>
+            <td><span class="status-dot active"></span> Active</td>
+            <td><strong>8</strong></td>
+            <td>2m 10s</td>
+            <td><strong style="color:#059669;">4.88 / 5.0</strong></td>
+            <td><button class="interactive-btn-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.NexusShowToast('Delegated 1 ticket to Marcus.')">Assign +1</button></td>
+          </tr>
+          <tr>
+            <td><strong>Sarah Chen</strong></td>
+            <td>Tier-3 Infrastructure SRE</td>
+            <td><span class="status-dot active"></span> Active</td>
+            <td><strong>3</strong></td>
+            <td>4m 50s</td>
+            <td><strong style="color:#059669;">4.98 / 5.0</strong></td>
+            <td><button class="interactive-btn-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.NexusShowToast('Sarah notified for P1 SRE queue.')">Page SRE</button></td>
+          </tr>
+          <tr>
+            <td><strong>David Kim</strong></td>
+            <td>Tier-2 Identity & SAML</td>
+            <td><span class="status-dot break"></span> On Break</td>
+            <td><strong>1</strong></td>
+            <td>3m 30s</td>
+            <td><strong style="color:#059669;">4.90 / 5.0</strong></td>
+            <td><button class="interactive-btn-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.NexusShowToast('Queue paused for David while on break.')">Hold Queue</button></td>
+          </tr>
+          <tr>
+            <td><strong>Alex Rivera</strong></td>
+            <td>Tier-1 API Technical Support</td>
+            <td><span class="status-dot active"></span> Active</td>
+            <td><strong>7</strong></td>
+            <td>2m 35s</td>
+            <td><strong style="color:#059669;">4.85 / 5.0</strong></td>
+            <td><button class="interactive-btn-secondary" style="font-size:11px; padding:3px 8px;" onclick="window.NexusShowToast('Delegated 1 ticket to Alex.')">Assign +1</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script>
+    function barClick(info) {
+      window.NexusShowToast(info);
+    }
+
+    function switchTimeframe(tf, btn) {
+      document.querySelectorAll('.time-tab').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      if (tf === '24h') {
+        document.getElementById('kpi-vol').textContent = '2,140';
+        document.getElementById('kpi-deflect').textContent = '71.2%';
+        document.getElementById('kpi-aht').textContent = '2m 48s';
+        window.NexusShowToast("Loaded metrics for: Last 24 Hours");
+      } else if (tf === '7d') {
+        document.getElementById('kpi-vol').textContent = '14,892';
+        document.getElementById('kpi-deflect').textContent = '68.4%';
+        document.getElementById('kpi-aht').textContent = '3m 12s';
+        window.NexusShowToast("Loaded metrics for: Last 7 Days");
+      } else if (tf === '30d') {
+        document.getElementById('kpi-vol').textContent = '62,450';
+        document.getElementById('kpi-deflect').textContent = '69.1%';
+        document.getElementById('kpi-aht').textContent = '3m 05s';
+        window.NexusShowToast("Loaded metrics for: 30 Days");
+      } else {
+        document.getElementById('kpi-vol').textContent = '184,200';
+        document.getElementById('kpi-deflect').textContent = '67.8%';
+        document.getElementById('kpi-aht').textContent = '3m 18s';
+        window.NexusShowToast("Loaded metrics for: Quarterly");
+      }
+    }
+
+    function exportReport() {
+      window.NexusShowToast("Generating CSV report... Download started (nexus-analytics.csv).");
+    }
+
+    function rebalanceWorkload() {
+      window.NexusShowToast("AI Load Balancer: Re-allocated 4 tickets across available agents. Queue optimal.");
+    }
+  </script>
+</body>
+</html>

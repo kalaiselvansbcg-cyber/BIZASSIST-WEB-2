@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Dashboard — NexusAI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .header-nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .header-nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 500ms var(--ease);
+    }
+    .header-nav-link:hover, .header-nav-link.active {
+      color: #000000;
+    }
+
+    /* Dashboard Layout */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr 340px;
+      height: calc(100vh - 65px);
+      background: #FAFAFA;
+      overflow: hidden;
+    }
+    @media (max-width: 1100px) {
+      .dashboard-layout {
+        grid-template-columns: 280px 1fr;
+      }
+      .panel-customer {
+        display: none;
+      }
+    }
+    @media (max-width: 768px) {
+      .dashboard-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+      }
+    }
+
+    /* Panel Left: Ticket Queue */
+    .panel-queue {
+      background: #FFFFFF;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .queue-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .filter-pills {
+      display: flex;
+      gap: 6px;
+      margin-top: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+    .filter-pill {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      padding: 4px 10px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: #FAFAFA;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 300ms var(--ease);
+    }
+    .filter-pill.active {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+    .ticket-list {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .ticket-card {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 300ms var(--ease);
+      position: relative;
+    }
+    .ticket-card:hover {
+      background: #F4F4F5;
+    }
+    .ticket-card.active {
+      background: #F0FDF4;
+      border-left: 3px solid #10B981;
+    }
+    .badge-p1 {
+      background: #FEF2F2;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .badge-p2 {
+      background: #EFF6FF;
+      color: #2563EB;
+      border: 1px solid #BFDBFE;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .badge-p3 {
+      background: #F4F4F5;
+      color: #52525B;
+      border: 1px solid #E4E4E7;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* Panel Center: Workspace */
+    .panel-workspace {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #FFFFFF;
+      border-right: 1px solid var(--border);
+    }
+    .workspace-topbar {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFFFFF;
+    }
+    .conversation-thread {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background: #FAFAFA;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      position: relative;
+    }
+    .chat-bubble.customer {
+      align-self: flex-start;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      color: #18181B;
+    }
+    .chat-bubble.agent {
+      align-self: flex-end;
+      background: #000000;
+      color: #FFFFFF;
+    }
+    .chat-bubble.ai-note {
+      align-self: stretch;
+      max-width: 100%;
+      background: #EFF6FF;
+      border: 1px dashed #93C5FD;
+      color: #1E3A8A;
+      font-size: 13px;
+    }
+
+    /* AI Draft Box */
+    .ai-draft-recommendation {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 24px 0 24px;
+    }
+    .ai-draft-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #EEF2FF;
+      color: #4F46E5;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    /* Composer */
+    .composer-area {
+      padding: 16px 24px 20px 24px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+    }
+    .composer-textarea {
+      width: 100%;
+      height: 90px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      resize: none;
+      background: #FAFAFA;
+      transition: border-color 300ms var(--ease), background 300ms var(--ease);
+    }
+    .composer-textarea:focus {
+      outline: none;
+      border-color: #000000;
+      background: #FFFFFF;
+    }
+    .composer-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    /* Panel Right: Customer Intelligence 360 */
+    .panel-customer {
+      background: #FFFFFF;
+      height: 100%;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .customer-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #18181B;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .sla-timer-box {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 16px;
+      text-align: center;
+    }
+    .sla-timer-box .timer {
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: #DC2626;
+    }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Header Navigation -->
+  <header class="page-header">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
+      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
+        Agent Dashboard · G2
+      </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#059669; font-weight:600; background:#ECFDF5; padding:2px 8px; border-radius:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Online
+      </span>
+    </div>
+    <nav>
+      <ul class="header-nav-links">
+        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
+        <li><a href="portal.html" class="header-nav-link" data-hover>Portal</a></li>
+        <li><a href="agent-dashboard.html" class="header-nav-link active" data-hover>Agent Dashboard</a></li>
+        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
+        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
+        <li><a href="chatbot.html" class="header-nav-link" data-hover>Chatbot</a></li>
+        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 3-Column Split Workspace -->
+  <div class="dashboard-layout">
+    <!-- LEFT PANE: TICKET QUEUE -->
+    <aside class="panel-queue">
+      <div class="queue-header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="font-size:15px; font-weight:700; letter-spacing:-0.02em;">Inbox Queue</h2>
+          <span style="font-family:var(--font-mono); font-size:11px; background:#F4F4F5; padding:2px 6px; border-radius:4px;" id="queue-count">6 Pending</span>
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active" onclick="filterQueue('all', this)">All (6)</button>
+          <button class="filter-pill" onclick="filterQueue('p1', this)">P1 Urgent (2)</button>
+          <button class="filter-pill" onclick="filterQueue('p2', this)">P2 Normal (3)</button>
+          <button class="filter-pill" onclick="filterQueue('resolved', this)">Resolved (1)</button>
+        </div>
+      </div>
+
+      <ul class="ticket-list" id="ticket-list-container">
+        <!-- Ticket 1 -->
+        <li class="ticket-card active" data-priority="p1" onclick="selectTicket(0, this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="badge-p1">P1 URGENT</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">10:14 AM</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Payment gateway 502 during renewal</div>
+          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
+            <span>Sarah Jenkins · Acme Corp</span>
+            <span style="color:#DC2626; font-weight:600;">SLA: 12m</span>
+          </div>
+        </li>
+
+        <!-- Ticket 2 -->
+        <li class="ticket-card" data-priority="p1" onclick="selectTicket(1, this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="badge-p1">P1 URGENT</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">09:58 AM</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Webhook signatures validation failing</div>
+          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
+            <span>Alex Rivera · FinScale Ltd</span>
+            <span style="color:#DC2626; font-weight:600;">SLA: 24m</span>
+          </div>
+        </li>
+
+        <!-- Ticket 3 -->
+        <li class="ticket-card" data-priority="p2" onclick="selectTicket(2, this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="badge-p2">P2 NORMAL</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">09:30 AM</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Add 45 additional seats to Enterprise tier</div>
+          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
+            <span>Elena Rostova · CloudCore</span>
+            <span style="color:#2563EB;">SLA: 1h 45m</span>
+          </div>
+        </li>
+
+        <!-- Ticket 4 -->
+        <li class="ticket-card" data-priority="p2" onclick="selectTicket(3, this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="badge-p2">P2 NORMAL</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">08:42 AM</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">SAML 2.0 Okta metadata cert renewal</div>
+          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
+            <span>David Kim · ByteWave</span>
+            <span style="color:#2563EB;">SLA: 2h 10m</span>
+          </div>
+        </li>
+
+        <!-- Ticket 5 -->
+        <li class="ticket-card" data-priority="p2" onclick="selectTicket(4, this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span class="badge-p2">P2 NORMAL</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">08:15 AM</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Custom domain SSL cert propagation delay</div>
+          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
+            <span>Maya Patel · OrbitIO</span>
+            <span style="color:#2563EB;">SLA: 3h 15m</span>
+          </div>
+        </li>
+
+        <!-- Ticket 6 (Resolved) -->
+        <li class="ticket-card" data-priority="resolved" onclick="selectTicket(5, this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-family:var(--font-mono); font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px;">RESOLVED</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">Yesterday</span>
+          </div>
+          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Update invoice VAT registration number</div>
+          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
+            <span>Marcus Vance · NordTech</span>
+            <span style="color:#059669;">Closed</span>
+          </div>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- CENTER PANE: ACTIVE WORKSPACE -->
+    <main class="panel-workspace">
+      <!-- Active Ticket Topbar -->
+      <div class="workspace-topbar">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span class="badge-p1" id="active-badge">P1 URGENT</span>
+            <h2 style="font-size:16px; font-weight:700; letter-spacing:-0.02em;" id="active-title">
+              Payment gateway 502 during renewal
+            </h2>
+          </div>
+          <span style="font-family:var(--font-mono); font-size:12px; color:#71717A;" id="active-meta">
+            Ticket #NX-4092 · Raised via Customer Portal · Assigned to You
+          </span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="escalateTicket()">Escalate Tier-3</button>
+          <button class="interactive-btn-primary" style="padding:6px 12px; font-size:12px;" onclick="markResolved()">Mark Resolved ✓</button>
+        </div>
+      </div>
+
+      <!-- Active Ticket Thread -->
+      <div class="conversation-thread" id="thread-container">
+        <!-- Customer message -->
+        <div class="chat-bubble customer">
+          <div style="font-weight:600; font-size:12px; margin-bottom:4px; color:#52525B;">Sarah Jenkins (10:14 AM)</div>
+          Hi Support, we just tried to process our annual Enterprise tier renewal for \$48,000 via Stripe corporate card, but our finance lead got a 502 Bad Gateway response. The funds seem on hold on our Amex. Can you confirm if our workspace is at risk of downgrade?
+        </div>
+
+        <!-- AI Triage note -->
+        <div class="chat-bubble ai-note">
+          <div style="display:flex; justify-content:space-between; font-weight:600; margin-bottom:4px;">
+            <span>🤖 Nexus AI Triage Engine (Confidence 98.4%)</span>
+            <span>Triggered 10:14:12 AM</span>
+          </div>
+          Identified Intent: <code>Billing / Payment Gateway Timeout</code>. Stripe charge <code>ch_3Ox948aL</code> status verified: authorized but uncaptured due to webhook latency. No account lock scheduled. Auto-routed to FinOps queue.
+        </div>
+      </div>
+
+      <!-- AI Recommended Draft -->
+      <div class="ai-draft-recommendation" id="ai-draft-box">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span class="ai-draft-badge">✦ AI Suggested Reply (Trained on FinOps Policies)</span>
+          <button class="interactive-btn-secondary" style="padding:4px 10px; font-size:11px;" onclick="insertDraft()">Insert Draft ↓</button>
+        </div>
+        <p style="font-size:13px; color:#334155; line-height:1.45; margin:6px 0 0 0;" id="draft-text-preview">
+          Hi Sarah, thank you for reaching out. I've inspected transaction ch_3Ox948aL on our Stripe gateway. The funds are held safely; the gateway timed out acknowledging our webhook. I have manually captured the renewal and extended your Enterprise contract through Nov 2027. Your workspace is 100% uninterrupted. Invoice #INV-2026-904 is attached!
+        </p>
+      </div>
+
+      <!-- Reply Composer -->
+      <div class="composer-area">
+        <textarea class="composer-textarea" id="reply-composer" placeholder="Type response to Sarah or press 'Insert Draft' above..."></textarea>
+        <div class="composer-actions">
+          <div style="display:flex; gap:8px;">
+            <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="switchTone('Empathetic')">Tone: Empathetic</button>
+            <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="window.NexusShowToast('Attaching invoice INV-2026-904.pdf...')">Attach File 📎</button>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="interactive-btn-secondary" style="padding:6px 14px; font-size:12px;" onclick="insertInternalNote()">Add Internal Note 📝</button>
+            <button class="interactive-btn-primary" style="padding:6px 18px; font-size:12px;" onclick="sendReply()">Approve & Dispatch ↗</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT PANE: CUSTOMER 360 INTELLIGENCE -->
+    <aside class="panel-customer">
+      <div class="customer-avatar" id="cust-avatar">SJ</div>
+      <h3 style="font-size:16px; font-weight:700; margin-bottom:2px;" id="cust-name">Sarah Jenkins</h3>
+      <span style="font-size:13px; color:#71717A;" id="cust-title">VP of Operations · Acme Corp</span>
+
+      <div class="sla-timer-box">
+        <span style="font-family:var(--font-mono); font-size:11px; text-transform:uppercase; color:#991B1B; font-weight:600;">SLA Breach Countdown</span>
+        <div class="timer" id="sla-countdown">11:42</div>
+        <span style="font-size:11px; color:#71717A;">Target: Under 15m resolution</span>
+      </div>
+
+      <div style="margin-top:24px; display:flex; flex-direction:column; gap:16px;">
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+          <span class="meta-mono" style="display:block; margin-bottom:6px;">Subscription Status</span>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong style="font-size:14px;" id="cust-plan">Enterprise SLA-Plus</strong>
+            <span style="font-family:var(--font-mono); font-size:12px; color:#059669; background:#ECFDF5; padding:2px 6px; border-radius:4px;">\$48,000 / yr</span>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+          <span class="meta-mono" style="display:block; margin-bottom:6px;">Customer Sentiment</span>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <div style="flex:1; height:6px; background:#F4F4F5; border-radius:3px; overflow:hidden;">
+              <div style="width:78%; height:100%; background:#10B981;" id="sentiment-bar"></div>
+            </div>
+            <span style="font-family:var(--font-mono); font-size:12px; font-weight:600;" id="sentiment-val">Positive (78%)</span>
+          </div>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+          <span class="meta-mono" style="display:block; margin-bottom:6px;">Past Tickets</span>
+          <ul style="font-size:12px; list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;">
+            <li style="display:flex; justify-content:space-between; color:#52525B;">
+              <span>#NX-3104 SSO Config</span>
+              <span style="color:#059669;">Resolved</span>
+            </li>
+            <li style="display:flex; justify-content:space-between; color:#52525B;">
+              <span>#NX-2890 API Keys</span>
+              <span style="color:#059669;">Resolved</span>
+            </li>
+          </ul>
+        </div>
+
+        <div style="border-top:1px solid var(--border); padding-top:16px;">
+          <span class="meta-mono" style="display:block; margin-bottom:6px;">Quick Actions</span>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <a href="suggested-replies.html" class="interactive-btn-secondary" style="font-size:12px; text-align:center; text-decoration:none;" data-hover>Open in Suggested Replies Studio →</a>
+            <a href="ai-triage.html" class="interactive-btn-secondary" style="font-size:12px; text-align:center; text-decoration:none;" data-hover>View AI Triage Classifier →</a>
+            <a href="manager-overview.html" class="interactive-btn-secondary" style="font-size:12px; text-align:center; text-decoration:none;" data-hover>View Team Capacity →</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Ticket Data Store
+    const tickets = [
+      {
+        id: "NX-4092",
+        title: "Payment gateway 502 during renewal",
+        priority: "p1",
+        priorityLabel: "P1 URGENT",
+        priorityBadge: "badge-p1",
+        time: "10:14 AM",
+        sla: "11:42",
+        author: "Sarah Jenkins",
+        company: "Acme Corp",
+        avatar: "SJ",
+        plan: "Enterprise SLA-Plus",
+        sentiment: "Positive (78%)",
+        sentimentPct: "78%",
+        customerMsg: "Hi Support, we just tried to process our annual Enterprise tier renewal for $48,000 via Stripe corporate card, but our finance lead got a 502 Bad Gateway response. The funds seem on hold on our Amex. Can you confirm if our workspace is at risk of downgrade?",
+        aiNote: "Identified Intent: Billing / Payment Gateway Timeout. Stripe charge ch_3Ox948aL status verified: authorized but uncaptured due to webhook latency. No account lock scheduled. Auto-routed to FinOps queue.",
+        aiDraft: "Hi Sarah, thank you for reaching out. I've inspected transaction ch_3Ox948aL on our Stripe gateway. The funds are held safely; the gateway timed out acknowledging our webhook. I have manually captured the renewal and extended your Enterprise contract through Nov 2027. Your workspace is 100% uninterrupted. Invoice #INV-2026-904 is attached!"
+      },
+      {
+        id: "NX-4088",
+        title: "Webhook signatures validation failing",
+        priority: "p1",
+        priorityLabel: "P1 URGENT",
+        priorityBadge: "badge-p1",
+        time: "09:58 AM",
+        sla: "23:15",
+        author: "Alex Rivera",
+        company: "FinScale Ltd",
+        avatar: "AR",
+        plan: "Growth Tier ($1,200/mo)",
+        sentiment: "Neutral (54%)",
+        sentimentPct: "54%",
+        customerMsg: "Our production receiver is rejecting events with 401 Invalid Signature. Did the webhook signing secret rotate overnight?",
+        aiNote: "Intent: Developer API / Security. Secret rotation logs show no change. Key hash matches v2 specification. Check payload raw buffer vs parsed JSON.",
+        aiDraft: "Hi Alex, our signing secrets have not been rotated. We noticed your framework recently enabled automatic JSON middleware parsing before verifying raw buffer headers. Please ensure you pass the raw unparsed request buffer to verifyHeader()."
+      },
+      {
+        id: "NX-4076",
+        title: "Add 45 additional seats to Enterprise tier",
+        priority: "p2",
+        priorityLabel: "P2 NORMAL",
+        priorityBadge: "badge-p2",
+        time: "09:30 AM",
+        sla: "1h 45m",
+        author: "Elena Rostova",
+        company: "CloudCore",
+        avatar: "ER",
+        plan: "Enterprise ($36,000/yr)",
+        sentiment: "Delighted (95%)",
+        sentimentPct: "95%",
+        customerMsg: "We just onboarded 45 new engineers in our APAC region and need their seat licenses activated right away. Can you provision them under our pooled master agreement?",
+        aiNote: "Intent: Account Expansion. Pooled seat contract has 60 pre-approved overflow allocations at contract rate ($45/seat). Provisioning automated.",
+        aiDraft: "Hi Elena! Congratulations on the APAC expansion. I have provisioned the 45 additional engineer seats under your master enterprise pool. Your team can immediately SSO log in."
+      },
+      {
+        id: "NX-4061",
+        title: "SAML 2.0 Okta metadata cert renewal",
+        priority: "p2",
+        priorityLabel: "P2 NORMAL",
+        priorityBadge: "badge-p2",
+        time: "08:42 AM",
+        sla: "2h 10m",
+        author: "David Kim",
+        company: "ByteWave",
+        avatar: "DK",
+        plan: "Enterprise ($24,000/yr)",
+        sentiment: "Neutral (60%)",
+        sentimentPct: "60%",
+        customerMsg: "Our Okta certificate expires in 72 hours. We uploaded the new x509 cert to the staging admin console, need production sync.",
+        aiNote: "Intent: Security & Identity / SAML. Staging cert validated. Sha256 fingerprint verified against Okta directory.",
+        aiDraft: "Hi David, I verified your uploaded x509 cert against your Okta tenant. The certificate has been propagated to production SAML endpoints with zero downtime."
+      },
+      {
+        id: "NX-4055",
+        title: "Custom domain SSL cert propagation delay",
+        priority: "p2",
+        priorityLabel: "P2 NORMAL",
+        priorityBadge: "badge-p2",
+        time: "08:15 AM",
+        sla: "3h 15m",
+        author: "Maya Patel",
+        company: "OrbitIO",
+        avatar: "MP",
+        plan: "Pro ($499/mo)",
+        sentiment: "Slightly Frustrated (45%)",
+        sentimentPct: "45%",
+        customerMsg: "We pointed our CNAME app.orbitio.com to proxy.nexus.ai 2 hours ago but Let's Encrypt is still showing pending.",
+        aiNote: "Intent: DNS / Infrastructure. CAA records on orbitio.com previously blocked letsencrypt.org. DNS cache TTL is 3600s.",
+        aiDraft: "Hi Maya, our edge nodes checked your DNS. You have a CAA record restricting cert issuers. We've triggered an ACME challenge retry now that DNS has cleared, and your SSL certificate is now active!"
+      },
+      {
+        id: "NX-4010",
+        title: "Update invoice VAT registration number",
+        priority: "resolved",
+        priorityLabel: "RESOLVED",
+        priorityBadge: "badge-status resolved",
+        time: "Yesterday",
+        sla: "Closed",
+        author: "Marcus Vance",
+        company: "NordTech",
+        avatar: "MV",
+        plan: "Enterprise ($18,000/yr)",
+        sentiment: "Delighted (99%)",
+        sentimentPct: "99%",
+        customerMsg: "Please update our EU VAT number on invoice #INV-1099 to DK-98234123.",
+        aiNote: "Intent: Billing / Tax Compliance. VAT number validated against VIES database.",
+        aiDraft: "Hi Marcus, the VAT ID DK-98234123 has been updated and a revised invoice has been dispatched to billing@nordtech.dk."
+      }
+    ];
+
+    let currentTicketIdx = 0;
+
+    function selectTicket(idx, elem) {
+      currentTicketIdx = idx;
+      const t = tickets[idx];
+
+      // Update active highlight
+      document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('active'));
+      if (elem) elem.classList.add('active');
+
+      // Update center workspace
+      document.getElementById('active-badge').className = t.priorityBadge;
+      document.getElementById('active-badge').textContent = t.priorityLabel;
+      document.getElementById('active-title').textContent = t.title;
+      document.getElementById('active-meta').textContent = `Ticket #${t.id} · Customer: ${t.author} (${t.company})`;
+
+      // Update thread
+      const thread = document.getElementById('thread-container');
+      thread.innerHTML = `
+        <div class="chat-bubble customer">
+          <div style="font-weight:600; font-size:12px; margin-bottom:4px; color:#52525B;">${t.author} (${t.time})</div>
+          ${t.customerMsg}
+        </div>
+        <div class="chat-bubble ai-note">
+          <div style="display:flex; justify-content:space-between; font-weight:600; margin-bottom:4px;">
+            <span>🤖 Nexus AI Triage Engine</span>
+            <span>Confidence 98.4%</span>
+          </div>
+          ${t.aiNote}
+        </div>
+      `;
+
+      // Update AI draft preview
+      document.getElementById('draft-text-preview').textContent = t.aiDraft;
+
+      // Update Customer Intelligence
+      document.getElementById('cust-avatar').textContent = t.avatar;
+      document.getElementById('cust-name').textContent = t.author;
+      document.getElementById('cust-title').textContent = `${t.company}`;
+      document.getElementById('cust-plan').textContent = t.plan;
+      document.getElementById('sla-countdown').textContent = t.sla;
+      document.getElementById('sentiment-bar').style.width = t.sentimentPct;
+      document.getElementById('sentiment-val').textContent = t.sentiment;
+
+      // Clear composer
+      document.getElementById('reply-composer').value = '';
+    }
+
+    function insertDraft() {
+      const draft = tickets[currentTicketIdx].aiDraft;
+      document.getElementById('reply-composer').value = draft;
+      window.NexusShowToast("AI draft injected into composer.");
+    }
+
+    function switchTone(tone) {
+      const composer = document.getElementById('reply-composer');
+      let val = composer.value || tickets[currentTicketIdx].aiDraft;
+      composer.value = `[Tone: ${tone}] ` + val;
+      window.NexusShowToast(`Adapted reply tone to: ${tone}`);
+    }
+
+    function insertInternalNote() {
+      const note = prompt("Enter internal note (visible only to team):", "Verified Stripe transaction log. Approved for capture.");
+      if (note) {
+        const thread = document.getElementById('thread-container');
+        const noteEl = document.createElement('div');
+        noteEl.className = 'chat-bubble';
+        noteEl.style.background = '#FEF9C3';
+        noteEl.style.border = '1px solid #FDE047';
+        noteEl.style.color = '#713F12';
+        noteEl.style.alignSelf = 'stretch';
+        noteEl.innerHTML = `<strong>📝 Internal Note:</strong> ${note} <span style="float:right; font-size:11px;">Just now</span>`;
+        thread.appendChild(noteEl);
+        thread.scrollTop = thread.scrollHeight;
+        window.NexusShowToast("Internal note appended to ticket.");
+      }
+    }
+
+    function sendReply() {
+      const text = document.getElementById('reply-composer').value.trim();
+      if (!text) {
+        window.NexusShowToast("Please enter or insert a draft before sending.");
+        return;
+      }
+
+      const thread = document.getElementById('thread-container');
+      const bubble = document.createElement('div');
+      bubble.className = 'chat-bubble agent';
+      bubble.innerHTML = `
+        <div style="font-weight:600; font-size:11px; margin-bottom:4px; opacity:0.8;">You (Agent Kala) · Just now</div>
+        ${text.replace(/\n/g, '<br>')}
+      `;
+      thread.appendChild(bubble);
+      thread.scrollTop = thread.scrollHeight;
+
+      document.getElementById('reply-composer').value = '';
+      window.NexusShowToast("Reply approved & dispatched to customer!");
+    }
+
+    function escalateTicket() {
+      window.NexusShowToast("Ticket escalated to Tier-3 Engineering on-call.");
+      document.getElementById('active-badge').textContent = "ESCALATED TIER-3";
+      document.getElementById('active-badge').style.background = "#581C87";
+      document.getElementById('active-badge').style.color = "#FFFFFF";
+    }
+
+    function markResolved() {
+      window.NexusShowToast("Ticket #NX-4092 marked as Resolved ✓");
+      document.getElementById('active-badge').textContent = "RESOLVED";
+      document.getElementById('active-badge').className = "badge-status resolved";
+    }
+
+    function filterQueue(type, btn) {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.ticket-card');
+      let visible = 0;
+      cards.forEach(card => {
+        const p = card.getAttribute('data-priority');
+        if (type === 'all' || p === type) {
+          card.style.display = 'block';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      document.getElementById('queue-count').textContent = `${visible} Shown`;
+    }
+
+    // Countdown SLA timer simulation
+    let seconds = 702;
+    setInterval(() => {
+      if (seconds > 0) {
+        seconds--;
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        const el = document.getElementById('sla-countdown');
+        if (el && !el.textContent.includes('h') && el.textContent !== 'Closed') {
+          el.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

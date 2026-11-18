@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge-Based Chatbot — NexusAI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .header-nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .header-nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 500ms var(--ease);
+    }
+    .header-nav-link:hover, .header-nav-link.active {
+      color: #000000;
+    }
+
+    .chatbot-app-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 65px);
+      background: #FAFAFA;
+      overflow: hidden;
+    }
+    @media (max-width: 860px) {
+      .chatbot-app-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+      .chatbot-sidebar {
+        display: none;
+      }
+    }
+
+    /* Sidebar */
+    .chatbot-sidebar {
+      background: #FFFFFF;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .kb-card {
+      border: 1px solid var(--border);
+      background: #FAFAFA;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 300ms var(--ease);
+    }
+    .kb-card:hover, .kb-card.active {
+      background: #FFFFFF;
+      border-color: #000000;
+    }
+
+    /* Main Chat Area */
+    .chatbot-main {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #FFFFFF;
+    }
+    .chat-topbar {
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #FFFFFF;
+    }
+    .chat-messages-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background: #FAFAFA;
+    }
+
+    .bot-msg-row {
+      display: flex;
+      gap: 12px;
+      max-width: 800px;
+    }
+    .user-msg-row {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .avatar-bot {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #000000;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .msg-content-bot {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px 22px;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #18181B;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .msg-content-user {
+      background: #000000;
+      color: #FFFFFF;
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 14.5px;
+      line-height: 1.5;
+      max-width: 75%;
+    }
+
+    .citation-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #EFF6FF;
+      color: #2563EB;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+      margin-right: 6px;
+      text-decoration: none;
+    }
+
+    .quick-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 12px 28px 0 28px;
+      background: #FFFFFF;
+    }
+    .quick-chip {
+      background: #FAFAFA;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 300ms var(--ease);
+    }
+    .quick-chip:hover {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+
+    .chat-input-bar {
+      padding: 16px 28px 20px 28px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+    }
+    .chat-input-field {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: #FAFAFA;
+      padding: 14px 18px;
+      font-size: 14.5px;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      transition: border-color 300ms var(--ease), background 300ms var(--ease);
+    }
+    .chat-input-field:focus {
+      outline: none;
+      border-color: #000000;
+      background: #FFFFFF;
+    }
+
+    .feedback-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px;
+      font-size: 13px;
+      opacity: 0.6;
+      transition: opacity 200ms;
+    }
+    .feedback-btn:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Header Navigation -->
+  <header class="page-header">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
+      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
+        Knowledge Chatbot · G5
+      </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#059669; font-weight:600; background:#ECFDF5; padding:2px 8px; border-radius:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> 12,840 Vectors In-Memory
+      </span>
+    </div>
+    <nav>
+      <ul class="header-nav-links">
+        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
+        <li><a href="portal.html" class="header-nav-link" data-hover>Portal</a></li>
+        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
+        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
+        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
+        <li><a href="chatbot.html" class="header-nav-link active" data-hover>Chatbot</a></li>
+        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- 2-Pane Chatbot Layout -->
+  <div class="chatbot-app-layout">
+    <!-- Left Pane: Knowledge Base Collections & Sessions -->
+    <aside class="chatbot-sidebar">
+      <div style="margin-bottom:18px;">
+        <span class="meta-mono">Grounded Knowledge Indexes</span>
+        <h2 style="font-size:15px; font-weight:700; margin-top:2px;">Connected Doc Hubs</h2>
+      </div>
+
+      <div class="kb-card active" onclick="switchIndex('API Documentation', this)">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:13px;">API & Developer Hub</strong>
+          <span style="font-family:var(--font-mono); font-size:10px; color:#059669;">Synced</span>
+        </div>
+        <span style="font-size:11px; color:#71717A; display:block; margin-top:4px;">Endpoints, Webhook signatures, Auth headers</span>
+      </div>
+
+      <div class="kb-card" onclick="switchIndex('Billing & Finance', this)">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:13px;">Enterprise Billing & Tax</strong>
+          <span style="font-family:var(--font-mono); font-size:10px; color:#059669;">Synced</span>
+        </div>
+        <span style="font-size:11px; color:#71717A; display:block; margin-top:4px;">Stripe gateway, Grace periods, VAT rules</span>
+      </div>
+
+      <div class="kb-card" onclick="switchIndex('Security & SAML', this)">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:13px;">Security, SSO & Compliance</strong>
+          <span style="font-family:var(--font-mono); font-size:10px; color:#059669;">Synced</span>
+        </div>
+        <span style="font-size:11px; color:#71717A; display:block; margin-top:4px;">Okta SAML 2.0, SCIM provisioning, SOC2</span>
+      </div>
+
+      <div style="margin-top:auto; padding-top:20px; border-top:1px solid var(--border);">
+        <button class="interactive-btn-secondary" style="width:100%; font-size:12px;" onclick="window.NexusShowToast('Syncing RAG vector store... 12,840 documents refreshed.')">
+          Force Vector Sync ↻
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Chat Workspace -->
+    <main class="chatbot-main">
+      <div class="chat-topbar">
+        <div>
+          <h2 style="font-size:15px; font-weight:700; letter-spacing:-0.02em;">NexusBot Assistant</h2>
+          <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">
+            Grounding: High Rigor · Hallucination Shield Active
+          </span>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="clearChat()">Clear History</button>
+          <button class="interactive-btn-primary" style="padding:6px 14px; font-size:12px; background:#DC2626; border-color:#DC2626;" onclick="escalateToHuman()">
+            Escalate to Human Agent ↗
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Prompt Suggestions -->
+      <div class="quick-chips">
+        <button class="quick-chip" onclick="askQuickPrompt('How do I rotate API keys without downtime?')">
+          🔑 How to rotate API keys with zero downtime?
+        </button>
+        <button class="quick-chip" onclick="askQuickPrompt('What is your Enterprise renewal grace period?')">
+          💳 What is the Enterprise payment grace period?
+        </button>
+        <button class="quick-chip" onclick="askQuickPrompt('How do I configure SAML 2.0 with Okta?')">
+          🔐 Steps to configure SAML 2.0 with Okta?
+        </button>
+      </div>
+
+      <!-- Message Thread -->
+      <div class="chat-messages-container" id="chat-thread">
+        <!-- Initial Bot Greeting -->
+        <div class="bot-msg-row">
+          <div class="avatar-bot">✦</div>
+          <div>
+            <div class="msg-content-bot">
+              <strong style="display:block; margin-bottom:4px;">Hello! I am your 24/7 autonomous support assistant.</strong>
+              I can answer technical questions, explain billing rules, or verify architecture configs using our verified engineering documentation. If you need dedicated human attention at any point, just tap <em>Escalate to Human Agent</em>!
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Bar -->
+      <form class="chat-input-bar" onsubmit="handleUserSubmit(event)">
+        <input type="text" class="chat-input-field" id="user-input-box" placeholder="Ask any question about APIs, billing, SAML, or troubleshooting..." autocomplete="off">
+        <button type="submit" class="interactive-btn-primary" style="padding:0 24px;">Send ↗</button>
+      </form>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    const knowledgeBase = {
+      "rotate api keys": {
+        answer: "To rotate your production API keys with zero downtime, follow our dual-key zero-downtime rotation protocol:\n\n1. **Generate Secondary Key**: In your Developer Console > API Keys, click **Generate Rolling Key**.\n2. **Deploy to Secondary Environment**: Update your production application config to use the new key for 5% canary traffic.\n3. **Verify Auth Telemetry**: Check response headers for <code>x-nexus-auth: valid</code>.\n4. **Revoke Primary Key**: Once 100% of microservices migrate, click **Deactivate Old Key**.",
+        citations: ["/docs/security/api-keys#rotation", "/docs/architecture/zero-downtime-tokens"]
+      },
+      "grace period": {
+        answer: "Per our Enterprise Master Services Agreement (Section 12.3):\n\n- All Enterprise tier accounts receive an **automatic 14-day grace period** following payment gateway timeout or card renewal declines.\n- During this period, all API rate limits, production compute seats, and SLA guarantees remain 100% intact.\n- Automated notifications are sent to your designated Billing Admin at 72 hours, 7 days, and 12 days.",
+        citations: ["/docs/billing/terms-of-service#grace-period", "/policies/enterprise-contracts"]
+      },
+      "saml": {
+        answer: "Configuring SAML 2.0 with Okta takes 3 simple steps:\n\n1. **Download Metadata**: Go to Organization Settings > SSO > SAML 2.0 and copy your SP Entity ID and ACS URL (<code>https://auth.nexus.ai/saml/v2/acs</code>).\n2. **Add Custom Application in Okta**: Choose SAML 2.0, paste the ACS URL, and set Name ID format to <code>EmailAddress</code>.\n3. **Upload x509 Cert**: Paste Okta's IdP Issuer Certificate and Sign-On URL into Nexus Settings > Identity. Changes propagate globally within 60 seconds.",
+        citations: ["/docs/security/okta-saml-guide", "/docs/sso/x509-certificates"]
+      }
+    };
+
+    function askQuickPrompt(text) {
+      document.getElementById('user-input-box').value = text;
+      handleUserSubmit(new Event('submit'));
+    }
+
+    function handleUserSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('user-input-box');
+      const val = input.value.trim();
+      if (!val) return;
+
+      appendUserMsg(val);
+      input.value = '';
+
+      // Bot thinking state
+      const thread = document.getElementById('chat-thread');
+      const thinkingRow = document.createElement('div');
+      thinkingRow.className = 'bot-msg-row';
+      thinkingRow.id = 'bot-thinking';
+      thinkingRow.innerHTML = `
+        <div class="avatar-bot">✦</div>
+        <div class="msg-content-bot" style="font-style:italic; color:#71717A;">Searching vector embeddings...</div>
+      `;
+      thread.appendChild(thinkingRow);
+      thread.scrollTop = thread.scrollHeight;
+
+      setTimeout(() => {
+        const thinking = document.getElementById('bot-thinking');
+        if (thinking) thinking.remove();
+
+        const lower = val.toLowerCase();
+        let match = null;
+        if (lower.includes("key") || lower.includes("rotate")) {
+          match = knowledgeBase["rotate api keys"];
+        } else if (lower.includes("grace") || lower.includes("renewal") || lower.includes("refund") || lower.includes("billing")) {
+          match = knowledgeBase["grace period"];
+        } else if (lower.includes("saml") || lower.includes("okta") || lower.includes("sso")) {
+          match = knowledgeBase["saml"];
+        } else {
+          match = {
+            answer: `Thank you for your question regarding: "${val}". Based on our indexed engineering knowledge base, this requires specific configuration verification. Our automated diagnostic runbook has confirmed normal cluster status. Would you like me to connect you directly with a dedicated Tier-2 specialist?`,
+            citations: ["/docs/general/troubleshooting", "/docs/runbooks/overview"]
+          };
+        }
+
+        appendBotMsg(match.answer, match.citations);
+      }, 500);
+    }
+
+    function appendUserMsg(text) {
+      const thread = document.getElementById('chat-thread');
+      const row = document.createElement('div');
+      row.className = 'user-msg-row';
+      row.innerHTML = `<div class="msg-content-user">${text}</div>`;
+      thread.appendChild(row);
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    function appendBotMsg(answer, citations) {
+      const thread = document.getElementById('chat-thread');
+      const row = document.createElement('div');
+      row.className = 'bot-msg-row';
+
+      const citationsHtml = citations.map(c => `
+        <a href="javascript:void(0)" class="citation-tag" onclick="window.NexusShowToast('Viewing documentation: ${c}')">
+          📖 ${c}
+        </a>
+      `).join('');
+
+      row.innerHTML = `
+        <div class="avatar-bot">✦</div>
+        <div>
+          <div class="msg-content-bot">
+            ${answer.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}
+            <div style="margin-top:12px; border-top:1px solid var(--border); padding-top:8px;">
+              <span style="font-family:var(--font-mono); font-size:11px; color:#71717A; display:block; margin-bottom:4px;">VERIFIED CITATIONS:</span>
+              ${citationsHtml}
+            </div>
+            <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; color:#71717A;">Was this helpful?</span>
+              <div>
+                <button class="feedback-btn" onclick="window.NexusShowToast('Thank you for your feedback! 👍')">👍 Helpful</button>
+                <button class="feedback-btn" onclick="window.NexusShowToast('Feedback recorded. Improving answer model. 👎')">👎 Incomplete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      thread.appendChild(row);
+      thread.scrollTop = thread.scrollHeight;
+    }
+
+    function switchIndex(name, elem) {
+      document.querySelectorAll('.kb-card').forEach(c => c.classList.remove('active'));
+      if (elem) elem.classList.add('active');
+      window.NexusShowToast(`Active Knowledge Context switched to: ${name}`);
+    }
+
+    function clearChat() {
+      const thread = document.getElementById('chat-thread');
+      thread.innerHTML = `
+        <div class="bot-msg-row">
+          <div class="avatar-bot">✦</div>
+          <div class="msg-content-bot">
+            Chat history cleared. How may I assist you today?
+          </div>
+        </div>
+      `;
+      window.NexusShowToast("Chat history reset.");
+    }
+
+    function escalateToHuman() {
+      const thread = document.getElementById('chat-thread');
+      const row = document.createElement('div');
+      row.className = 'bot-msg-row';
+      row.innerHTML = `
+        <div class="avatar-bot" style="background:#DC2626;">!</div>
+        <div class="msg-content-bot" style="border-color:#FCA5A5; background:#FEF2F2;">
+          <strong style="color:#991B1B; display:block; margin-bottom:4px;">🚨 Handover Triggered: Human Agent Requested</strong>
+          Your conversation context, diagnostics, and session history have been dispatched to the on-call Tier-2 Agent queue.
+          <div style="margin-top:12px;">
+            <a href="agent-dashboard.html" class="interactive-btn-primary" style="display:inline-block; font-size:12px; padding:6px 14px; text-decoration:none;" data-hover>
+              View Ticket in Agent Dashboard →
+            </a>
+          </div>
+        </div>
+      `;
+      thread.appendChild(row);
+      thread.scrollTop = thread.scrollHeight;
+      window.NexusShowToast("Escalated to Agent Dashboard queue with priority P1.");
+    }
+  </script>
+</body>
+</html>

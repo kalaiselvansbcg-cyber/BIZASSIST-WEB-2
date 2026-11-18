@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Suggested Replies Studio — NexusAI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .header-nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .header-nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 500ms var(--ease);
+    }
+    .header-nav-link:hover, .header-nav-link.active {
+      color: #000000;
+    }
+
+    .studio-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 40px 32px 80px 32px;
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 32px;
+      margin-top: 32px;
+    }
+    @media (max-width: 960px) {
+      .studio-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .studio-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+    }
+
+    .tone-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .tone-pill {
+      border: 1px solid var(--border);
+      background: #FAFAFA;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 300ms var(--ease);
+    }
+    .tone-pill.active {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+
+    .variable-chip {
+      background: #F4F4F5;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      transition: background 200ms var(--ease);
+    }
+    .variable-chip:hover {
+      background: #E4E4E7;
+    }
+
+    .editor-textarea {
+      width: 100%;
+      height: 240px;
+      padding: 16px;
+      font-family: var(--font-body);
+      font-size: 14.5px;
+      line-height: 1.6;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #FAFAFA;
+      resize: vertical;
+      transition: border-color 300ms var(--ease), background 300ms var(--ease);
+    }
+    .editor-textarea:focus {
+      outline: none;
+      border-color: #000000;
+      background: #FFFFFF;
+    }
+
+    .citation-box {
+      border-left: 3px solid #2563EB;
+      background: #F8FAFC;
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 12px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Header Navigation -->
+  <header class="page-header">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
+      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
+        Suggested Replies Studio · G4
+      </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#4F46E5; font-weight:600; background:#EEF2FF; padding:2px 8px; border-radius:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#6366F1;"></span> Model: Claude-3.5 + Nexus-RAG
+      </span>
+    </div>
+    <nav>
+      <ul class="header-nav-links">
+        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
+        <li><a href="portal.html" class="header-nav-link" data-hover>Portal</a></li>
+        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
+        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
+        <li><a href="suggested-replies.html" class="header-nav-link active" data-hover>Suggested Replies</a></li>
+        <li><a href="chatbot.html" class="header-nav-link" data-hover>Chatbot</a></li>
+        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="studio-container">
+    <div>
+      <span class="meta-mono">Human-in-the-Loop AI Draft Studio</span>
+      <h1 style="font-size:clamp(32px, 4vw, 56px); font-weight:700; letter-spacing:-0.05em; line-height:1.0; margin:8px 0 16px 0;">
+        Contextual Drafts. Instant Delivery.
+      </h1>
+      <p style="color:var(--text-secondary); font-size:17px; max-width:70ch; line-height:1.5;">
+        Generate hyper-accurate, brand-aligned responses grounded in verified documentation, internal contracts, and real-time transaction data with 1-click tone adaptation.
+      </p>
+    </div>
+
+    <div class="studio-grid">
+      <!-- LEFT: Context & Sources -->
+      <div>
+        <!-- Customer Context Box -->
+        <div class="studio-card" style="margin-bottom:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span class="meta-mono">Incoming Ticket Context</span>
+            <span style="font-family:var(--font-mono); font-size:11px; background:#FEF2F2; color:#DC2626; padding:2px 6px; border-radius:4px; font-weight:700;">P1 URGENT</span>
+          </div>
+
+          <h3 style="font-size:16px; font-weight:700; margin-bottom:4px;">Sarah Jenkins</h3>
+          <span style="font-size:13px; color:#71717A;">VP Operations, Acme Corp · \$48k/yr Contract</span>
+
+          <div style="margin-top:16px; background:#FAFAFA; border:1px solid var(--border); border-radius:6px; padding:14px; font-size:13px; line-height:1.5;">
+            "Hi Support, we just tried to process our annual Enterprise tier renewal for \$48,000 via Stripe corporate card, but our finance lead got a <mark style="background:#FED7AA;">502 Bad Gateway</mark> response. The funds seem on hold on our Amex. Can you confirm if our workspace is at risk of downgrade?"
+          </div>
+        </div>
+
+        <!-- Grounded Sources -->
+        <div class="studio-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <span class="meta-mono">RAG Grounded Citations (3)</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:#059669;">100% Fact-Checked</span>
+          </div>
+
+          <div class="citation-box">
+            <strong style="color:#1E3A8A; display:block; margin-bottom:2px;">[KB-814] Stripe Webhook Latency Runbook</strong>
+            <span style="color:#475569; font-size:12px;">Stripe auth holds remain valid for 7 days. Failed HTTP 502 webhooks do not trigger immediate plan downgrades.</span>
+          </div>
+
+          <div class="citation-box">
+            <strong style="color:#1E3A8A; display:block; margin-bottom:2px;">[POLICY-04] Enterprise 14-Day Grace Period</strong>
+            <span style="color:#475569; font-size:12px;">Enterprise accounts maintain uninterrupted SLA access for 14 days following renewal payment anomalies.</span>
+          </div>
+
+          <div class="citation-box">
+            <strong style="color:#1E3A8A; display:block; margin-bottom:2px;">[LIVE-DATA] Stripe Transaction ch_3Ox948aL</strong>
+            <span style="color:#475569; font-size:12px;">Authorized \$48,000.00 on American Express ending in 4091. Manual capture required by agent.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: AI Draft Studio -->
+      <div class="studio-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <span class="meta-mono">Select Voice & Tone</span>
+            <div class="tone-pills">
+              <button class="tone-pill active" onclick="setTone('empathetic', this)">Empathetic & Reassuring</button>
+              <button class="tone-pill" onclick="setTone('concise', this)">Concise & Direct</button>
+              <button class="tone-pill" onclick="setTone('executive', this)">Executive / Formal</button>
+              <button class="tone-pill" onclick="setTone('technical', this)">Technical Deep-Dive</button>
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <span class="meta-mono" style="font-size:11px;">Alignment Score</span>
+            <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:#059669;">99.4% CSAT Fit</div>
+          </div>
+        </div>
+
+        <!-- Variable Chips -->
+        <div style="margin:12px 0 8px 0;">
+          <span class="meta-mono" style="font-size:11px; display:block; margin-bottom:6px;">Inject Dynamic Variable Tokens</span>
+          <span class="variable-chip" onclick="insertToken('{{customer_first_name}}')">+ {{customer_first_name}}</span>
+          <span class="variable-chip" onclick="insertToken('{{transaction_id}}')">+ {{transaction_id}}</span>
+          <span class="variable-chip" onclick="insertToken('{{invoice_number}}')">+ {{invoice_number}}</span>
+          <span class="variable-chip" onclick="insertToken('{{renewal_period}}')">+ {{renewal_period}}</span>
+          <span class="variable-chip" onclick="insertToken('{{agent_name}}')">+ {{agent_name}}</span>
+        </div>
+
+        <!-- Editable Area -->
+        <div style="margin-top:12px;">
+          <textarea class="editor-textarea" id="studio-editor"></textarea>
+        </div>
+
+        <!-- Studio Metrics Footer -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:12px; color:#71717A; flex-wrap:wrap; gap:10px;">
+          <div style="display:flex; gap:16px;">
+            <span>Reading Grade: <strong>8th Grade</strong></span>
+            <span>Estimated Reading Time: <strong>26s</strong></span>
+            <span>Hallucination Risk: <strong style="color:#059669;">&lt; 0.01%</strong></span>
+          </div>
+          <button class="interactive-btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="regenerateDraft()">
+            Regenerate Draft ✦
+          </button>
+        </div>
+
+        <!-- Final Actions -->
+        <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+          <div style="display:flex; gap:8px;">
+            <button class="interactive-btn-secondary" onclick="copyDraft()">Copy to Clipboard 📋</button>
+            <a href="agent-dashboard.html" class="interactive-btn-secondary" style="text-decoration:none;" data-hover>Insert into Dashboard →</a>
+          </div>
+          <button class="interactive-btn-primary" onclick="approveAndDispatch()">
+            Approve & Dispatch Reply ↗
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script>
+    const drafts = {
+      empathetic: "Hi Sarah,\n\nThank you for reaching out right away, and I completely understand how concerning a 502 error during renewal can feel when large payments are involved. Please rest assured: your team's workspace is completely safe, active, and there is zero risk of downgrade.\n\nI just checked transaction ch_3Ox948aL on our payment gateway. The funds were authorized securely on your American Express, but our edge webhook experienced a brief 502 timeout before returning acknowledgment. I have manually captured the transaction on our end and renewed your Enterprise subscription through November 2027.\n\nYour official receipt and paid invoice #INV-2026-904 have been attached for your records. Please don't hesitate to reach back out if you or your finance team need anything else!",
+      
+      concise: "Hi Sarah,\n\nYour workspace is 100% active and will not be downgraded. \n\nTransaction ch_3Ox948aL was authorized safely on Stripe; our edge webhook timed out delivering confirmation. I have manually captured the $48,000 charge and renewed your Enterprise plan through November 2027.\n\nInvoice #INV-2026-904 is attached. Let me know if you need any additional documentation.",
+
+      executive: "Dear Sarah,\n\nI am writing to confirm that Acme Corp's Enterprise subscription has been successfully renewed through November 2027. Your production workspace and dedicated SLA guarantees remain fully uninterrupted.\n\nThe HTTP 502 anomaly encountered by your finance lead was an isolated gateway acknowledgment timeout. Transaction ch_3Ox948aL ($48,000.00 USD) was successfully captured, and paid invoice #INV-2026-904 has been generated and dispatched to your billing portal.\n\nWe value Acme Corp's partnership and remain at your service for any governance or procurement requirements.",
+
+      technical: "Hi Sarah,\n\nRoot Cause Analysis on transaction ch_3Ox948aL:\n- Gateway status: Auth succeeded on Amex 4091 (amount: $48,000.00 USD).\n- Issue: Inbound Stripe webhook endpoint /v1/webhooks/billing returned HTTP 502 due to an edge proxy timeout (upstream socket hangup > 10,000ms).\n- Action Taken: Executed manual charge capture via CLI; workspace contract tier updated to Enterprise v4 with valid_until: 2027-11-18T00:00:00Z.\n- Impact: Zero downtime; no permissions or seats revoked. Invoice #INV-2026-904 dispatched."
+    };
+
+    let currentTone = 'empathetic';
+
+    function setTone(tone, btn) {
+      currentTone = tone;
+      document.querySelectorAll('.tone-pill').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      document.getElementById('studio-editor').value = drafts[tone];
+      window.NexusShowToast(`Loaded ${tone.toUpperCase()} tone template.`);
+    }
+
+    function insertToken(token) {
+      const editor = document.getElementById('studio-editor');
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      const text = editor.value;
+      editor.value = text.substring(0, start) + token + text.substring(end);
+      editor.focus();
+      editor.setSelectionRange(start + token.length, start + token.length);
+      window.NexusShowToast(`Inserted variable: ${token}`);
+    }
+
+    function regenerateDraft() {
+      const editor = document.getElementById('studio-editor');
+      editor.style.opacity = '0.5';
+      setTimeout(() => {
+        editor.style.opacity = '1';
+        setTone(currentTone);
+        window.NexusShowToast("AI draft regenerated using latest RAG vectors.");
+      }, 350);
+    }
+
+    function copyDraft() {
+      const val = document.getElementById('studio-editor').value;
+      navigator.clipboard.writeText(val).then(() => {
+        window.NexusShowToast("Draft copied to clipboard!");
+      }).catch(() => {
+        window.NexusShowToast("Draft copied!");
+      });
+    }
+
+    function approveAndDispatch() {
+      window.NexusShowToast("Reply approved & dispatched to Sarah Jenkins (Acme Corp)!");
+      setTimeout(() => {
+        window.location.href = "agent-dashboard.html";
+      }, 1200);
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('studio-editor').value = drafts.empathetic;
+    });
+  </script>
+</body>
+</html>

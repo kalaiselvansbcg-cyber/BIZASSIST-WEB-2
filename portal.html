@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Ticket Portal — NexusAI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .header-nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .header-nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 500ms var(--ease);
+    }
+    .header-nav-link:hover, .header-nav-link.active {
+      color: #000000;
+    }
+    .portal-hero {
+      padding: 60px 0 40px 0;
+    }
+    .card-panel {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 32px;
+    }
+    .search-input-wrap {
+      position: relative;
+      margin: 24px 0 32px 0;
+    }
+    .search-input-wrap input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #FAFAFA;
+      padding: 16px 20px 16px 48px;
+      font-size: 15px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      transition: border-color 500ms var(--ease), background 500ms var(--ease);
+    }
+    .search-input-wrap input:focus {
+      outline: none;
+      border-color: #000000;
+      background: #FFFFFF;
+    }
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      stroke: #71717A;
+      stroke-width: 1.5;
+      fill: none;
+    }
+    .portal-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 768px) {
+      .portal-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .portal-stat-box {
+      border: 1px solid var(--border);
+      padding: 20px;
+      border-radius: 8px;
+      background: #FAFAFA;
+    }
+    .portal-stat-box .num {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin: 8px 0 4px 0;
+      color: #000000;
+    }
+    .ticket-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    .ticket-table th {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-meta);
+      background: #F4F4F5;
+    }
+    .ticket-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .ticket-table tr:hover {
+      background: #FAFAFA;
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .badge-status.resolved {
+      background: #ECFDF5;
+      color: #059669;
+    }
+    .badge-status.investigating {
+      background: #EFF6FF;
+      color: #2563EB;
+    }
+    .badge-status.urgent {
+      background: #FEF2F2;
+      color: #DC2626;
+    }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Portal Header Navigation -->
+  <header class="page-header">
+    <div style="display:flex; align-items:center; gap:24px;">
+      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
+      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
+        Customer Portal · G1
+      </span>
+    </div>
+    <nav>
+      <ul class="header-nav-links">
+        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
+        <li><a href="portal.html" class="header-nav-link active" data-hover>Portal</a></li>
+        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
+        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
+        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
+        <li><a href="chatbot.html" class="header-nav-link" data-hover>Chatbot</a></li>
+        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- Portal Hero Introduction -->
+    <div class="portal-hero">
+      <span class="meta-mono" style="margin-bottom:12px;">Customer Self-Service Intake</span>
+      <h1 style="font-size:clamp(36px, 5vw, 64px); font-weight:700; letter-spacing:-0.05em; line-height:0.95; margin-bottom:16px;">
+        Support, without the wait.
+      </h1>
+      <p style="color:var(--text-secondary); font-size:18px; max-width:60ch; line-height:1.5;">
+        Register, raise support tickets, and follow real-time status updates directly. Powered by NexusAI autonomous triage and instant routing.
+      </p>
+
+      <!-- Instant Search -->
+      <div class="search-input-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="portal-kb-search" placeholder="Search knowledge base articles, billing FAQs, or enter ticket ID (#NX-...)" oninput="filterArticles(this.value)" />
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="portal-stats-grid">
+        <div class="portal-stat-box">
+          <span class="meta-mono">Active Tickets</span>
+          <div class="num" id="stat-active-count">1</div>
+          <span style="font-size:12px; color:#2563EB;">● In Progress</span>
+        </div>
+        <div class="portal-stat-box">
+          <span class="meta-mono">Resolved Tickets</span>
+          <div class="num">14</div>
+          <span style="font-size:12px; color:#059669;">✓ 100% On-Time</span>
+        </div>
+        <div class="portal-stat-box">
+          <span class="meta-mono">Average Resolution</span>
+          <div class="num">3m 42s</div>
+          <span style="font-size:12px; color:#71717A;">AI-assisted dispatch</span>
+        </div>
+        <div class="portal-stat-box">
+          <span class="meta-mono">Customer Rating</span>
+          <div class="num">5.0 / 5.0</div>
+          <span style="font-size:12px; color:#D97706;">★★★★★ CSAT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Ticket Progress Stepper Card -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+        <div>
+          <span class="badge-status investigating" style="margin-bottom:8px;">ACTIVE TICKET #NX-4092</span>
+          <h2 style="font-size:22px; font-weight:700; letter-spacing:-0.03em;">Payment failure during enterprise checkout renewal</h2>
+          <span style="font-size:13px; color:#71717A;">Submitted Nov 18, 2026 at 10:14 AM by sarah@acme.co</span>
+        </div>
+        <button class="interactive-btn-secondary" onclick="window.NexusShowToast('Checking webhook status... all systems operational.')">Refresh Status ↻</button>
+      </div>
+
+      <!-- Milestone Stepper -->
+      <div style="background:#FAFAFA; border:1px solid var(--border); border-radius:8px; padding:24px; margin-bottom:20px;">
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; text-align:center;">
+          <div>
+            <div style="width:28px; height:28px; border-radius:50%; background:#000000; color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; font-size:12px;">✓</div>
+            <strong style="font-size:13px; display:block;">1. Submitted</strong>
+            <span style="font-size:11px; color:#71717A;">10:14 AM</span>
+          </div>
+          <div>
+            <div style="width:28px; height:28px; border-radius:50%; background:#000000; color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; font-size:12px;">✓</div>
+            <strong style="font-size:13px; display:block;">2. AI Triaged</strong>
+            <span style="font-size:11px; color:#71717A;">P1 Billing (10:15 AM)</span>
+          </div>
+          <div>
+            <div style="width:28px; height:28px; border-radius:50%; background:#000000; color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; font-size:12px;">✓</div>
+            <strong style="font-size:13px; display:block;">3. Fix Approved</strong>
+            <span style="font-size:11px; color:#71717A;">Agent Kala (10:17 AM)</span>
+          </div>
+          <div>
+            <div style="width:28px; height:28px; border-radius:50%; background:#10B981; color:#fff; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; font-size:12px;">✓</div>
+            <strong style="font-size:13px; display:block; color:#047857;">4. Resolved</strong>
+            <span style="font-size:11px; color:#059669;">Confirmed (10:20 AM)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ticket Conversation History -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="background:#F4F4F5; padding:16px 20px; border-radius:8px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <strong style="font-size:13px;">Customer (sarah@acme.co)</strong>
+            <span style="font-size:11px; color:#71717A;">10:14 AM</span>
+          </div>
+          <p style="font-size:14px; color:#27272A; line-height:1.5;">
+            "We were charged $1,200 on our card statement during renewal but our team access currently displays 'Plan Expired'. Please verify transaction status urgently."
+          </p>
+        </div>
+
+        <div style="background:#F0FDFA; border:1px solid #99F6E4; padding:16px 20px; border-radius:8px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <strong style="font-size:13px; color:#0F766E;">NexusAI Support Agent (Kala)</strong>
+            <span style="font-size:11px; color:#0D9488;">10:17 AM</span>
+          </div>
+          <p style="font-size:14px; color:#115E59; line-height:1.5;">
+            "Hello Sarah, I verified your transaction with Stripe and confirmed the webhook deadlock has been resolved. Your Enterprise license has been unlocked and full team seats are active."
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Raise a New Ticket Interactive Form -->
+    <div class="card-panel">
+      <span class="meta-mono" style="margin-bottom:8px;">Submit New Inquiry</span>
+      <h2 style="font-size:24px; font-weight:700; letter-spacing:-0.03em; margin-bottom:8px;">Raise a Support Ticket</h2>
+      <p style="color:var(--text-secondary); font-size:14px; margin-bottom:24px;">
+        Tickets are parsed by our AI triage pipeline in under 300 milliseconds. Urgent and revenue-impacting issues are escalated directly to on-call specialists.
+      </p>
+
+      <form id="portal-new-ticket-form" onsubmit="handlePortalSubmit(event)">
+        <div style="display:grid; grid-template-columns:2fr 1fr 1fr; gap:16px; margin-bottom:16px;">
+          <div class="interactive-field" style="margin-bottom:0;">
+            <label class="interactive-label">Subject</label>
+            <input type="text" id="p-subject" class="interactive-input" placeholder="e.g. Single Sign-On certificate renewal error" required />
+          </div>
+          <div class="interactive-field" style="margin-bottom:0;">
+            <label class="interactive-label">Category</label>
+            <select id="p-category" class="interactive-select">
+              <option>Billing &amp; Payments</option>
+              <option>Authentication / SSO</option>
+              <option>Technical Bug</option>
+              <option>Feature Request</option>
+            </select>
+          </div>
+          <div class="interactive-field" style="margin-bottom:0;">
+            <label class="interactive-label">Urgency</label>
+            <select id="p-priority" class="interactive-select">
+              <option>P1 - Critical (System Down)</option>
+              <option>P2 - High Urgency</option>
+              <option selected>P3 - Normal</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="interactive-field">
+          <label class="interactive-label">Issue Details</label>
+          <textarea id="p-body" class="interactive-textarea" placeholder="Please describe the steps to reproduce or provide relevant error codes..." required></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+          <div style="font-size:13px; color:#71717A;">
+            Avg First Response SLA: <strong>&lt; 15 minutes for P1</strong>, <strong>&lt; 1 hour for P2</strong>.
+          </div>
+          <button type="submit" class="interactive-btn-primary" data-hover>Submit Ticket to AI Triage →</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Resolved Tickets History Table -->
+    <div class="card-panel">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <h2 style="font-size:20px; font-weight:700;">Previous Tickets History</h2>
+        <span class="meta-mono">14 RECORDS</span>
+      </div>
+
+      <table class="ticket-table" id="portal-history-table">
+        <thead>
+          <tr>
+            <th>Ticket ID</th>
+            <th>Subject</th>
+            <th>Category</th>
+            <th>Resolution Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="portal-history-body">
+          <tr>
+            <td><strong>#NX-4089</strong></td>
+            <td>SAML 2.0 Azure AD assertion mapping</td>
+            <td>Authentication</td>
+            <td>4m 10s</td>
+            <td><span class="badge-status resolved">Resolved</span></td>
+          </tr>
+          <tr>
+            <td><strong>#NX-4085</strong></td>
+            <td>Invoice receipt download for October 2026</td>
+            <td>Billing</td>
+            <td>1m 20s (AI Automated)</td>
+            <td><span class="badge-status resolved">Resolved</span></td>
+          </tr>
+          <tr>
+            <td><strong>#NX-4078</strong></td>
+            <td>Webhook payload retry backoff settings</td>
+            <td>API &amp; Integrations</td>
+            <td>5m 45s</td>
+            <td><span class="badge-status resolved">Resolved</span></td>
+          </tr>
+          <tr>
+            <td><strong>#NX-4062</strong></td>
+            <td>Invite 10 additional seats to Enterprise workspace</td>
+            <td>Account Admin</td>
+            <td>2m 15s (AI Automated)</td>
+            <td><span class="badge-status resolved">Resolved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="site-footer" style="padding:60px 0 32px 0;">
+    <div class="container" style="display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#71717A; flex-wrap:wrap; gap:16px;">
+      <div>© 2026 NexusAI Support Platform · Goal G1 Prototype</div>
+      <div><a href="index.html" style="color:#ffffff; text-decoration:none;">← Return to Main Homepage</a></div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    function handlePortalSubmit(e) {
+      e.preventDefault();
+      const subject = document.getElementById('p-subject').value;
+      const cat = document.getElementById('p-category').value;
+      const prio = document.getElementById('p-priority').value;
+      
+      const tbody = document.getElementById('portal-history-body');
+      const newId = '#NX-' + Math.floor(4093 + Math.random() * 50);
+
+      const row = document.createElement('tr');
+      row.innerHTML = '<td><strong>' + newId + '</strong></td>' +
+        '<td>' + subject + '</td>' +
+        '<td>' + cat + '</td>' +
+        '<td>Just now (Triaged)</td>' +
+        '<td><span class="badge-status investigating">Investigating</span></td>';
+      tbody.insertBefore(row, tbody.firstChild);
+
+      const activeNum = document.getElementById('stat-active-count');
+      activeNum.textContent = parseInt(activeNum.textContent, 10) + 1;
+
+      document.getElementById('portal-new-ticket-form').reset();
+      window.NexusShowToast('✓ Ticket ' + newId + ' created & triaged to ' + cat + ' queue!');
+    }
+
+    function filterArticles(val) {
+      if (val.length > 2) {
+        window.NexusShowToast('Searching knowledge base for: "' + val + '"');
+      }
+    }
+  </script>
+</body>
+</html>

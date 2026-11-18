@@ -1,0 +1,22 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node / Package managers
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Logs and Scratch files
+*.log
+.scratch/
+tmp/
+temp/
+
+# IDE / Editor Files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusAI — AI-assisted customer support</title>
+  
+  <!-- Inter Font from Google Fonts (400, 500, 600, 700) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Modular Design System Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Progressive Enhancement Class -->
+  <script>
+    document.documentElement.classList.add('js');
+  </script>
+
+  <!-- Accessibility Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Custom Difference Cursor -->
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <!-- Toast Notification Stack -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <a href="index.html" class="site-logo" aria-label="NexusAI home" data-hover>nx</a>
+    
+    <nav class="header-desktop-nav" style="display:flex; gap:20px; align-items:center;">
+      <a href="portal.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Portal</a>
+      <a href="agent-dashboard.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Agent Dashboard</a>
+      <a href="ai-triage.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>AI Triage</a>
+      <a href="suggested-replies.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Suggested Replies</a>
+      <a href="chatbot.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Chatbot</a>
+      <a href="manager-overview.html" class="header-nav-link" style="font-size:13px; text-decoration:none; color:var(--text-secondary); font-weight:500;" data-hover>Manager Overview</a>
+    </nav>
+
+    <div class="header-right-actions">
+      <button class="menu-btn" id="menu-btn" aria-label="Toggle navigation menu" aria-expanded="false" data-hover>
+        <svg class="plus-icon" viewBox="0 0 24 24" fill="none">
+          <line x1="12" y1="2" x2="12" y2="22" />
+          <line x1="2" y1="12" x2="22" y2="12" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Fullscreen Navigation Menu Overlay -->
+  <nav class="nav-overlay" id="nav-overlay" aria-label="Primary Navigation">
+    <ul class="nav-menu-list">
+      <li class="nav-item-wrap"><a href="portal.html" class="nav-menu-link" data-hover>1. Customer Ticket Portal</a></li>
+      <li class="nav-item-wrap"><a href="agent-dashboard.html" class="nav-menu-link" data-hover>2. Agent Dashboard</a></li>
+      <li class="nav-item-wrap"><a href="ai-triage.html" class="nav-menu-link" data-hover>3. AI Triage Engine</a></li>
+      <li class="nav-item-wrap"><a href="suggested-replies.html" class="nav-menu-link" data-hover>4. Suggested Replies Studio</a></li>
+      <li class="nav-item-wrap"><a href="chatbot.html" class="nav-menu-link" data-hover>5. Knowledge-Based Chatbot</a></li>
+      <li class="nav-item-wrap"><a href="manager-overview.html" class="nav-menu-link" data-hover>6. Manager Overview & Analytics</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <!-- Hero Section (min-height 80vh, centered) -->
+    <section class="hero-section container" aria-label="Hero Introduction">
+      <span class="meta-mono hero-pretitle">AI-assisted customer support · Working prototype</span>
+      
+      <h1 class="hero-headline">
+        <span class="hero-line-wrap" aria-label="Support,">
+          <span class="hero-char" style="animation-delay: 0.150s">S</span><span class="hero-char" style="animation-delay: 0.195s">u</span><span class="hero-char" style="animation-delay: 0.240s">p</span><span class="hero-char" style="animation-delay: 0.285s">p</span><span class="hero-char" style="animation-delay: 0.330s">o</span><span class="hero-char" style="animation-delay: 0.375s">r</span><span class="hero-char" style="animation-delay: 0.420s">t</span><span class="hero-char" style="animation-delay: 0.465s">,</span>
+        </span>
+        <span class="hero-line-wrap" aria-label="reimagined.">
+          <span class="hero-char" style="animation-delay: 0.510s">r</span><span class="hero-char" style="animation-delay: 0.555s">e</span><span class="hero-char" style="animation-delay: 0.600s">i</span><span class="hero-char" style="animation-delay: 0.645s">m</span><span class="hero-char" style="animation-delay: 0.690s">a</span><span class="hero-char" style="animation-delay: 0.735s">g</span><span class="hero-char" style="animation-delay: 0.780s">i</span><span class="hero-char" style="animation-delay: 0.825s">n</span><span class="hero-char" style="animation-delay: 0.870s">e</span><span class="hero-char" style="animation-delay: 0.915s">d</span><span class="hero-char" style="animation-delay: 0.960s">.</span>
+        </span>
+      </h1>
+
+      <p class="hero-subhead">
+        One place for customers to raise and track tickets, and for AI to sort, prioritise and answer them faster.
+      </p>
+
+      <!-- 6 Direct Platform Launch Quick-Pills -->
+      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:24px auto 32px auto; max-width:920px;">
+        <a href="portal.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>1. Customer Portal ↗</a>
+        <a href="agent-dashboard.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>2. Agent Dashboard ↗</a>
+        <a href="ai-triage.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>3. AI Triage ↗</a>
+        <a href="suggested-replies.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>4. Suggested Replies ↗</a>
+        <a href="chatbot.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>5. Chatbot ↗</a>
+        <a href="manager-overview.html" class="interactive-btn-secondary" style="font-size:12px; text-decoration:none;" data-hover>6. Manager Overview ↗</a>
+      </div>
+
+      <div class="hero-action-row reveal-fade">
+        <a href="portal.html" class="btn-editorial-primary" id="btn-hero-prototype" data-hover style="text-decoration:none;">Launch Customer Portal →</a>
+        <a href="agent-dashboard.html" class="btn-editorial-secondary" data-hover style="text-decoration:none;">Open Agent Dashboard →</a>
+      </div>
+    </section>
+
+    <!-- Infinite Marquee: "The life of a ticket" -->
+    <section class="marquee-section" id="flow" aria-label="The life of a ticket">
+      <div class="container">
+        <div class="marquee-header-row">
+          <span class="meta-mono">The life of a ticket</span>
+          <span class="meta-mono">Hover to pause</span>
+        </div>
+      </div>
+
+      <div class="marquee-outer" data-hover>
+        <div class="marquee-track" id="marquee-track">
+          <!-- 6 Cards First Sequence -->
+          <a href="portal.html" class="marquee-card" data-step="1" data-hover aria-label="Step 1: Ticket raised (Customer Portal)">
+            <span class="marquee-hint-tag">OPEN PORTAL →</span>
+            <img alt="Step 1: Ticket raised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 1 · G1</span>
+              <h2 class="step-name">Ticket raised</h2>
+            </div>
+          </a>
+
+          <a href="ai-triage.html" class="marquee-card" data-step="2" data-hover aria-label="Step 2: Categorised (AI Triage)">
+            <span class="marquee-hint-tag">VIEW TRIAGE →</span>
+            <img alt="Step 2: Categorised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 2 · G3</span>
+              <h2 class="step-name">Categorised</h2>
+            </div>
+          </a>
+
+          <a href="ai-triage.html" class="marquee-card" data-step="3" data-hover aria-label="Step 3: Prioritised (AI Triage)">
+            <span class="marquee-hint-tag">VIEW PRIORITY →</span>
+            <img alt="Step 3: Prioritised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 3 · G3</span>
+              <h2 class="step-name">Prioritised</h2>
+            </div>
+          </a>
+
+          <a href="ai-triage.html" class="marquee-card" data-step="4" data-hover aria-label="Step 4: Summarised (AI Triage)">
+            <span class="marquee-hint-tag">VIEW SUMMARY →</span>
+            <img alt="Step 4: Summarised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 4 · G3</span>
+              <h2 class="step-name">Summarised</h2>
+            </div>
+          </a>
+
+          <a href="suggested-replies.html" class="marquee-card" data-step="5" data-hover aria-label="Step 5: Reply suggested (Suggested Replies Studio)">
+            <span class="marquee-hint-tag">OPEN DRAFT STUDIO →</span>
+            <img alt="Step 5: Reply suggested" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 5 · G3</span>
+              <h2 class="step-name">Reply suggested</h2>
+            </div>
+          </a>
+
+          <a href="agent-dashboard.html" class="marquee-card" data-step="6" data-hover aria-label="Step 6: Status tracked (Agent Dashboard)">
+            <span class="marquee-hint-tag">AGENT DASHBOARD →</span>
+            <img alt="Step 6: Status tracked" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 6 · G2</span>
+              <h2 class="step-name">Status tracked</h2>
+            </div>
+          </a>
+
+          <!-- 6 Cards Duplicate Sequence for Seamless Infinite Loop -->
+          <a href="portal.html" class="marquee-card" data-step="1" data-hover aria-label="Step 1: Ticket raised (Customer Portal)">
+            <span class="marquee-hint-tag">OPEN PORTAL →</span>
+            <img alt="Step 1: Ticket raised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 1 · G1</span>
+              <h2 class="step-name">Ticket raised</h2>
+            </div>
+          </a>
+
+          <a href="ai-triage.html" class="marquee-card" data-step="2" data-hover aria-label="Step 2: Categorised (AI Triage)">
+            <span class="marquee-hint-tag">VIEW TRIAGE →</span>
+            <img alt="Step 2: Categorised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 2 · G3</span>
+              <h2 class="step-name">Categorised</h2>
+            </div>
+          </a>
+
+          <a href="ai-triage.html" class="marquee-card" data-step="3" data-hover aria-label="Step 3: Prioritised (AI Triage)">
+            <span class="marquee-hint-tag">VIEW PRIORITY →</span>
+            <img alt="Step 3: Prioritised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 3 · G3</span>
+              <h2 class="step-name">Prioritised</h2>
+            </div>
+          </a>
+
+          <a href="ai-triage.html" class="marquee-card" data-step="4" data-hover aria-label="Step 4: Summarised (AI Triage)">
+            <span class="marquee-hint-tag">VIEW SUMMARY →</span>
+            <img alt="Step 4: Summarised" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 4 · G3</span>
+              <h2 class="step-name">Summarised</h2>
+            </div>
+          </a>
+
+          <a href="suggested-replies.html" class="marquee-card" data-step="5" data-hover aria-label="Step 5: Reply suggested (Suggested Replies Studio)">
+            <span class="marquee-hint-tag">OPEN DRAFT STUDIO →</span>
+            <img alt="Step 5: Reply suggested" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 5 · G3</span>
+              <h2 class="step-name">Reply suggested</h2>
+            </div>
+          </a>
+
+          <a href="agent-dashboard.html" class="marquee-card" data-step="6" data-hover aria-label="Step 6: Status tracked (Agent Dashboard)">
+            <span class="marquee-hint-tag">AGENT DASHBOARD →</span>
+            <img alt="Step 6: Status tracked" loading="lazy" class="card-img" />
+            <div class="marquee-card-gradient"></div>
+            <div class="marquee-card-caption">
+              <span class="step-tag">Step 6 · G2</span>
+              <h2 class="step-name">Status tracked</h2>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision Statement (centered) -->
+    <section class="vision-section section-spacing container" id="vision" aria-label="Vision Statement">
+      <span class="meta-mono vision-meta reveal-fade">Vision</span>
+      
+      <div class="vision-statement reveal-headline">
+        <span class="reveal-line-wrap"><span class="reveal-line-inner">Every customer query organised,</span></span>
+        <span class="reveal-line-wrap"><span class="reveal-line-inner">prioritised and answered quickly,</span></span>
+        <span class="reveal-line-wrap"><span class="reveal-line-inner">without overworking the support team.</span></span>
+      </div>
+
+      <div class="stats-grid reveal-fade">
+        <div class="stat-item">
+          <div class="stat-num">14</div>
+          <div class="stat-desc">Students</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">6</div>
+          <div class="stat-desc">Days to build</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">4</div>
+          <div class="stat-desc">User roles</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">1</div>
+          <div class="stat-desc">End-to-end flow</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- "Today's pain." Section -->
+    <section class="section-spacing container" id="pain" aria-label="Today's pain">
+      <div class="section-head-split reveal-fade">
+        <h2 class="section-title reveal-headline">
+          <span class="reveal-line-wrap"><span class="reveal-line-inner">Today's pain.</span></span>
+        </h2>
+        <p class="section-intro-text">
+          Businesses receive many queries every day and struggle to organise, prioritise and answer them on time.
+        </p>
+      </div>
+
+      <div class="pain-list reveal-fade">
+        <button class="pain-row" data-pain="lost" data-hover aria-expanded="false">
+          <div class="pain-row-main">
+            <div class="pain-label">Lost</div>
+            <div class="pain-statement">Queries are not organised, so important ones get lost or forgotten.</div>
+          </div>
+          <div class="pain-solution-drawer">
+            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
+            Every query from web, email, or chat is unified into a single queue with zero drop guarantee.
+          </div>
+        </button>
+
+        <button class="pain-row" data-pain="queued" data-hover aria-expanded="false">
+          <div class="pain-row-main">
+            <div class="pain-label">Queued</div>
+            <div class="pain-statement">Urgent issues wait in the same queue as simple questions.</div>
+          </div>
+          <div class="pain-solution-drawer">
+            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
+            Autonomous urgency scoring moves critical VIP/revenue issues to Position #1 in under 300ms.
+          </div>
+        </button>
+
+        <button class="pain-row" data-pain="repeated" data-hover aria-expanded="false">
+          <div class="pain-row-main">
+            <div class="pain-label">Repeated</div>
+            <div class="pain-statement">Agents spend time reading long complaints and typing similar replies again and again.</div>
+          </div>
+          <div class="pain-solution-drawer">
+            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
+            AI distills long messages into 3 bullets and pre-generates a ready-to-send response with 98% accuracy.
+          </div>
+        </button>
+
+        <button class="pain-row" data-pain="unseen" data-hover aria-expanded="false">
+          <div class="pain-row-main">
+            <div class="pain-label">Unseen</div>
+            <div class="pain-statement">Customers cannot see what is happening with their query.</div>
+          </div>
+          <div class="pain-solution-drawer">
+            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
+            Self-service portal gives live step-by-step progress tracking with real-time agent updates.
+          </div>
+        </button>
+
+        <button class="pain-row" data-pain="blind" data-hover aria-expanded="false">
+          <div class="pain-row-main">
+            <div class="pain-label">Blind</div>
+            <div class="pain-statement">Managers have no clear view of workload, response time or common issues.</div>
+          </div>
+          <div class="pain-solution-drawer">
+            <span class="pain-solution-badge">NEXUSAI SOLUTION:</span>
+            Real-time analytics board tracks team capacity, 7-day deflection rate, and zero-breach SLA compliance.
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- "What we built." Project Grid -->
+    <section class="section-spacing container" id="capabilities" aria-label="What we built">
+      <div class="section-head-split reveal-fade">
+        <h2 class="section-title reveal-headline">
+          <span class="reveal-line-wrap"><span class="reveal-line-inner">What we built.</span></span>
+        </h2>
+        <p class="section-intro-text">
+          Six parts of one platform, from the first customer message to the manager's overview.
+        </p>
+      </div>
+
+      <div class="project-grid reveal-fade">
+        <!-- Item 1: Customer ticket portal -->
+        <a href="portal.html" class="project-card" data-module="portal" data-hover aria-label="Open Customer ticket portal">
+          <div class="project-img-container">
+            <img alt="Customer ticket portal" loading="lazy" class="project-img" />
+            <div class="project-hover-overlay"></div>
+            <div class="project-badge-arrow">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <h3 class="project-title">Customer ticket portal</h3>
+            <span class="project-tag">Customers · G1</span>
+          </div>
+          <p class="project-desc">Register, raise a ticket and follow its status without asking anyone.</p>
+          <div>
+            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Portal Page →</span>
+          </div>
+        </a>
+
+        <!-- Item 2: Agent dashboard -->
+        <a href="agent-dashboard.html" class="project-card" data-module="dashboard" data-hover aria-label="Open Agent dashboard">
+          <div class="project-img-container">
+            <img alt="Agent dashboard" loading="lazy" class="project-img" />
+            <div class="project-hover-overlay"></div>
+            <div class="project-badge-arrow">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <h3 class="project-title">Agent dashboard</h3>
+            <span class="project-tag">Support agents · G2</span>
+          </div>
+          <p class="project-desc">Every ticket viewed, assigned and updated from one screen.</p>
+          <div>
+            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Dashboard Page →</span>
+          </div>
+        </a>
+
+        <!-- Item 3: AI triage -->
+        <a href="ai-triage.html" class="project-card" data-module="triage" data-hover aria-label="Open AI triage engine">
+          <div class="project-img-container">
+            <img alt="AI triage" loading="lazy" class="project-img" />
+            <div class="project-hover-overlay"></div>
+            <div class="project-badge-arrow">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <h3 class="project-title">AI triage</h3>
+            <span class="project-tag">AI · G3</span>
+          </div>
+          <p class="project-desc">New tickets arrive categorised, prioritised and summarised.</p>
+          <div>
+            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Triage Engine →</span>
+          </div>
+        </a>
+
+        <!-- Item 4: Suggested replies -->
+        <a href="suggested-replies.html" class="project-card" data-module="replies" data-hover aria-label="Open Suggested replies studio">
+          <div class="project-img-container">
+            <img alt="Suggested replies" loading="lazy" class="project-img" />
+            <div class="project-hover-overlay"></div>
+            <div class="project-badge-arrow">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <h3 class="project-title">Suggested replies</h3>
+            <span class="project-tag">AI · Agents · G3</span>
+          </div>
+          <p class="project-desc">A draft answer ready to review, edit and send.</p>
+          <div>
+            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Replies Studio →</span>
+          </div>
+        </a>
+
+        <!-- Item 5: Knowledge-base chatbot -->
+        <a href="chatbot.html" class="project-card" data-module="chatbot" data-hover aria-label="Open Knowledge-base chatbot">
+          <div class="project-img-container">
+            <img alt="Knowledge-base chatbot" loading="lazy" class="project-img" />
+            <div class="project-hover-overlay"></div>
+            <div class="project-badge-arrow">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <h3 class="project-title">Knowledge-base chatbot</h3>
+            <span class="project-tag">Customers · AI · G4</span>
+          </div>
+          <p class="project-desc">Answers common questions instantly and hands over to a human when unsure.</p>
+          <div>
+            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Chatbot Page →</span>
+          </div>
+        </a>
+
+        <!-- Item 6: Manager overview -->
+        <a href="manager-overview.html" class="project-card" data-module="manager" data-hover aria-label="Open Manager overview">
+          <div class="project-img-container">
+            <img alt="Manager overview" loading="lazy" class="project-img" />
+            <div class="project-hover-overlay"></div>
+            <div class="project-badge-arrow">
+              <svg viewBox="0 0 24 24"><path d="M7 17L17 7M17 7H7M17 7V17" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="project-info-row">
+            <h3 class="project-title">Manager overview</h3>
+            <span class="project-tag">Admins · Managers · G2</span>
+          </div>
+          <p class="project-desc">Workload, response time and common issues in one clear view.</p>
+          <div>
+            <span class="interactive-btn-secondary" style="margin-top:12px; font-size:12px; display:inline-block; padding:6px 14px;">Open Overview Page →</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- "Five goals." Section -->
+    <section class="section-spacing container" id="goals" aria-label="Five goals">
+      <div class="section-head-split reveal-fade">
+        <h2 class="section-title reveal-headline">
+          <span class="reveal-line-wrap"><span class="reveal-line-inner">Five goals.</span></span>
+        </h2>
+        <p class="section-intro-text">
+          Each goal has a plain test. The final demonstration runs the full ticket flow end to end.
+        </p>
+      </div>
+
+      <div class="goals-table reveal-fade">
+        <div class="goals-header">
+          <div>ID</div>
+          <div>Goal</div>
+          <div>How we will know</div>
+        </div>
+
+        <a href="portal.html" class="goal-row" data-goal="G1" data-hover aria-label="Open Goal G1: Customer ticket portal">
+          <div class="goal-id">G1</div>
+          <div class="goal-name">Give customers one simple place to raise and track tickets</div>
+          <div class="goal-test">A customer can register, submit a ticket and see its status without help. <strong>(Open Portal →)</strong></div>
+        </a>
+
+        <a href="agent-dashboard.html" class="goal-row" data-goal="G2" data-hover aria-label="Open Goal G2: Agent dashboard">
+          <div class="goal-id">G2</div>
+          <div class="goal-name">Give staff and admins one place to manage every ticket</div>
+          <div class="goal-test">All tickets can be viewed, assigned and updated from one dashboard. <strong>(Open Dashboard →)</strong></div>
+        </a>
+
+        <a href="ai-triage.html" class="goal-row" data-goal="G3" data-hover aria-label="Open Goal G3: AI triage and suggested replies">
+          <div class="goal-id">G3</div>
+          <div class="goal-name">Reduce manual sorting and typing with AI</div>
+          <div class="goal-test">New tickets arrive already categorised, prioritised and summarised, with a suggested reply. <strong>(Open AI Triage →)</strong></div>
+        </a>
+
+        <a href="chatbot.html" class="goal-row" data-goal="G4" data-hover aria-label="Open Goal G4: Knowledge-base chatbot">
+          <div class="goal-id">G4</div>
+          <div class="goal-name">Answer common questions instantly</div>
+          <div class="goal-test">The chatbot answers from the knowledge base and hands over to a human when unsure. <strong>(Open Chatbot →)</strong></div>
+        </a>
+
+        <a href="manager-overview.html" class="goal-row" data-goal="G5" data-hover aria-label="Open Goal G5: Manager overview">
+          <div class="goal-id">G5</div>
+          <div class="goal-name">Deliver a working prototype in 6 days</div>
+          <div class="goal-test">The final demonstration runs the full ticket flow end to end with analytics. <strong>(Open Overview →)</strong></div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" id="contact" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Columns 1 and 2: Brand & Bio -->
+        <div class="footer-brand-col">
+          <h2 class="footer-brand-title">NexusAI</h2>
+          <p class="footer-bio">
+            A web-based customer support platform where customers raise and track tickets, and AI helps support staff sort, prioritise and answer them faster. Built by 14 students in 6 days.
+          </p>
+        </div>
+
+        <!-- Column 3: Dedicated Pages Navigation -->
+        <div>
+          <h3 class="footer-heading">Platform Modules</h3>
+          <ul class="footer-nav">
+            <li><a href="portal.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>1. Customer Portal</a></li>
+            <li><a href="agent-dashboard.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>2. Agent Dashboard</a></li>
+            <li><a href="ai-triage.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>3. AI Triage Engine</a></li>
+            <li><a href="suggested-replies.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>4. Suggested Replies</a></li>
+            <li><a href="chatbot.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>5. Knowledge Chatbot</a></li>
+            <li><a href="manager-overview.html" class="footer-action-btn" style="text-decoration:none; display:inline-block;" data-hover>6. Manager Overview</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Contact & Socials -->
+        <div>
+          <h3 class="footer-heading">Connect & Demo</h3>
+          <ul class="footer-nav">
+            <li><button class="footer-action-btn" id="footer-btn-email" data-hover>hello@nexusai.example</button></li>
+            <li><button class="footer-action-btn" id="footer-btn-demo" data-hover>Book a Live Demo</button></li>
+            <li><button class="footer-action-btn" data-social="GitHub" data-hover>GitHub Repository</button></li>
+            <li><button class="footer-action-btn" data-social="LinkedIn" data-hover>LinkedIn Company</button></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>© 2026 NexusAI. All rights reserved.</div>
+        <div>AI Product Prototyping with Low-Code Tools · PRD by @KAL-EL, Nov 17, 2026</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Chatbot Widget Button -->
+  <button class="floating-chat-trigger" id="floating-chat-btn" data-hover aria-label="Open NexusAI instant assistant">
+    <span class="chat-pulse-dot"></span>
+    <span class="chat-trigger-text">Ask NexusAI</span>
+  </button>
+
+  <!-- Interactive Modal Dialog Container -->
+  <div class="modal-overlay" id="interactive-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-meta" id="modal-meta-label">MODULE PREVIEW</span>
+          <h2 class="modal-title" id="modal-title-label">Interactive Prototype</h2>
+        </div>
+        <button class="modal-close-btn" id="modal-close-button" aria-label="Close modal dialog" data-hover>
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-content-area" id="modal-content-slot">
+        <!-- Injected dynamically via js/interactive.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modular Scripts -->
+  <script src="js/assets.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/interactive.js"></script>
+</body>
+</html>

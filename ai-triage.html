@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Triage Engine — NexusAI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+    .header-nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      list-style: none;
+    }
+    .header-nav-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 500ms var(--ease);
+    }
+    .header-nav-link:hover, .header-nav-link.active {
+      color: #000000;
+    }
+
+    .triage-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 32px 80px 32px;
+    }
+    .triage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 32px;
+      margin-top: 36px;
+    }
+    @media (max-width: 900px) {
+      .triage-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+    }
+
+    .preset-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .preset-chip {
+      background: #F4F4F5;
+      border: 1px solid var(--border);
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 300ms var(--ease);
+      font-family: var(--font-body);
+    }
+    .preset-chip:hover {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+
+    .confidence-bar-wrap {
+      margin-bottom: 14px;
+    }
+    .confidence-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    .confidence-track {
+      height: 8px;
+      background: #F4F4F5;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 600ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .entity-tag-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .entity-tag-box {
+      background: #FAFAFA;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .live-stream-log {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: #0A0A0A;
+      color: #A1A1AA;
+      border-radius: 8px;
+      padding: 20px;
+      height: 220px;
+      overflow-y: auto;
+      line-height: 1.6;
+      margin-top: 32px;
+    }
+    .log-entry {
+      margin-bottom: 6px;
+    }
+    .log-success { color: #34D399; }
+    .log-alert { color: #F87171; }
+    .log-highlight { color: #60A5FA; }
+  </style>
+</head>
+<body>
+  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
+    <div class="cursor-circle"></div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- Header Navigation -->
+  <header class="page-header">
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
+      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
+        AI Triage Engine · G3
+      </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#2563EB; font-weight:600; background:#EFF6FF; padding:2px 8px; border-radius:12px;">
+        <span style="width:6px; height:6px; border-radius:50%; background:#3B82F6;"></span> Ingestion Rate: 120 req/s
+      </span>
+    </div>
+    <nav>
+      <ul class="header-nav-links">
+        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
+        <li><a href="portal.html" class="header-nav-link" data-hover>Portal</a></li>
+        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
+        <li><a href="ai-triage.html" class="header-nav-link active" data-hover>AI Triage</a></li>
+        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
+        <li><a href="chatbot.html" class="header-nav-link" data-hover>Chatbot</a></li>
+        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="triage-container">
+    <div>
+      <span class="meta-mono">Autonomous NLP Classification Pipeline</span>
+      <h1 style="font-size:clamp(32px, 4vw, 56px); font-weight:700; letter-spacing:-0.05em; line-height:1.0; margin:8px 0 16px 0;">
+        Zero-Touch Ticket Triage.
+      </h1>
+      <p style="color:var(--text-secondary); font-size:17px; max-width:70ch; line-height:1.5;">
+        Every incoming ticket is processed in under 120 milliseconds. Our model extracts semantic entities, regresses SLA priority (P1–P3), computes customer sentiment and churn risk, and auto-routes to specialized tier queues with 98.4% precision.
+      </p>
+    </div>
+
+    <!-- 2-Column Triage Interactive Workbench -->
+    <div class="triage-grid">
+      <!-- LEFT: Ticket Input & Preset Tests -->
+      <div class="panel-card">
+        <h2 style="font-size:16px; font-weight:700; letter-spacing:-0.02em; margin-bottom:12px;">
+          1. Select Test Ingestion or Write Inquiry
+        </h2>
+        
+        <span class="meta-mono" style="margin-bottom:8px; display:block;">Sample Customer Scenarios</span>
+        <div class="preset-chips">
+          <button class="preset-chip" onclick="loadScenario(0)">🚨 API 502 Webhook Spike (P1)</button>
+          <button class="preset-chip" onclick="loadScenario(1)">💳 Refund & Contract Cancellation (P2)</button>
+          <button class="preset-chip" onclick="loadScenario(2)">🔐 SAML SSO Certificate Expiry (P2)</button>
+          <button class="preset-chip" onclick="loadScenario(3)">👥 Add 45 Enterprise Seats (P3)</button>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label for="raw-inquiry" class="meta-mono" style="display:block; margin-bottom:6px;">Raw Customer Message</label>
+          <textarea id="raw-inquiry" style="width:100%; height:140px; padding:14px; border:1px solid var(--border); border-radius:6px; font-family:var(--font-body); font-size:14px; line-height:1.5; resize:none; background:#FAFAFA;" placeholder="Paste customer email, ticket body, or live chat message here..."></textarea>
+        </div>
+
+        <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+          <button class="interactive-btn-secondary" onclick="document.getElementById('raw-inquiry').value='';">Clear Input</button>
+          <button class="interactive-btn-primary" id="btn-run-triage" onclick="runTriageEngine()">Run AI Triage Engine ⚡</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: Live Classification Results -->
+      <div class="panel-card" id="results-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <h2 style="font-size:16px; font-weight:700; letter-spacing:-0.02em;">
+            2. Multi-Stage Inference Result
+          </h2>
+          <span style="font-family:var(--font-mono); font-size:11px; color:#059669; background:#ECFDF5; padding:2px 8px; border-radius:4px;" id="inference-time">
+            Latency: 94ms · Model: Nexus-Triage-v4
+          </span>
+        </div>
+
+        <!-- Priority Regressor -->
+        <div style="background:#FAFAFA; border:1px solid var(--border); border-radius:6px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <span class="meta-mono" style="font-size:11px;">Assigned Priority Level</span>
+            <div style="font-size:20px; font-weight:700; margin-top:2px;" id="res-priority-title">P1 — Critical Production Outage</div>
+          </div>
+          <div style="text-align:right;">
+            <span class="meta-mono" style="font-size:11px;">Guaranteed SLA</span>
+            <div style="font-family:var(--font-mono); font-size:18px; font-weight:700; color:#DC2626;" id="res-sla">
+              &lt; 15 Minutes
+            </div>
+          </div>
+        </div>
+
+        <!-- Intent Probability Breakdown -->
+        <div style="margin-bottom:20px;">
+          <span class="meta-mono" style="margin-bottom:12px; display:block;">Intent Confidence Distribution</span>
+          
+          <div class="confidence-bar-wrap">
+            <div class="confidence-label-row">
+              <span id="intent-1-label">Infrastructure / API Failure</span>
+              <strong id="intent-1-pct">96.8%</strong>
+            </div>
+            <div class="confidence-track">
+              <div class="confidence-fill" id="intent-1-bar" style="width:96.8%; background:#000000;"></div>
+            </div>
+          </div>
+
+          <div class="confidence-bar-wrap">
+            <div class="confidence-label-row">
+              <span id="intent-2-label">Billing & Gateway Renewal</span>
+              <strong id="intent-2-pct">2.4%</strong>
+            </div>
+            <div class="confidence-track">
+              <div class="confidence-fill" id="intent-2-bar" style="width:2.4%; background:#71717A;"></div>
+            </div>
+          </div>
+
+          <div class="confidence-bar-wrap">
+            <div class="confidence-label-row">
+              <span id="intent-3-label">Security & Access Management</span>
+              <strong id="intent-3-pct">0.8%</strong>
+            </div>
+            <div class="confidence-track">
+              <div class="confidence-fill" id="intent-3-bar" style="width:0.8%; background:#D4D4D8;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Semantic Entities & Sentiment -->
+        <div class="entity-tag-grid">
+          <div class="entity-tag-box">
+            <span class="meta-mono" style="font-size:11px;">Target Routing Queue</span>
+            <strong style="font-size:13px; display:block; margin-top:4px; color:#2563EB;" id="res-queue">
+              tier2-sre-oncall
+            </strong>
+          </div>
+          <div class="entity-tag-box">
+            <span class="meta-mono" style="font-size:11px;">Sentiment & Churn Risk</span>
+            <strong style="font-size:13px; display:block; margin-top:4px; color:#DC2626;" id="res-sentiment">
+              -0.78 Critical (High Churn)
+            </strong>
+          </div>
+          <div class="entity-tag-box">
+            <span class="meta-mono" style="font-size:11px;">Detected Surface</span>
+            <strong style="font-size:13px; display:block; margin-top:4px;" id="res-surface">
+              REST Webhook API / Stripe
+            </strong>
+          </div>
+          <div class="entity-tag-box">
+            <span class="meta-mono" style="font-size:11px;">Automated Runbook</span>
+            <strong style="font-size:13px; display:block; margin-top:4px; color:#059669;" id="res-runbook">
+              RUNBOOK-419 Circuit Breaker
+            </strong>
+          </div>
+        </div>
+
+        <!-- Action Links -->
+        <div style="margin-top:20px; display:flex; gap:12px;">
+          <a href="agent-dashboard.html" class="interactive-btn-secondary" style="flex:1; text-align:center; font-size:12px; text-decoration:none;" data-hover>
+            View in Agent Dashboard →
+          </a>
+          <a href="suggested-replies.html" class="interactive-btn-primary" style="flex:1; text-align:center; font-size:12px; text-decoration:none;" data-hover>
+            Draft AI Response →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Ingestion Stream Console -->
+    <div style="margin-top:40px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span class="meta-mono">Real-Time Ingestion Event Log</span>
+        <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">Live WebSocket Feed · Auto-scroll Active</span>
+      </div>
+      <div class="live-stream-log" id="live-console">
+        <div class="log-entry"><span class="log-highlight">[10:14:02.102]</span> INGESTION: Received payload from customer_id=usr_88291 (Acme Corp)</div>
+        <div class="log-entry"><span class="log-success">[10:14:02.196]</span> TRIAGE_COMPLETE: Intent="Infrastructure 502" Conf=96.8% Priority=P1 Routing="tier2-sre-oncall"</div>
+        <div class="log-entry"><span class="log-highlight">[10:14:15.420]</span> INGESTION: Received payload from customer_id=usr_90124 (FinScale)</div>
+        <div class="log-entry"><span class="log-success">[10:14:15.514]</span> TRIAGE_COMPLETE: Intent="Security Webhook" Conf=94.2% Priority=P1 Routing="tier2-security"</div>
+        <div class="log-entry"><span class="log-highlight">[10:14:28.810]</span> INGESTION: Received payload from customer_id=usr_19482 (CloudCore)</div>
+        <div class="log-entry"><span class="log-success">[10:14:28.899]</span> TRIAGE_COMPLETE: Intent="Seat Expansion" Conf=99.1% Priority=P3 Routing="sales-ops-auto"</div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/main.js"></script>
+  <script>
+    const scenarios = [
+      {
+        text: "URGENT: Our production checkout endpoint is throwing HTTP 502 Bad Gateway errors for all customers renewing enterprise subscriptions. Revenue is blocked. Need immediate engineer on-call.",
+        priority: "P1 — Critical Production Outage",
+        sla: "< 15 Minutes",
+        slaColor: "#DC2626",
+        intent1: { label: "Infrastructure / API Failure", pct: "96.8%" },
+        intent2: { label: "Billing & Gateway Renewal", pct: "2.4%" },
+        intent3: { label: "Security & Access Management", pct: "0.8%" },
+        queue: "tier2-sre-oncall",
+        sentiment: "-0.88 Critical (High Churn)",
+        surface: "REST Webhook API / Stripe",
+        runbook: "RUNBOOK-419 Circuit Breaker"
+      },
+      {
+        text: "Please cancel our annual subscription immediately. We have decided to migrate away. Also please issue a prorated refund for the remaining 4 months left on our contract.",
+        priority: "P2 — Cancellation / Retention Risk",
+        sla: "< 2 Hours",
+        slaColor: "#D97706",
+        intent1: { label: "Billing / Refund Request", pct: "94.2%" },
+        intent2: { label: "Churn & Contract Offboarding", pct: "5.1%" },
+        intent3: { label: "General Feedback", pct: "0.7%" },
+        queue: "retention-and-finance",
+        sentiment: "-0.65 Negative (Churn Warning)",
+        surface: "Billing Portal / Subscriptions",
+        runbook: "RUNBOOK-208 Prorated Terms"
+      },
+      {
+        text: "Our corporate Okta identity provider certificate expires in 48 hours. Can you assist in verifying our new x509 cert fingerprint and testing SSO SAML 2.0 logins on staging?",
+        priority: "P2 — High Security Dependency",
+        sla: "< 1 Hour",
+        slaColor: "#2563EB",
+        intent1: { label: "Security & SAML SSO", pct: "98.5%" },
+        intent2: { label: "User Access Provisioning", pct: "1.2%" },
+        intent3: { label: "General Technical", pct: "0.3%" },
+        queue: "tier2-identity-ops",
+        sentiment: "+0.10 Neutral / Operational",
+        surface: "Okta SAML 2.0 / IdP",
+        runbook: "RUNBOOK-310 Cert Sync"
+      },
+      {
+        text: "Hello! We just hired 45 engineers in our Singapore hub and would like to add them to our existing master enterprise license pool. Please invoice our accounts payable.",
+        priority: "P3 — Normal Expansion",
+        sla: "< 4 Hours",
+        slaColor: "#059669",
+        intent1: { label: "Account Expansion / Licenses", pct: "99.1%" },
+        intent2: { label: "Invoicing & Billing", pct: "0.7%" },
+        intent3: { label: "Onboarding Inquiries", pct: "0.2%" },
+        queue: "sales-ops-auto",
+        sentiment: "+0.92 Delighted / Growth",
+        surface: "License Pools / Workspaces",
+        runbook: "RUNBOOK-102 Seat Provision"
+      }
+    ];
+
+    function loadScenario(idx) {
+      const s = scenarios[idx];
+      document.getElementById('raw-inquiry').value = s.text;
+      runTriageWithData(s);
+    }
+
+    function runTriageWithData(s) {
+      const btn = document.getElementById('btn-run-triage');
+      btn.textContent = "Analyzing NLP...";
+      btn.style.opacity = "0.7";
+
+      setTimeout(() => {
+        btn.textContent = "Run AI Triage Engine ⚡";
+        btn.style.opacity = "1";
+
+        const latency = Math.floor(Math.random() * 25) + 75;
+        document.getElementById('inference-time').textContent = `Latency: ${latency}ms · Model: Nexus-Triage-v4`;
+
+        document.getElementById('res-priority-title').textContent = s.priority;
+        const slaEl = document.getElementById('res-sla');
+        slaEl.textContent = s.sla;
+        slaEl.style.color = s.slaColor;
+
+        document.getElementById('intent-1-label').textContent = s.intent1.label;
+        document.getElementById('intent-1-pct').textContent = s.intent1.pct;
+        document.getElementById('intent-1-bar').style.width = s.intent1.pct;
+
+        document.getElementById('intent-2-label').textContent = s.intent2.label;
+        document.getElementById('intent-2-pct').textContent = s.intent2.pct;
+        document.getElementById('intent-2-bar').style.width = s.intent2.pct;
+
+        document.getElementById('intent-3-label').textContent = s.intent3.label;
+        document.getElementById('intent-3-pct').textContent = s.intent3.pct;
+        document.getElementById('intent-3-bar').style.width = s.intent3.pct;
+
+        document.getElementById('res-queue').textContent = s.queue;
+        document.getElementById('res-sentiment').textContent = s.sentiment;
+        document.getElementById('res-surface').textContent = s.surface;
+        document.getElementById('res-runbook').textContent = s.runbook;
+
+        // Append log
+        const log = document.getElementById('live-console');
+        const now = new Date().toLocaleTimeString();
+        const div = document.createElement('div');
+        div.className = 'log-entry';
+        div.innerHTML = `<span class="log-success">[${now}]</span> TRIAGE_EVAL: Intent="${s.intent1.label}" Conf=${s.intent1.pct} AssignedQueue="${s.queue}" Latency=${latency}ms`;
+        log.appendChild(div);
+        log.scrollTop = log.scrollHeight;
+
+        window.NexusShowToast("AI Triage evaluation complete: " + s.intent1.label);
+      }, 400);
+    }
+
+    function runTriageEngine() {
+      const val = document.getElementById('raw-inquiry').value.trim();
+      if (!val) {
+        window.NexusShowToast("Please enter customer message or select a test scenario.");
+        return;
+      }
+      // Simple dynamic match
+      if (val.toLowerCase().includes("refund") || val.toLowerCase().includes("cancel")) {
+        runTriageWithData(scenarios[1]);
+      } else if (val.toLowerCase().includes("sso") || val.toLowerCase().includes("saml") || val.toLowerCase().includes("cert")) {
+        runTriageWithData(scenarios[2]);
+      } else if (val.toLowerCase().includes("seat") || val.toLowerCase().includes("hire") || val.toLowerCase().includes("license")) {
+        runTriageWithData(scenarios[3]);
+      } else {
+        runTriageWithData(scenarios[0]);
+      }
+    }
+
+    // Default load scenario 0
+    window.addEventListener('DOMContentLoaded', () => {
+      loadScenario(0);
+    });
+  </script>
+</body>
+</html>
