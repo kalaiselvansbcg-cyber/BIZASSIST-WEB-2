@@ -543,12 +543,33 @@
     e.preventDefault();
     const subject = document.getElementById('ticket-subject-input').value;
     const cat = document.getElementById('ticket-cat-input').value;
+    const bodyEl = document.getElementById('ticket-body-input');
+    const body = bodyEl ? bodyEl.value : '';
     const prev = document.getElementById('ticket-response-preview');
     const text = document.getElementById('ticket-response-text');
     
     text.innerHTML = 'Assigned Ticket #NX-4093 to <strong>' + cat + '</strong>. Subject: "' + subject + '". Auto-routed with P1 priority.';
     prev.style.display = 'block';
     window.NexusShowToast('✓ Ticket #NX-4093 submitted! Auto-triage initiated in 0.2s.');
+
+    if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+      window.NexusSupabase.createTicket({
+        ticket_code: 'NX-' + Math.floor(4100 + Math.random() * 900),
+        subject: subject,
+        category: cat,
+        priority: 'P1',
+        description: body,
+        customer_name: 'Sarah Jenkins',
+        customer_email: 'sarah@acme.co',
+        ai_intent: cat,
+        ai_summary: subject,
+        sla_minutes: 15
+      }).then(function (res) {
+        if (!res.error) {
+          window.NexusShowToast('☁ Ticket synced to Supabase database!');
+        }
+      });
+    }
   };
 
   window.NexusFillTriage = function (type) {
@@ -682,6 +703,16 @@
   };
 
   window.NexusConfirmDemo = function () {
+    const emailInput = document.querySelector('input[type="email"]');
+    const email = emailInput ? emailInput.value : 'demo@company.com';
+
+    if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+      window.NexusSupabase.submitDemoRequest({
+        work_email: email,
+        notes: 'Interactive Modal Demo booking'
+      });
+    }
+
     window.NexusShowToast('✓ Demonstration booked! Confirmation sent to your inbox.');
     setTimeout(function () {
       closeModal();
@@ -689,6 +720,18 @@
   };
 
   window.NexusSendContact = function () {
+    const emailInput = document.querySelector('input[type="email"]');
+    const textarea = document.querySelector('.interactive-textarea');
+    const email = emailInput ? emailInput.value : 'user@example.com';
+    const msg = textarea ? textarea.value : '';
+
+    if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+      window.NexusSupabase.submitDemoRequest({
+        work_email: email,
+        notes: 'Interactive Modal Contact: ' + msg
+      });
+    }
+
     window.NexusShowToast('✓ Inquiry sent to hello@nexusai.example. We reply in < 15m.');
     setTimeout(function () {
       closeModal();

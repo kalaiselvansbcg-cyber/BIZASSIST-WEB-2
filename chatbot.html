@@ -239,6 +239,9 @@
       <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#059669; font-weight:600; background:#ECFDF5; padding:2px 8px; border-radius:12px;">
         <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> 12,840 Vectors In-Memory
       </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:#059669; font-weight:600; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:12px;" title="Connected to https://imhfqkepsepiscyceoyk.supabase.co">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Supabase: imhfqkepsepiscyceoyk
+      </span>
     </div>
     <nav>
       <ul class="header-nav-links">
@@ -346,7 +349,10 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
   <script>
+    const currentSessionId = 'session-' + Date.now();
     const knowledgeBase = {
       "rotate api keys": {
         answer: "To rotate your production API keys with zero downtime, follow our dual-key zero-downtime rotation protocol:\n\n1. **Generate Secondary Key**: In your Developer Console > API Keys, click **Generate Rolling Key**.\n2. **Deploy to Secondary Environment**: Update your production application config to use the new key for 5% canary traffic.\n3. **Verify Auth Telemetry**: Check response headers for <code>x-nexus-auth: valid</code>.\n4. **Revoke Primary Key**: Once 100% of microservices migrate, click **Deactivate Old Key**.",
@@ -418,12 +424,20 @@
       row.innerHTML = `<div class="msg-content-user">${text}</div>`;
       thread.appendChild(row);
       thread.scrollTop = thread.scrollHeight;
+
+      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+        window.NexusSupabase.logChatMessage(currentSessionId, 'user', text, []);
+      }
     }
 
     function appendBotMsg(answer, citations) {
       const thread = document.getElementById('chat-thread');
       const row = document.createElement('div');
       row.className = 'bot-msg-row';
+
+      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+        window.NexusSupabase.logChatMessage(currentSessionId, 'ai', answer, citations || []);
+      }
 
       const citationsHtml = citations.map(c => `
         <a href="javascript:void(0)" class="citation-tag" onclick="window.NexusShowToast('Viewing documentation: ${c}')">

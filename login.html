@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sign in — BIZASSIST AI</title>
+  
+  <!-- Inter from Google Fonts with high-performance preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. STRICT BLACK & WHITE TOKENS
+       - Single light theme. Every color explicitly declared.
+       - Hairlines: rgba(0, 0, 0, 0.14)
+       ========================================================================== */
+    :root {
+      --bg: #FFFFFF;
+      --text: #000000;
+      --text-secondary: #525252;
+      --text-muted: #737373;
+      --hairline: rgba(0, 0, 0, 0.14);
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration: 0.9s;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: -0.02em;
+      min-height: 100vh;
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Page container with Safe Area Insets and 400px width support */
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: max(20px, env(safe-area-inset-top)) 
+               max(24px, env(safe-area-inset-right)) 
+               max(20px, env(safe-area-inset-bottom)) 
+               max(24px, env(safe-area-inset-left));
+      overflow-x: hidden;
+    }
+
+    /* Accessibility Focus Rings */
+    :focus-visible {
+      outline: 2px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    /* Monospace metadata labels */
+    .mono-label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       2. TOP BAR & FOOTER
+       ========================================================================== */
+    .top-bar {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .wordmark {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .footer-line {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       3. TWO-COLUMN LAYOUT (Max-width 1240px, centered vertically)
+       ========================================================================== */
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: clamp(32px, 5vh, 64px) 0;
+    }
+
+    .login-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      align-items: center;
+      gap: clamp(32px, 6vw, 96px);
+    }
+
+    @media (max-width: 860px) {
+      .login-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+    }
+
+    /* ==========================================================================
+       4. LEFT COLUMN: MASKED HEADLINE & SUB-LINE
+       ========================================================================== */
+    .headline-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .line-mask {
+      overflow: hidden;
+      display: block;
+      padding-bottom: 0.12em;
+      margin-bottom: -0.12em;
+    }
+
+    .hero-heading {
+      font-size: clamp(52px, 7.5vw, 136px);
+      font-weight: 700;
+      letter-spacing: -0.055em;
+      line-height: 0.9;
+      color: var(--text);
+      display: inline-block;
+      transform: translateY(100%);
+      animation: maskRise var(--duration) var(--ease) forwards;
+    }
+
+    .line-mask:nth-child(2) .hero-heading {
+      animation-delay: 0.12s;
+    }
+
+    .sub-line {
+      font-size: clamp(17px, 2vw, 20px);
+      color: var(--text-secondary);
+      max-width: 38ch;
+      line-height: 1.45;
+      margin-top: 24px;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp var(--duration) var(--ease) 0.25s forwards;
+    }
+
+    /* ==========================================================================
+       5. RIGHT COLUMN: SIGN-IN CARD
+       ========================================================================== */
+    .card-wrap {
+      width: 100%;
+      max-width: 460px;
+      justify-self: end;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp var(--duration) var(--ease) 0.32s forwards;
+    }
+
+    @media (max-width: 860px) {
+      .card-wrap {
+        justify-self: start;
+        max-width: 100%;
+      }
+    }
+
+    .signin-card {
+      background: #FFFFFF;
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: clamp(24px, 5vw, 40px);
+    }
+
+    .card-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .card-hint {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       6. ROLE PICKER (Real radio inputs in 2x2 grid, styled as pills)
+       ========================================================================== */
+    .role-fieldset {
+      border: none;
+      padding: 0;
+      margin: 0 0 24px 0;
+    }
+
+    .role-legend {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .role-option {
+      position: relative;
+    }
+
+    /* Real radio input kept keyboard accessible, visually layered beneath label */
+    .role-radio {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .role-pill-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: #FFFFFF;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      transition: background 250ms var(--ease), 
+                  color 250ms var(--ease), 
+                  border-color 250ms var(--ease);
+    }
+
+    .role-option:hover .role-pill-label {
+      border-color: var(--text);
+    }
+
+    /* Checked state: solid black with white text */
+    .role-radio:checked + .role-pill-label {
+      background: #000000;
+      color: #FFFFFF;
+      border-color: #000000;
+    }
+
+    /* Keyboard focus ring */
+    .role-radio:focus-visible + .role-pill-label {
+      outline: 2px solid var(--text);
+      outline-offset: 3px;
+    }
+
+    /* ==========================================================================
+       7. INPUT FIELDS & PASSWORD TOGGLE
+       ========================================================================== */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 18px;
+    }
+
+    .field-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .text-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 16px;
+      border: 1px solid #000000;
+      border-radius: 10px;
+      background: #FFFFFF;
+      color: #000000;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      letter-spacing: -0.02em;
+      transition: border-color 200ms ease, box-shadow 200ms ease;
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: #000000;
+      box-shadow: 0 0 0 1px #000000;
+    }
+
+    .text-input[aria-invalid="true"] {
+      border-color: #000000;
+      box-shadow: 0 0 0 2px #000000;
+    }
+
+    /* Show / Hide toggle button inside password field */
+    .toggle-password-btn {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      min-height: 44px;
+      min-width: 64px;
+      padding: 0 12px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 200ms ease;
+    }
+
+    .toggle-password-btn:hover {
+      color: var(--text);
+    }
+
+    /* Inline validation error messages (Bold Black) */
+    .field-error {
+      display: none;
+      margin-top: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000000;
+      line-height: 1.4;
+    }
+
+    .field-error.is-visible {
+      display: block;
+    }
+
+    /* ==========================================================================
+       8. CONTROLS ROW (Checkbox & Forgot Password)
+       ========================================================================== */
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 24px 0;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .checkbox-input {
+      width: 18px;
+      height: 18px;
+      border: 1px solid #000000;
+      border-radius: 4px;
+      accent-color: #000000;
+      cursor: pointer;
+    }
+
+    .forgot-btn {
+      min-height: 44px;
+      background: none;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: color 200ms ease;
+    }
+
+    .forgot-btn:hover {
+      color: var(--text);
+    }
+
+    /* Inline message for Forgot Password */
+    .inline-notice {
+      display: none;
+      background: #FFFFFF;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #000000;
+      line-height: 1.4;
+    }
+
+    .inline-notice.is-visible {
+      display: block;
+    }
+
+    /* ==========================================================================
+       9. PILL BUTTONS (999px radius, invert on hover)
+       ========================================================================== */
+    .btn-pill-primary {
+      width: 100%;
+      min-height: 52px;
+      padding: 0 28px;
+      border-radius: 999px;
+      border: 1px solid #000000;
+      background: #000000;
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 300ms var(--ease), 
+                  color 300ms var(--ease),
+                  border-color 300ms var(--ease);
+    }
+
+    .btn-pill-primary:hover {
+      background: #FFFFFF;
+      color: #000000;
+      border-color: #000000;
+    }
+
+    .btn-pill-primary:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    /* Fine-print prototype disclaimer note */
+    .fine-print {
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       10. SIGNED-IN SUCCESS PANEL
+       ========================================================================== */
+    .success-panel {
+      display: none;
+      flex-direction: column;
+    }
+
+    .success-panel.is-active {
+      display: flex;
+    }
+
+    .success-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .success-sentence {
+      font-size: 16px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 24px;
+      padding: 16px;
+      border-radius: 8px;
+      background: #FFFFFF;
+      border: 1px solid var(--hairline);
+    }
+
+    .success-links-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .quick-route-link {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 8px;
+      border: 1px solid var(--hairline);
+      background: #FFFFFF;
+      transition: border-color 200ms ease;
+    }
+
+    .quick-route-link:hover {
+      border-color: #000000;
+    }
+
+    /* ==========================================================================
+       11. KEYFRAME ANIMATIONS & REDUCED MOTION SAFETY
+       - Fully renders finished without JavaScript
+       ========================================================================== */
+    @keyframes maskRise {
+      from {
+        transform: translateY(100%);
+      }
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+      }
+      .hero-heading, .sub-line, .card-wrap {
+        transform: none !important;
+        opacity: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="top-bar" role="banner">
+    <a href="index.html" class="wordmark" aria-label="BIZASSIST AI Homepage">BIZASSIST AI</a>
+    <span class="mono-label">Customer support</span>
+  </header>
+
+  <!-- Two-Column Main Content -->
+  <main class="main-wrap" id="main-content">
+    <div class="login-grid">
+      
+      <!-- Left Column: Masked Headline & Sub Line -->
+      <section class="headline-wrap" aria-label="Welcome">
+        <div class="line-mask">
+          <h1 class="hero-heading">Welcome</h1>
+        </div>
+        <div class="line-mask">
+          <span class="hero-heading">back.</span>
+        </div>
+        <p class="sub-line">
+          Sign in to raise and track tickets, or to manage the queue.
+        </p>
+      </section>
+
+      <!-- Right Column: Sign-in Card -->
+      <section class="card-wrap" aria-label="Authentication Form">
+        <div class="signin-card">
+          
+          <!-- Live Status Announcer for Screen Readers -->
+          <div id="status-live" class="mono-label" style="position:absolute; width:1px; height:1px; overflow:hidden;" aria-live="polite"></div>
+
+          <!-- The Form -->
+          <form id="signin-form" novalidate onsubmit="handleSignInSubmit(event)">
+            <h2 class="card-title">Sign in</h2>
+            <p class="card-hint">Choose your role, then enter your details.</p>
+
+            <!-- 1. Role Picker (Real Radio Inputs in 2x2 Grid) -->
+            <fieldset class="role-fieldset">
+              <legend class="mono-label role-legend">Select Account Role</legend>
+              <div class="role-grid">
+                
+                <div class="role-option">
+                  <input type="radio" name="role" id="role-customer" value="Customer" class="role-radio" checked>
+                  <label for="role-customer" class="role-pill-label">Customer</label>
+                </div>
+
+                <div class="role-option">
+                  <input type="radio" name="role" id="role-agent" value="Agent" class="role-radio">
+                  <label for="role-agent" class="role-pill-label">Agent</label>
+                </div>
+
+                <div class="role-option">
+                  <input type="radio" name="role" id="role-admin" value="Admin" class="role-radio">
+                  <label for="role-admin" class="role-pill-label">Admin</label>
+                </div>
+
+                <div class="role-option">
+                  <input type="radio" name="role" id="role-manager" value="Manager" class="role-radio">
+                  <label for="role-manager" class="role-pill-label">Manager</label>
+                </div>
+
+              </div>
+            </fieldset>
+
+            <!-- 2. Email Field -->
+            <div class="field-group">
+              <label for="input-email" class="field-label">Email address</label>
+              <div class="input-wrapper">
+                <input 
+                  type="email" 
+                  id="input-email" 
+                  name="username" 
+                  class="text-input" 
+                  inputmode="email" 
+                  autocomplete="username" 
+                  placeholder="name@company.com" 
+                  aria-describedby="email-error"
+                  aria-invalid="false"
+                  required
+                >
+              </div>
+              <div id="email-error" class="field-error" role="alert">
+                Please enter a valid email address (e.g. name@company.com).
+              </div>
+            </div>
+
+            <!-- 3. Password Field with Show/Hide Toggle Button -->
+            <div class="field-group">
+              <label for="input-password" class="field-label">Password</label>
+              <div class="input-wrapper">
+                <input 
+                  type="password" 
+                  id="input-password" 
+                  name="password" 
+                  class="text-input" 
+                  autocomplete="current-password" 
+                  placeholder="At least 8 characters" 
+                  style="padding-right: 76px;"
+                  aria-describedby="password-error"
+                  aria-invalid="false"
+                  required
+                >
+                <button 
+                  type="button" 
+                  id="toggle-password" 
+                  class="toggle-password-btn" 
+                  aria-pressed="false" 
+                  aria-label="Show password" 
+                  onclick="togglePasswordVisibility()"
+                >
+                  Show
+                </button>
+              </div>
+              <div id="password-error" class="field-error" role="alert">
+                Password must be at least 8 characters long.
+              </div>
+            </div>
+
+            <!-- 4. Inline Notice for Forgot Password -->
+            <div id="forgot-notice" class="inline-notice" role="status">
+              Password reset is not connected in this prototype.
+            </div>
+
+            <!-- 5. Controls Row: Keep Me Signed In & Forgot Password -->
+            <div class="controls-row">
+              <label class="checkbox-label" for="keep-signed-in">
+                <input type="checkbox" id="keep-signed-in" name="keepSignedIn" class="checkbox-input" checked>
+                <span>Keep me signed in</span>
+              </label>
+
+              <button type="button" class="forgot-btn" onclick="showForgotPasswordNotice()">
+                Forgot password?
+              </button>
+            </div>
+
+            <!-- 6. Full-Width Pill Sign In Button -->
+            <button type="submit" id="btn-submit" class="btn-pill-primary">
+              <span id="btn-submit-text">Sign in</span>
+            </button>
+
+            <!-- 7. Fine-Print Disclaimer -->
+            <p class="fine-print">
+              Prototype. Use any email and a password of 8 or more characters. Nothing is sent or stored.
+            </p>
+          </form>
+
+          <!-- Success Panel (Replaces form on success) -->
+          <div id="success-panel" class="success-panel" aria-live="polite">
+            <h2 class="success-title" id="success-role-title">Signed in as Customer.</h2>
+            <p class="success-sentence" id="success-role-sentence">
+              Raise and follow tickets and use the chatbot.
+            </p>
+
+            <div class="success-links-row" id="role-links-container">
+              <!-- Dynamically populated links to the respective prototype workspace -->
+            </div>
+
+            <button type="button" class="btn-pill-primary" onclick="handleSignOut()">
+              Sign out
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer Line -->
+  <footer class="footer-line" role="contentinfo">
+    <span>© 2026 BIZASSIST AI</span>
+    <span>AI Product Prototyping with Low-Code Tools</span>
+  </footer>
+
+  <!-- ==========================================================================
+       VANILLA JAVASCRIPT LOGIC
+       - Email format & 8+ character password validation
+       - aria-describedby, aria-invalid, aria-pressed, role="alert"
+       - First invalid field auto-focus
+       - 900ms simulated transition
+       - Zero data storage/sending
+       ========================================================================== -->
+  <script>
+    'use strict';
+
+    // Role-specific descriptions and destination targets
+    const roleDescriptions = {
+      'Customer': {
+        sentence: 'Raise and follow tickets and use the chatbot.',
+        linkText: 'Go to Customer Ticket Portal →',
+        href: 'portal.html'
+      },
+      'Agent': {
+        sentence: 'Assigned tickets with AI summaries and suggested replies.',
+        linkText: 'Go to Agent Dashboard →',
+        href: 'agent-dashboard.html'
+      },
+      'Admin': {
+        sentence: 'Every ticket, assignment and user management.',
+        linkText: 'Go to Ticket Management & Triage →',
+        href: 'ai-triage.html'
+      },
+      'Manager': {
+        sentence: 'Workload, response time and common issues.',
+        linkText: 'Go to Manager Overview & Analytics →',
+        href: 'manager-overview.html'
+      }
+    };
+
+    /**
+     * Password Visibility Show / Hide Toggle
+     */
+    function togglePasswordVisibility() {
+      const passwordInput = document.getElementById('input-password');
+      const toggleBtn = document.getElementById('toggle-password');
+      const isVisible = passwordInput.type === 'text';
+
+      if (isVisible) {
+        passwordInput.type = 'password';
+        toggleBtn.textContent = 'Show';
+        toggleBtn.setAttribute('aria-pressed', 'false');
+        toggleBtn.setAttribute('aria-label', 'Show password');
+      } else {
+        passwordInput.type = 'text';
+        toggleBtn.textContent = 'Hide';
+        toggleBtn.setAttribute('aria-pressed', 'true');
+        toggleBtn.setAttribute('aria-label', 'Hide password');
+      }
+    }
+
+    /**
+     * Show inline message when "Forgot password?" is clicked
+     */
+    function showForgotPasswordNotice() {
+      const notice = document.getElementById('forgot-notice');
+      notice.classList.add('is-visible');
+    }
+
+    /**
+     * Handle Form Submission & Validation
+     */
+    function handleSignInSubmit(event) {
+      event.preventDefault();
+
+      const emailInput = document.getElementById('input-email');
+      const passwordInput = document.getElementById('input-password');
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+      const statusLive = document.getElementById('status-live');
+      const submitBtn = document.getElementById('btn-submit');
+      const submitText = document.getElementById('btn-submit-text');
+
+      // Hide previous errors
+      emailError.classList.remove('is-visible');
+      passwordError.classList.remove('is-visible');
+      emailInput.setAttribute('aria-invalid', 'false');
+      passwordInput.setAttribute('aria-invalid', 'false');
+
+      // Validation logic
+      const emailValue = emailInput.value.trim();
+      const passwordValue = passwordInput.value;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      let isEmailValid = emailRegex.test(emailValue);
+      let isPasswordValid = passwordValue.length >= 8;
+
+      let firstInvalid = null;
+
+      if (!isEmailValid) {
+        emailError.classList.add('is-visible');
+        emailInput.setAttribute('aria-invalid', 'true');
+        if (!firstInvalid) firstInvalid = emailInput;
+      }
+
+      if (!isPasswordValid) {
+        passwordError.classList.add('is-visible');
+        passwordInput.setAttribute('aria-invalid', 'true');
+        if (!firstInvalid) firstInvalid = passwordInput;
+      }
+
+      // If invalid, focus first invalid field immediately
+      if (firstInvalid) {
+        firstInvalid.focus();
+        statusLive.textContent = 'Sign in failed. Please review the highlighted errors.';
+        return;
+      }
+
+      // Valid: Get selected role
+      const selectedRadio = document.querySelector('input[name="role"]:checked');
+      const role = selectedRadio ? selectedRadio.value : 'Customer';
+
+      // 900ms simulated authentication animation
+      submitBtn.disabled = true;
+      submitText.textContent = 'Signing in...';
+      statusLive.textContent = 'Signing in... please wait.';
+
+      setTimeout(() => {
+        // Swap form with Success Panel
+        document.getElementById('signin-form').style.display = 'none';
+
+        const successPanel = document.getElementById('success-panel');
+        const roleInfo = roleDescriptions[role] || roleDescriptions['Customer'];
+
+        document.getElementById('success-role-title').textContent = `Signed in as ${role}.`;
+        document.getElementById('success-role-sentence').textContent = roleInfo.sentence;
+
+        const linksContainer = document.getElementById('role-links-container');
+        linksContainer.innerHTML = `
+          <a href="${roleInfo.href}" class="quick-route-link">
+            <span>${roleInfo.linkText}</span>
+          </a>
+          <a href="index.html" class="quick-route-link" style="color:var(--text-secondary);">
+            <span>Return to BIZASSIST AI Landing Page →</span>
+          </a>
+        `;
+
+        successPanel.classList.add('is-active');
+        statusLive.textContent = `Successfully signed in as ${role}.`;
+
+        // Focus the title for keyboard users
+        document.getElementById('success-role-title').setAttribute('tabindex', '-1');
+        document.getElementById('success-role-title').focus();
+      }, 900);
+    }
+
+    /**
+     * Sign out and return to the login form
+     */
+    function handleSignOut() {
+      const successPanel = document.getElementById('success-panel');
+      const form = document.getElementById('signin-form');
+      const submitBtn = document.getElementById('btn-submit');
+      const submitText = document.getElementById('btn-submit-text');
+      const emailInput = document.getElementById('input-email');
+      const passwordInput = document.getElementById('input-password');
+      const forgotNotice = document.getElementById('forgot-notice');
+
+      successPanel.classList.remove('is-active');
+      form.style.display = 'block';
+
+      submitBtn.disabled = false;
+      submitText.textContent = 'Sign in';
+
+      // Clear password field for security
+      passwordInput.value = '';
+      if (passwordInput.type === 'text') {
+        togglePasswordVisibility();
+      }
+      forgotNotice.classList.remove('is-visible');
+
+      document.getElementById('status-live').textContent = 'Signed out. Ready to sign in.';
+      emailInput.focus();
+    }
+  </script>
+</body>
+</html>

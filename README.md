@@ -40,7 +40,8 @@ The project code is separated into clean, modular files for easy maintenance and
 
 ```
 nexusai/
-├── index.html              # Main landing page with full navigation to all 6 modules
+├── index.html              # Main landing page with full navigation to all modules
+├── login.html              # Dedicated single-file accessible authentication screen
 ├── portal.html             # Customer Ticket Portal (Ticket intake, live milestone tracker, search)
 ├── agent-dashboard.html    # Agent Dashboard (Split-pane inbox queue, customer 360, SLA countdown)
 ├── ai-triage.html          # AI Triage Engine (Real-time NLP classification, entity extractor, routing)
@@ -59,12 +60,13 @@ nexusai/
 
 ---
 
-## 🌐 6 Dedicated Platform Modules & Links
+## 🌐 Platform Modules & Links
 
-Each of the 6 platform modules has its own dedicated page with live data, interactive forms, and direct actions:
+Each of the platform modules and authentication screen has its own dedicated page with live data, interactive forms, and direct actions:
 
 | Module | File | Local HTTP Link | Description |
 |---|---|---|---|
+| **0. Sign In / Authentication** | [`login.html`](file:///d:/zeni/login.html) | [http://localhost:3000/login.html](http://localhost:3000/login.html) | Single-screen accessible login with 4-role switcher (Customer, Agent, Admin, Manager), validation, password reveal, and role routing. |
 | **1. Customer Ticket Portal** | [`portal.html`](file:///d:/zeni/portal.html) | [http://localhost:3000/portal.html](http://localhost:3000/portal.html) | Self-service intake form, active milestone tracker (Submitted → Triaged → Fix Approved → Resolved), knowledge base search bar, and ticket history. |
 | **2. Agent Dashboard** | [`agent-dashboard.html`](file:///d:/zeni/agent-dashboard.html) | [http://localhost:3000/agent-dashboard.html](http://localhost:3000/agent-dashboard.html) | 3-pane agent workspace, filterable queue (P1/P2/Resolved), Customer 360 card, SLA countdown timer, AI draft injector, and Tier-3 escalation. |
 | **3. AI Triage Engine** | [`ai-triage.html`](file:///d:/zeni/ai-triage.html) | [http://localhost:3000/ai-triage.html](http://localhost:3000/ai-triage.html) | Interactive NLP workbench with sample presets, entity tagger, confidence breakdown bar chart, priority regressor, and live streaming event log. |
@@ -147,6 +149,25 @@ Every button, card, and icon on the website is completely functional:
 7. **Floating AI Assistant & Toasts**:
    - Persistent `Ask NexusAI` floating pill in the bottom right corner opens the instant support chatbot from anywhere on the page.
    - Real-time toast notifications confirm ticket creation, draft dispatch, and demo bookings.
+
+---
+
+## 🗄️ Supabase Backend Integration
+
+The project is connected live to Supabase:
+- **Project URL**: `https://imhfqkepsepiscyceoyk.supabase.co`
+- **Project Ref**: `imhfqkepsepiscyceoyk`
+- **Client Service**: [`js/supabase-client.js`](file:///d:/zeni/js/supabase-client.js)
+- **Environment Config**: [`.env`](file:///d:/zeni/.env) & [`.env.example`](file:///d:/zeni/.env.example)
+
+### Active Supabase Database Tables:
+1. `public.tickets`: Stores customer tickets with code (`#NX-4092`), category, priority (P1-P3), SLA countdown, and AI inference metadata.
+2. `public.ticket_messages`: Stores message threads and agent replies for each ticket.
+3. `public.chat_messages`: Logs knowledge base chatbot queries, vector citation references, and user feedback.
+4. `public.knowledge_articles`: Stores indexed engineering & support documentation articles with citations.
+5. `public.demo_requests`: Captures lead bookings and demonstration requests submitted via landing page modals.
+
+Row Level Security (RLS) is enabled across all tables with public policies configured for real-time customer and agent prototype interaction.
 
 ---
 

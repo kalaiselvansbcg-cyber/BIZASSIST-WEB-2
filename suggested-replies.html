@@ -149,6 +149,9 @@
       <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#4F46E5; font-weight:600; background:#EEF2FF; padding:2px 8px; border-radius:12px;">
         <span style="width:6px; height:6px; border-radius:50%; background:#6366F1;"></span> Model: Claude-3.5 + Nexus-RAG
       </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:#059669; font-weight:600; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:12px;" title="Connected to https://imhfqkepsepiscyceoyk.supabase.co">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Supabase: imhfqkepsepiscyceoyk
+      </span>
     </div>
     <nav>
       <ul class="header-nav-links">
@@ -276,6 +279,8 @@
   </main>
 
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
   <script>
     const drafts = {
       empathetic: "Hi Sarah,\n\nThank you for reaching out right away, and I completely understand how concerning a 502 error during renewal can feel when large payments are involved. Please rest assured: your team's workspace is completely safe, active, and there is zero risk of downgrade.\n\nI just checked transaction ch_3Ox948aL on our payment gateway. The funds were authorized securely on your American Express, but our edge webhook experienced a brief 502 timeout before returning acknowledgment. I have manually captured the transaction on our end and renewed your Enterprise subscription through November 2027.\n\nYour official receipt and paid invoice #INV-2026-904 have been attached for your records. Please don't hesitate to reach back out if you or your finance team need anything else!",

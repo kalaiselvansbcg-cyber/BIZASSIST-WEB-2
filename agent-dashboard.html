@@ -308,6 +308,9 @@
       <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#059669; font-weight:600; background:#ECFDF5; padding:2px 8px; border-radius:12px;">
         <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Online
       </span>
+      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:#059669; font-weight:600; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:12px;" title="Connected to https://imhfqkepsepiscyceoyk.supabase.co">
+        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Supabase: imhfqkepsepiscyceoyk
+      </span>
     </div>
     <nav>
       <ul class="header-nav-links">
@@ -544,6 +547,8 @@
   </div>
 
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
   <script>
     // Ticket Data Store
     const tickets = [
@@ -754,6 +759,17 @@
 
       document.getElementById('reply-composer').value = '';
       window.NexusShowToast("Reply approved & dispatched to customer!");
+
+      // Sync reply to Supabase
+      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+        const cur = tickets[currentTicketIdx];
+        if (cur && cur.id) {
+          window.NexusSupabase.updateTicket(cur.id, {
+            suggested_reply: text,
+            status: 'In Progress'
+          });
+        }
+      }
     }
 
     function escalateTicket() {
@@ -761,12 +777,27 @@
       document.getElementById('active-badge').textContent = "ESCALATED TIER-3";
       document.getElementById('active-badge').style.background = "#581C87";
       document.getElementById('active-badge').style.color = "#FFFFFF";
+
+      // Sync escalation to Supabase
+      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+        const cur = tickets[currentTicketIdx];
+        if (cur && cur.id) {
+          window.NexusSupabase.updateTicket(cur.id, { status: 'Escalated' });
+        }
+      }
     }
 
     function markResolved() {
-      window.NexusShowToast("Ticket #NX-4092 marked as Resolved ✓");
+      const cur = tickets[currentTicketIdx];
+      const code = cur ? cur.id : 'NX-4092';
+      window.NexusShowToast("Ticket #" + code + " marked as Resolved ✓");
       document.getElementById('active-badge').textContent = "RESOLVED";
       document.getElementById('active-badge').className = "badge-status resolved";
+
+      // Sync resolved status to Supabase
+      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+        window.NexusSupabase.updateTicket(code, { status: 'Resolved' });
+      }
     }
 
     function filterQueue(type, btn) {

@@ -1339,7 +1339,8 @@
       </nav>
 
       <!-- Desktop Action -->
-      <div class="nav-desktop-btn">
+      <div class="nav-desktop-btn" style="display: flex; align-items: center; gap: 16px;">
+        <a href="login.html" class="nav-link" style="font-weight: 600;">Sign in</a>
         <button class="btn btn-primary" onclick="openDemoModal()" aria-haspopup="dialog">Book a demo</button>
       </div>
 
@@ -1359,6 +1360,7 @@
         <li><a href="#insights" class="nav-link" onclick="toggleMobileMenu()">Manager Insights</a></li>
         <li><a href="#goals" class="nav-link" onclick="toggleMobileMenu()">Goals</a></li>
         <li><a href="#contact" class="nav-link" onclick="toggleMobileMenu()">Contact</a></li>
+        <li><a href="login.html" class="nav-link" onclick="toggleMobileMenu()" style="font-weight: 700;">Sign in →</a></li>
       </ul>
       <button class="btn btn-primary" onclick="toggleMobileMenu(); openDemoModal();">Book a demo</button>
     </div>
@@ -2045,6 +2047,10 @@
     </div>
   </div>
 
+  <!-- Supabase Client SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+
   <!-- ==========================================================================
        VANILLA JS SCRIPT (Self-contained, clean functions, swappable for real API)
        ========================================================================== -->
@@ -2422,6 +2428,22 @@
     function submitDemoForm(e) {
       e.preventDefault();
       const name = document.getElementById('demo-name').value;
+      const email = document.getElementById('demo-email')?.value || '';
+      const company = document.getElementById('demo-company')?.value || '';
+      const size = document.getElementById('demo-size')?.value || '';
+
+      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
+        window.NexusSupabase.submitDemoRequest({
+          fullName: name,
+          workEmail: email,
+          companyName: company,
+          teamSize: size,
+          notes: 'Landing page demo request'
+        }).then(res => {
+          if (res.error) console.warn('[Supabase demo save error]', res.error);
+        });
+      }
+
       closeDemoModal();
       showToast("Thank you, " + name + "! Demo invitation sent to your email.");
     }
