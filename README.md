@@ -1,8 +1,8 @@
-# NexusAI — AI-Assisted Customer Support Platform
+# BIZASSIST AI — Customer Support Platform
 
-A bold, typography-first editorial marketing website and working prototype for **NexusAI**, an AI-assisted customer support platform where customers raise and track tickets, and AI helps support staff sort, prioritise, and answer them faster.
+A modern, accessible, single-file landing page and working prototype for **BIZASSIST AI**, an AI-assisted customer support platform where customers raise tickets and AI categorises, prioritises, summarises, and suggests replies.
 
-Built by **14 students in 6 days** based on the PRD by `@KAL-EL` (Nov 17, 2026).
+**GitHub Repository**: [https://github.com/kalaiselvansbcg-cyber/BIZASSIST-WEB-2](https://github.com/kalaiselvansbcg-cyber/BIZASSIST-WEB-2)
 
 ---
 
