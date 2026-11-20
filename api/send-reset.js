@@ -6,6 +6,25 @@
  * API keys are read strictly from process.env and never exposed to the client.
  */
 
+async function parseBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  if (typeof req.body === 'string') {
+    try { return JSON.parse(req.body); } catch (e) { return {}; }
+  }
+  return new Promise((resolve) => {
+    let data = '';
+    req.on('data', chunk => { data += chunk; });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(data || '{}'));
+      } catch (e) {
+        resolve({});
+      }
+    });
+    req.on('error', () => resolve({}));
+  });
+}
+
 export default async function handler(req, res) {
   // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -21,7 +40,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email, code } = req.body || {};
+    const body = await parseBody(req);
+    const { email, code } = body;
     if (!email || !code) {
       return res.status(400).json({ error: 'Email and verification code are required.' });
     }

@@ -370,6 +370,25 @@ function generateLocalFallbackResponse(userMessage, history) {
   };
 }
 
+async function parseBody(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  if (typeof req.body === 'string') {
+    try { return JSON.parse(req.body); } catch (e) { return {}; }
+  }
+  return new Promise((resolve) => {
+    let data = '';
+    req.on('data', chunk => { data += chunk; });
+    req.on('end', () => {
+      try {
+        resolve(JSON.parse(data || '{}'));
+      } catch (e) {
+        resolve({});
+      }
+    });
+    req.on('error', () => resolve({}));
+  });
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -384,7 +403,7 @@ export default async function handler(req, res) {
   }
 
   // 1. IP Rate Limiting
-  const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1';
+  const clientIp = (req.headers && req.headers['x-forwarded-for']) || (req.socket && req.socket.remoteAddress) || '127.0.0.1';
   if (!checkRateLimit(clientIp)) {
     return res.status(429).json({
       error: 'Too Many Requests',
@@ -393,7 +412,8 @@ export default async function handler(req, res) {
   }
 
   // 2. Parse payload
-  let { messages, action, toolArgs } = req.body || {};
+  const body = await parseBody(req);
+  let { messages, action, toolArgs } = body || {};
   if (!Array.isArray(messages)) messages = [];
 
   if (action && toolArgs) {
