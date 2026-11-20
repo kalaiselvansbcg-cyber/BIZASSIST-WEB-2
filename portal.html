@@ -3,28 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Ticket Portal — BIZASSIST AI</title>
+  <title>Customer Ticket Portal — BizAssist AI</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/shell.css">
   
   <style>
-    :root {
-      --bg: #FAF8F5;
-      --ink: #111111;
-      --secondary: #5E5A53;
-      --muted: #6F6A61;
-      --line: #E3DED6;
-      --accent: #B3402A;
-      --surface: #FFFFFF;
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-    }
-
     body {
       background-color: var(--bg);
       color: var(--ink);
@@ -35,443 +22,258 @@
     }
 
     .container {
-      max-width: 1320px;
+      max-width: 1280px;
       margin: 0 auto;
-      padding: 32px 24px 60px 24px;
+      padding: 32px 20px 60px 20px;
       flex: 1;
       width: 100%;
     }
 
     .portal-hero {
-      margin-bottom: 32px;
-    }
-
-    .portal-tag {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--muted);
-      display: inline-block;
-      margin-bottom: 8px;
+      margin-bottom: 28px;
     }
 
     .portal-title {
-      font-family: var(--font-serif);
-      font-size: clamp(36px, 5vw, 56px);
-      font-weight: 400;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 700;
       color: var(--ink);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
     }
 
     .portal-sub {
-      font-size: 15px;
-      color: var(--secondary);
-      max-width: 60ch;
-      line-height: 1.5;
+      font-size: 14.5px;
+      color: var(--ink-soft);
+      max-width: 65ch;
+      line-height: 1.55;
     }
 
-    /* Support Assistance Callout Card */
+    /* Support Callout Card */
     .support-callout-card {
       border: 1px solid var(--line);
       background: var(--surface);
+      border-radius: var(--radius);
       padding: 16px 20px;
-      margin-top: 20px;
+      margin-top: 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 16px;
-    }
-
-    .support-callout-text {
-      font-size: 13px;
-      color: var(--secondary);
-    }
-
-    .support-callout-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    .support-btn {
-      padding: 8px 14px;
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: pointer;
-      border: 1px solid var(--ink);
-      background: var(--ink);
-      color: #FAF8F5;
-      transition: background 150ms ease;
-    }
-
-    .support-btn:hover {
-      background: #2A2A2A;
-    }
-
-    .support-btn.secondary {
-      background: transparent;
-      color: var(--ink);
-      border-color: var(--line);
-    }
-
-    .support-btn.secondary:hover {
-      border-color: var(--ink);
-      background: #F4EFEB;
+      box-shadow: var(--shadow-sm);
     }
 
     /* Layout Grid */
     .portal-grid {
       display: grid;
       grid-template-columns: 1.25fr 1fr;
-      gap: 32px;
-      margin-top: 28px;
+      gap: 28px;
+      margin-top: 24px;
     }
 
-    @media (max-width: 1000px) {
+    @media (max-width: 992px) {
       .portal-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    .card-panel {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: 28px;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-      margin-bottom: 28px;
-    }
-
-    .panel-header {
+    /* 5-Stage Graphical Timeline */
+    .stepper-wrap {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 14px;
+      position: relative;
+      margin: 24px 0 20px 0;
     }
-
-    .panel-title {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      font-weight: 500;
-      color: var(--ink);
+    .stepper-wrap::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--line);
+      z-index: 1;
     }
-
-    /* Active Stepper */
-    .stepper-wrap {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-      text-align: center;
-      margin: 20px 0;
-      background: #FAF8F5;
-      padding: 20px 14px;
-      border: 1px solid var(--line);
-    }
-
     .step-box {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 6px;
+      position: relative;
+      z-index: 2;
+      text-align: center;
     }
-
     .step-dot {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 700;
-      border: 1px solid var(--line);
-      background: #FFFFFF;
-      color: var(--muted);
+      transition: all 200ms ease;
     }
-
     .step-box.completed .step-dot {
-      background: var(--ink);
-      border-color: var(--ink);
-      color: #FAF8F5;
-    }
-
-    .step-box.active .step-dot {
-      background: var(--accent);
-      border-color: var(--accent);
+      background: var(--status-resolved);
+      border-color: var(--status-resolved);
       color: #FFFFFF;
     }
-
+    .step-box.active .step-dot {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #FFFFFF;
+      box-shadow: 0 0 0 4px var(--primary-light);
+    }
     .step-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .step-box.active .step-label {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* 3-Step Intake Wizard */
+    .wizard-steps-indicator {
+      display: flex;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-alt);
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+    }
+    .wizard-step-tab {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-align: center;
+      border-bottom: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .wizard-step-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: var(--surface);
+    }
+    .wizard-step-tab.completed {
+      color: var(--status-resolved);
+    }
+
+    .wizard-pane {
+      display: none;
+      padding: 24px;
+    }
+    .wizard-pane.active {
+      display: block;
+      animation: modalPop 150ms ease;
+    }
+
+    /* AI Live Detection Pill */
+    .ai-intent-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      background: var(--ai-gradient-subtle);
+      border: 1px solid rgba(20, 184, 166, 0.3);
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    /* Deflection Accordion Box */
+    .deflection-box {
+      display: none;
+      background: #F0FDF4;
+      border: 1px solid var(--status-resolved-border);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .deflection-box.visible {
+      display: block;
+    }
+    .deflection-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-top: 8px;
+    }
+
+    /* Dropzone */
+    .dropzone {
+      border: 2px dashed var(--line-strong);
+      border-radius: var(--radius-sm);
+      padding: 24px 16px;
+      text-align: center;
+      background: var(--surface-alt);
+      cursor: pointer;
+      transition: all 150ms ease;
+    }
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    /* CSAT Star Buttons */
+    .csat-stars {
+      display: flex;
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .csat-star-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 120ms ease;
+    }
+    .csat-star-btn:hover, .csat-star-btn.selected {
+      background: #FEF3C7;
+      border-color: #F59E0B;
+      color: #B45309;
+    }
+
+    /* Ticket Table */
+    .ticket-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 13px;
+    }
+    .ticket-table th {
+      padding: 10px 12px;
+      text-align: left;
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      font-family: var(--font-mono);
-    }
-
-    .step-box.active .step-label {
-      color: var(--accent);
-    }
-
-    .step-meta {
-      font-size: 10px;
       color: var(--muted);
-    }
-
-    /* Form Fields */
-    .field-group {
-      margin-bottom: 16px;
-    }
-
-    .field-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-      color: var(--ink);
-    }
-
-    .text-input, .select-input, .textarea-input {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: #FAF8F5;
-      padding: 10px 14px;
-      font-family: var(--font-sans);
-      font-size: 14px;
-      color: var(--ink);
-      border-radius: 0;
-    }
-
-    .text-input:focus, .select-input:focus, .textarea-input:focus {
-      outline: none;
-      border-color: var(--ink);
-      background: #FFFFFF;
-    }
-
-    .textarea-input {
-      min-height: 100px;
-      resize: vertical;
-    }
-
-    /* File Attachment Dropzone */
-    .dropzone {
-      border: 1px dashed var(--line);
-      background: #FAF8F5;
-      padding: 18px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 150ms ease;
-      margin-top: 6px;
-    }
-
-    .dropzone:hover {
-      border-color: var(--ink);
-      background: #FFFFFF;
-    }
-
-    .dropzone-text {
-      font-size: 13px;
-      color: var(--secondary);
-    }
-
-    .dropzone-sub {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .attachment-preview-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .attachment-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
-      background: #FFFFFF;
-      border: 1px solid var(--line);
-      font-size: 12px;
-      font-family: var(--font-mono);
-    }
-
-    .attachment-chip-remove {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--accent);
-      font-weight: bold;
-    }
-
-    /* Deflection Suggestion Box */
-    .deflection-box {
-      display: none;
-      background: #F4EFEB;
-      border: 1px solid #D8CFC4;
-      padding: 16px;
-      margin: 16px 0;
-    }
-
-    .deflection-box.is-visible {
-      display: block;
-    }
-
-    .deflection-header {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-family: var(--font-mono);
-      color: var(--muted);
-      margin-bottom: 8px;
-    }
-
-    .deflection-card {
-      background: #FFFFFF;
-      border: 1px solid var(--line);
-      padding: 12px;
-      margin-bottom: 8px;
-    }
-
-    .deflection-card-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
-    .deflection-card-desc {
-      font-size: 12px;
-      color: var(--secondary);
-      margin: 4px 0 8px 0;
-      line-height: 1.4;
-    }
-
-    .deflection-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    /* CSAT Rating Widget */
-    .csat-box {
-      background: #F0F7F2;
-      border: 1px solid #C5E2CF;
-      padding: 20px;
-      margin-top: 20px;
-    }
-
-    .csat-title {
-      font-weight: 600;
-      font-size: 14px;
-      color: #1B5E34;
-      margin-bottom: 4px;
-    }
-
-    .csat-sub {
-      font-size: 12px;
-      color: #3B724E;
-      margin-bottom: 12px;
-    }
-
-    .csat-stars {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .csat-star-btn {
-      width: 36px;
-      height: 36px;
-      border: 1px solid #C5E2CF;
-      background: #FFFFFF;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      color: #1B5E34;
-      transition: all 150ms ease;
-    }
-
-    .csat-star-btn:hover, .csat-star-btn.selected {
-      background: #1B5E34;
-      color: #FAF8F5;
-      border-color: #1B5E34;
-    }
-
-    /* Table */
-    .ticket-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .ticket-table th {
-      text-align: left;
-      padding: 10px 14px;
       border-bottom: 1px solid var(--line);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      background: #FAF8F5;
     }
-
     .ticket-table td {
-      padding: 14px;
-      border-bottom: 1px solid #F0EBE1;
-    }
-
-    .ticket-table tr:hover {
-      background: #FAF8F5;
-      cursor: pointer;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      border: 1px solid var(--line);
-      background: #FFFFFF;
-    }
-
-    .status-badge.resolved {
-      background: #F0F7F2;
-      border-color: #C5E2CF;
-      color: #1B5E34;
-    }
-
-    .status-badge.urgent {
-      background: #FDF4F2;
-      border-color: #EAC9C1;
-      color: #8C2210;
-    }
-
-    .status-badge.active {
-      background: #FAF8F5;
-      border-color: var(--ink);
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
       color: var(--ink);
+    }
+    .ticket-table tr:hover td {
+      background: var(--surface-alt);
+      cursor: pointer;
     }
   </style>
 </head>
@@ -479,23 +281,23 @@
 
   <main class="container">
     
-    <!-- Portal Hero Introduction -->
+    <!-- Hero Header -->
     <header class="portal-hero">
-      <span class="portal-tag">Customer Self-Service Intake</span>
-      <h1 class="portal-title">Transparent support operations.</h1>
+      <span class="badge-pill badge-ai" style="margin-bottom:8px;">Customer Self-Service Hub</span>
+      <h1 class="portal-title">Transparent Support Operations</h1>
       <p class="portal-sub">
-        Raise inquiries, inspect real-time triage milestones, and review knowledge base documentation with zero wait time.
+        Raise inquiries, inspect real-time AI triage milestones, track engineering assignment, and review verified documentation with zero waiting time.
       </p>
 
       <!-- Contact Support Bar -->
       <div class="support-callout-card">
-        <div class="support-callout-text">
-          Need immediate assistance? Reach our dedicated operations team directly via phone or WhatsApp.
+        <div style="font-size:13px; color:var(--ink-soft);">
+          Need immediate phone or WhatsApp assistance? Our human operations team is ready to assist.
         </div>
-        <div class="support-callout-actions">
-          <a href="tel:+910000000000" id="portal-call-btn" class="support-btn">Call Support</a>
-          <a href="https://wa.me/910000000000" id="portal-wa-btn" target="_blank" rel="noopener" class="support-btn secondary">WhatsApp Us</a>
-          <button type="button" class="support-btn secondary" onclick="BizAssistShell.openCallbackModal()">Request Call Back</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="tel:+910000000000" id="portal-call-btn" class="btn-primary" style="font-size:12px;">Call Support</a>
+          <a href="https://wa.me/910000000000" id="portal-wa-btn" target="_blank" rel="noopener" class="btn-secondary" style="font-size:12px;">WhatsApp Us</a>
+          <button type="button" class="btn-secondary" style="font-size:12px;" onclick="BizAssistShell.openCallbackModal()">Schedule Call Back</button>
         </div>
       </div>
     </header>
@@ -503,74 +305,122 @@
     <!-- Main Grid -->
     <div class="portal-grid">
       
-      <!-- Left Column: Active Ticket & Previous Tickets -->
-      <section>
+      <!-- Left Column: Active Ticket Tracker & History -->
+      <section style="display:flex; flex-direction:column; gap:24px;">
         
-        <!-- Active Ticket Detail & Stepper Card -->
-        <div class="card-panel" id="active-ticket-card">
-          <div class="panel-header">
+        <!-- Active Ticket Detail & Visual Timeline -->
+        <div class="card-modern" id="active-ticket-card">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;">
             <div>
-              <span class="status-badge active" id="active-ticket-badge">TICKET #BA-1042</span>
-              <h2 class="panel-title" id="active-ticket-title" style="margin-top:6px;">Enterprise SSO integration failure with Okta SAML 2.0</h2>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="ticket-id-copy" id="active-ticket-code">#BA-1042</span>
+                <span class="badge-pill" id="active-ticket-priority">HIGH</span>
+                <span class="badge-pill badge-ai" id="active-ticket-category">Account & Security</span>
+              </div>
+              <h2 style="font-size:18px; margin-top:8px; font-weight:700;" id="active-ticket-subject">
+                Enterprise SSO integration failure with Okta SAML 2.0
+              </h2>
             </div>
-            <button type="button" class="support-btn secondary" onclick="refreshTicketStatus()">Refresh Status</button>
+            <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="refreshTicketStatus()">Refresh Status</button>
           </div>
 
-          <div style="font-size:12px; color:var(--secondary); margin-bottom:12px;" id="active-ticket-meta">
-            Submitted 42 minutes ago by Alex Rivera · Tier-2 Infrastructure
+          <div style="font-size:12px; color:var(--muted); margin-bottom:16px;" id="active-ticket-meta">
+            Submitted by Alex Rivera · Plan SLA Commitment: <strong>&lt; 60m turnaround</strong>
           </div>
 
-          <!-- 5-Stage Stepper -->
+          <!-- 5-Stage Timeline Stepper -->
           <div class="stepper-wrap" id="active-ticket-stepper">
-            <!-- Populated dynamically via JS -->
+            <div class="step-box completed">
+              <div class="step-dot">✓</div>
+              <span class="step-label">1. Submitted</span>
+            </div>
+            <div class="step-box completed">
+              <div class="step-dot">✓</div>
+              <span class="step-label">2. AI Triaged</span>
+            </div>
+            <div class="step-box completed">
+              <div class="step-dot">✓</div>
+              <span class="step-label">3. Assigned</span>
+            </div>
+            <div class="step-box active">
+              <div class="step-dot">4</div>
+              <span class="step-label">4. In Progress</span>
+            </div>
+            <div class="step-box">
+              <div class="step-dot">5</div>
+              <span class="step-label">5. Resolved</span>
+            </div>
           </div>
 
-          <!-- Ticket Conversation Snippet -->
-          <div style="margin-top:20px;">
-            <div style="background:#FAF8F5; border:1px solid var(--line); padding:16px; margin-bottom:12px;">
-              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px;">
-                <span id="active-ticket-author">CUSTOMER</span>
-                <span id="active-ticket-time">Initial Request</span>
+          <!-- Conversation Thread Snippet -->
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+            <!-- Customer Initial Ingestion -->
+            <div style="background:var(--surface-alt); border:1px solid var(--line); border-radius:8px; padding:14px;">
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:6px;">
+                <span style="font-weight:600;" id="active-ticket-author">ALEX RIVERA (YOU)</span>
+                <span id="active-ticket-time">48m ago</span>
               </div>
               <p style="font-size:13px; line-height:1.5;" id="active-ticket-desc">
                 Our staging Okta IdP cert was rotated but SAML assertion verification is failing with invalid signature on the metadata endpoint.
               </p>
-              <div id="active-ticket-attachments" class="attachment-preview-list"></div>
+              <div id="active-ticket-attachments" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
             </div>
 
-            <!-- Agent Reply Box -->
-            <div style="background:#FFFFFF; border:1px solid var(--ink); padding:16px;" id="active-ticket-reply-box">
-              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); font-family:var(--font-mono); margin-bottom:6px;">
-                <span id="active-ticket-agent">AGENT SARAH JENKINS</span>
+            <!-- Agent Latest Public Reply -->
+            <div style="background:var(--surface); border:1px solid var(--primary); border-radius:8px; padding:14px;" id="active-ticket-reply-box">
+              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--primary); margin-bottom:6px;">
+                <span style="font-weight:700;" id="active-ticket-agent">AGENT SARAH JENKINS (SUPPORT SPECIALIST)</span>
                 <span>LATEST UPDATE</span>
               </div>
-              <p style="font-size:13px; line-height:1.5;" id="active-ticket-reply-text">
+              <p style="font-size:13px; line-height:1.55;" id="active-ticket-reply-text">
                 Hi Alex, I reviewed your Okta metadata endpoint. The x509 cert fingerprint needs manual re-sync in your SSO settings panel. I have refreshed the cache on our auth gateway.
               </p>
             </div>
 
-            <!-- CSAT Rating Card (Shown when Resolved) -->
-            <div id="csat-card" class="csat-box" style="display:none;">
-              <div class="csat-title">Rate your support experience</div>
-              <p class="csat-sub">This ticket has been marked Resolved. How satisfied are you with our assistance?</p>
-              <div class="csat-stars" id="csat-star-group">
-                <button type="button" class="csat-star-btn" onclick="selectCsatRating(1)">1</button>
-                <button type="button" class="csat-star-btn" onclick="selectCsatRating(2)">2</button>
-                <button type="button" class="csat-star-btn" onclick="selectCsatRating(3)">3</button>
-                <button type="button" class="csat-star-btn" onclick="selectCsatRating(4)">4</button>
-                <button type="button" class="csat-star-btn selected" onclick="selectCsatRating(5)">5</button>
+            <!-- Customer Reply Box (Allows direct response to open ticket) -->
+            <div id="customer-reply-area" style="margin-top:6px;">
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="customer-reply-input" class="input-modern" placeholder="Add a reply or update for the assigned support agent...">
+                <button type="button" class="btn-primary" onclick="submitCustomerReply()">Reply</button>
               </div>
-              <textarea id="csat-comment" class="textarea-input" placeholder="Optional comments regarding your experience..." style="min-height:60px; margin-bottom:10px;"></textarea>
-              <button type="button" class="support-btn" onclick="submitActiveCsat()">Submit CSAT Rating</button>
             </div>
+
+            <!-- Reopen Ticket Action (Shown when Resolved) -->
+            <div id="reopen-ticket-area" style="display:none; margin-top:6px;">
+              <button type="button" class="btn-secondary" onclick="reopenActiveTicket()">↻ Reopen this ticket</button>
+            </div>
+
+            <!-- CSAT 5-Star Rating Survey (Shown when Resolved) -->
+            <div id="csat-card" style="display:none; background:#FFFBEB; border:1px solid #FCD34D; border-radius:8px; padding:16px; margin-top:8px;">
+              <div style="font-weight:700; font-size:14px; color:#92400E;">Rate your support experience</div>
+              <p style="font-size:12px; color:#B45309; margin-top:2px;">This inquiry has been marked Resolved. How satisfied are you with our assistance?</p>
+              
+              <div class="csat-stars" id="csat-star-group">
+                <button type="button" class="csat-star-btn" onclick="selectCsat(1)">1</button>
+                <button type="button" class="csat-star-btn" onclick="selectCsat(2)">2</button>
+                <button type="button" class="csat-star-btn" onclick="selectCsat(3)">3</button>
+                <button type="button" class="csat-star-btn" onclick="selectCsat(4)">4</button>
+                <button type="button" class="csat-star-btn selected" onclick="selectCsat(5)">5</button>
+              </div>
+
+              <textarea id="csat-comment-input" class="input-modern" placeholder="Optional comments regarding your experience..." style="min-height:50px; margin-bottom:8px;"></textarea>
+              <button type="button" class="btn-primary" onclick="submitCsatRating()">Submit CSAT Rating</button>
+            </div>
+
           </div>
         </div>
 
-        <!-- History Table -->
-        <div class="card-panel">
-          <div class="panel-header">
-            <h2 class="panel-title">Your Support History</h2>
-            <span class="portal-tag" id="history-count-badge">5 TICKETS</span>
+        <!-- Support History Table with Status Filter -->
+        <div class="card-modern">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <h2 style="font-size:16px; font-weight:700;">Your Support History</h2>
+            
+            <!-- Segmented status filter -->
+            <div class="segmented-control">
+              <button type="button" class="segmented-btn active" onclick="filterHistory('all', this)">All</button>
+              <button type="button" class="segmented-btn" onclick="filterHistory('open', this)">In Progress</button>
+              <button type="button" class="segmented-btn" onclick="filterHistory('resolved', this)">Resolved</button>
+            </div>
           </div>
 
           <table class="ticket-table">
@@ -584,49 +434,80 @@
               </tr>
             </thead>
             <tbody id="portal-history-body">
-              <!-- Populated dynamically via JS -->
+              <!-- Rendered via JS -->
             </tbody>
           </table>
         </div>
 
       </section>
 
-      <!-- Right Column: Raise a Ticket & Knowledge Base -->
-      <section>
+      <!-- Right Column: 3-Step Guided Intake Wizard & Knowledge Base -->
+      <section style="display:flex; flex-direction:column; gap:24px;">
         
-        <!-- Raise Ticket Card -->
-        <div class="card-panel">
-          <div class="panel-header">
-            <h2 class="panel-title">Raise a Support Ticket</h2>
+        <!-- 3-Step Guided Ticket Intake Wizard -->
+        <div class="card-modern" style="padding:0; overflow:hidden;">
+          <div class="wizard-steps-indicator">
+            <div class="wizard-step-tab active" id="wizard-tab-1">
+              <span>1. Inquiry</span>
+            </div>
+            <div class="wizard-step-tab" id="wizard-tab-2">
+              <span>2. Details</span>
+            </div>
+            <div class="wizard-step-tab" id="wizard-tab-3">
+              <span>3. Review</span>
+            </div>
           </div>
 
-          <form id="form-raise-ticket" onsubmit="handlePortalSubmit(event)" novalidate>
-            
-            <div class="field-group">
-              <label class="field-label" for="ticket-subject">Subject</label>
-              <input type="text" id="ticket-subject" class="text-input" placeholder="e.g. Invoicing VAT mismatch on monthly billing" required oninput="handleDeflectionSearch(this.value)">
+          <!-- Step 1: What's going on? -->
+          <div class="wizard-pane active" id="wizard-pane-1">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:6px;">Step 1: What is going on?</h3>
+            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Describe the issue you are facing. Our AI evaluates category and urgency as you type.</p>
+
+            <label class="mono-label" for="wizard-subject">Inquiry Subject</label>
+            <input type="text" id="wizard-subject" class="input-modern" placeholder="e.g. Invoicing VAT mismatch on monthly billing..." oninput="handleWizardIntentDetection(this.value)" style="margin-top:4px;">
+
+            <!-- Real-time AI classification pill -->
+            <div class="ai-intent-indicator" id="ai-intent-pill" style="display:none;">
+              <span>🤖</span>
+              <span id="ai-intent-text">AI Detected: <strong>Billing & Payments</strong> · Normal Urgency</span>
             </div>
 
-            <!-- Dynamic Deflection Suggestions -->
-            <div id="deflection-container" class="deflection-box">
-              <div class="deflection-header">Suggested Articles (Self-Service)</div>
+            <!-- Deflection Suggestions Box -->
+            <div class="deflection-box" id="deflection-box">
+              <div style="font-weight:700; font-size:12px; color:var(--status-resolved);">Suggested Instant Solutions (Self-Service)</div>
               <div id="deflection-articles-list"></div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
-              <div class="field-group">
-                <label class="field-label" for="ticket-category">Category</label>
-                <select id="ticket-category" class="select-input">
+            <div style="margin-top:14px;">
+              <label class="mono-label" for="wizard-quick-desc">Brief Overview</label>
+              <textarea id="wizard-quick-desc" class="input-modern" placeholder="Provide quick background on what broke or what you need..." style="min-height:70px; margin-top:4px;"></textarea>
+            </div>
+
+            <div style="margin-top:18px; text-align:right;">
+              <button type="button" class="btn-primary" onclick="goToWizardStep(2)">Next: Details & Attachments →</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Details & Attachments -->
+          <div class="wizard-pane" id="wizard-pane-2">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:6px;">Step 2: Details & Attachments</h3>
+            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Confirm category classification and attach error logs or screenshots.</p>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+              <div>
+                <label class="mono-label" for="wizard-category">Category</label>
+                <select id="wizard-category" class="input-modern" style="margin-top:4px;">
                   <option value="Billing & Payments">Billing & Payments</option>
                   <option value="API & Infrastructure">API & Infrastructure</option>
                   <option value="Account & Security">Account & Security</option>
-                  <option value="General">General Inquiries</option>
+                  <option value="Bug Reports">Bug Reports</option>
+                  <option value="Integrations">Integrations</option>
+                  <option value="General">General Inquiry</option>
                 </select>
               </div>
-
-              <div class="field-group">
-                <label class="field-label" for="ticket-priority">Priority</label>
-                <select id="ticket-priority" class="select-input">
+              <div>
+                <label class="mono-label" for="wizard-priority">Urgency / Severity</label>
+                <select id="wizard-priority" class="input-modern" style="margin-top:4px;">
                   <option value="Normal">Normal (8h SLA)</option>
                   <option value="High">High (1h SLA)</option>
                   <option value="Urgent">Urgent (15m SLA)</option>
@@ -634,41 +515,57 @@
               </div>
             </div>
 
-            <div class="field-group">
-              <label class="field-label" for="ticket-desc">Detailed Description</label>
-              <textarea id="ticket-desc" class="textarea-input" placeholder="Provide full context, affected user emails, or error messages..." required></textarea>
+            <label class="mono-label">Attachments (Screenshots, PDFs, Error Logs)</label>
+            <div class="dropzone" style="margin-top:4px;" onclick="document.getElementById('file-upload-input').click()">
+              <div style="font-weight:600; font-size:13px; color:var(--ink);">Click or drag files here</div>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">Supports PNG, JPEG, WebP, PDF (Up to 3 files, max 5MB)</div>
             </div>
+            <input type="file" id="file-upload-input" style="display:none;" multiple accept="image/*,.pdf,.txt" onchange="handleWizardFileUpload(event)">
+            
+            <div id="wizard-upload-preview" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;"></div>
 
-            <!-- Attachments Dropzone -->
-            <div class="field-group">
-              <label class="field-label">Attachments (Up to 3 files, max 5MB each)</label>
-              <div class="dropzone" onclick="document.getElementById('file-upload-input').click()">
-                <div class="dropzone-text">Click or drop files here to attach screenshots or logs</div>
-                <div class="dropzone-sub">Supports PNG, JPEG, WebP, PDF</div>
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+              <button type="button" class="btn-secondary" onclick="goToWizardStep(1)">← Back</button>
+              <button type="button" class="btn-primary" onclick="goToWizardStep(3)">Next: Review & Submit →</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Review & Submit -->
+          <div class="wizard-pane" id="wizard-pane-3">
+            <h3 style="font-size:16px; font-weight:700; margin-bottom:6px;">Step 3: Review & Submit</h3>
+            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Inspect your ticket card before sending it into the AI Triage queue.</p>
+
+            <div style="background:var(--surface-alt); border:1px solid var(--line); border-radius:8px; padding:16px;">
+              <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+                <span class="badge-pill badge-ai" id="review-badge-category">Billing & Payments</span>
+                <span class="badge-pill" id="review-badge-priority">Normal</span>
               </div>
-              <input type="file" id="file-upload-input" style="display:none;" multiple accept="image/png,image/jpeg,image/webp,application/pdf" onchange="handleFileUpload(event)">
-              <div id="upload-preview" class="attachment-preview-list"></div>
+              <div style="font-weight:700; font-size:15px; color:var(--ink);" id="review-subject">Inquiry Subject</div>
+              <p style="font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5;" id="review-desc">Description text...</p>
+              <div id="review-attachments" style="margin-top:8px; font-size:11px; color:var(--muted);"></div>
             </div>
 
-            <button type="submit" id="btn-submit-ticket" class="support-btn" style="width:100%; padding:14px; margin-top:8px;">
-              Submit Ticket to AI Triage
-            </button>
-          </form>
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+              <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">← Edit Details</button>
+              <button type="button" class="btn-primary" style="background:var(--ai-gradient); border:none;" onclick="submitWizardTicket()">
+                Submit Ticket to AI Triage ✦
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <!-- 12 Articles Knowledge Base Widget -->
-        <div class="card-panel" id="knowledge">
-          <div class="panel-header">
-            <h2 class="panel-title">Knowledge Base</h2>
-            <span class="portal-tag">12 ARTICLES</span>
+        <!-- 12-Article Verified Knowledge Base Widget -->
+        <div class="card-modern" id="knowledge">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2 style="font-size:16px; font-weight:700;">Knowledge Documentation</h2>
+            <span class="badge-pill badge-ai">12 ARTICLES</span>
           </div>
 
-          <div style="margin-bottom:14px;">
-            <input type="text" id="kb-search-input" class="text-input" placeholder="Search documentation..." oninput="renderKnowledgeBase(this.value)">
-          </div>
+          <input type="text" id="kb-search-input" class="input-modern" placeholder="Search documentation..." oninput="renderKbArticles(this.value)" style="margin-bottom:12px;">
 
-          <div id="kb-list" style="display:flex; flex-direction:column; gap:10px;">
-            <!-- Populated dynamically via JS -->
+          <div id="kb-articles-list" style="display:flex; flex-direction:column; gap:8px; max-height:360px; overflow-y:auto;">
+            <!-- Rendered via JS -->
           </div>
         </div>
 
@@ -677,13 +574,6 @@
     </div>
 
   </main>
-
-  <footer class="footer-line" style="padding:24px; border-top:1px solid var(--line); background:#FFFFFF;">
-    <div class="container" style="padding:0; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; font-size:13px; color:var(--muted);">
-      <div>© 2026 BIZASSIST AI · Customer Portal</div>
-      <div><a href="/app" style="color:var(--secondary); text-decoration:none;">← Return to Home Hub</a></div>
-    </div>
-  </footer>
 
   <!-- Scripts -->
   <script src="config/site.js"></script>
@@ -695,10 +585,11 @@
     'use strict';
 
     let activeTicketId = 'BA-1042';
-    let currentUploadedFiles = [];
-    let selectedRating = 5;
+    let wizardFiles = [];
+    let selectedCsatRating = 5;
+    let historyFilter = 'all';
 
-    // Contact link wiring from config/site.js
+    // Contact buttons wiring
     (function initContact() {
       const site = window.BIZASSIST_SITE || window.SITE || {};
       const callBtn = document.getElementById('portal-call-btn');
@@ -715,82 +606,74 @@
 
     function renderPortal() {
       if (!window.BizAssistStore) return;
-      const tickets = window.BizAssistStore.getTickets();
-      const session = window.BizAssistAuth ? window.BizAssistAuth.getSession() : null;
-
-      // Filter tickets for current user if role is Customer
-      let visibleTickets = tickets;
-      if (session && session.role === 'Customer' && session.email) {
-        visibleTickets = tickets.filter(t => t.contactEmail.toLowerCase() === session.email.toLowerCase() || t.id === 'BA-1042');
-        if (visibleTickets.length === 0) visibleTickets = tickets;
-      }
-
-      document.getElementById('history-count-badge').textContent = `${visibleTickets.length} TICKETS`;
+      const allTickets = window.BizAssistStore.getTickets();
 
       // Active ticket
-      const activeTicket = window.BizAssistStore.getTicket(activeTicketId) || visibleTickets[0] || tickets[0];
-      if (activeTicket) {
-        activeTicketId = activeTicket.id;
-        document.getElementById('active-ticket-badge').textContent = `TICKET #${activeTicket.code}`;
-        document.getElementById('active-ticket-badge').className = `status-badge ${activeTicket.stage === 'Resolved' ? 'resolved' : (activeTicket.priority === 'Urgent' ? 'urgent' : 'active')}`;
-        document.getElementById('active-ticket-title').textContent = activeTicket.subject;
-        document.getElementById('active-ticket-meta').textContent = `Submitted by ${activeTicket.contactName} (${activeTicket.contactEmail}) · Channel: ${activeTicket.channel || 'Web Portal'}`;
-        document.getElementById('active-ticket-desc').textContent = activeTicket.description;
-        document.getElementById('active-ticket-author').textContent = (activeTicket.contactName || 'CUSTOMER').toUpperCase();
+      const active = window.BizAssistStore.getTicket(activeTicketId) || allTickets[0];
+      if (active) {
+        activeTicketId = active.id;
+        document.getElementById('active-ticket-code').textContent = `#${active.code}`;
+        document.getElementById('active-ticket-subject').textContent = active.subject;
+        document.getElementById('active-ticket-category').textContent = active.category;
 
-        // Attachments preview
+        const pBadge = document.getElementById('active-ticket-priority');
+        pBadge.textContent = active.priority.toUpperCase();
+        pBadge.className = `badge-pill ${active.priority === 'Urgent' ? 'badge-urgent' : (active.priority === 'High' ? 'badge-high' : 'badge-normal')}`;
+
+        document.getElementById('active-ticket-meta').innerHTML = `Submitted by ${active.contactName} (${active.company}) · Target SLA: <strong>&lt; ${active.slaMinutes}m turnaround</strong>`;
+        document.getElementById('active-ticket-author').textContent = `${(active.contactName || 'CUSTOMER').toUpperCase()} (YOU)`;
+        document.getElementById('active-ticket-desc').textContent = active.description;
+
+        // Attachments
         const attContainer = document.getElementById('active-ticket-attachments');
-        if (attContainer) {
-          if (activeTicket.attachments && activeTicket.attachments.length > 0) {
-            attContainer.innerHTML = activeTicket.attachments.map(a => `
-              <div class="attachment-chip">
-                <span>FILE:</span>
-                <strong>${a.name}</strong>
-                <span>(${a.size})</span>
-              </div>
-            `).join('');
-          } else {
-            attContainer.innerHTML = '';
-          }
+        if (active.attachments && active.attachments.length > 0) {
+          attContainer.innerHTML = active.attachments.map(a => `
+            <span style="font-size:11px; font-family:var(--font-mono); background:var(--surface); padding:2px 8px; border-radius:4px; border:1px solid var(--line);">📎 ${a.name} (${a.size})</span>
+          `).join('');
+        } else {
+          attContainer.innerHTML = '';
         }
 
-        // Stepper
+        // Stepper: 1. Submitted -> 2. AI Triaged -> 3. Assigned -> 4. In Progress -> 5. Resolved
         const stages = ['Raised', 'Categorised', 'Assigned', 'Replied', 'Resolved'];
-        const currentIdx = stages.indexOf(activeTicket.stage);
-        const stepperEl = document.getElementById('active-ticket-stepper');
-        stepperEl.innerHTML = stages.map((stg, idx) => {
-          let cls = '';
-          if (idx < currentIdx) cls = 'completed';
-          else if (idx === currentIdx) cls = 'active';
-
-          return `
-            <div class="step-box ${cls}">
-              <div class="step-dot">${idx < currentIdx ? '✓' : (idx + 1)}</div>
-              <span class="step-label">${stg}</span>
-              <span class="step-meta">${idx <= currentIdx ? 'Verified' : 'Pending'}</span>
-            </div>
-          `;
-        }).join('');
+        const stageIndex = stages.indexOf(active.stage);
+        const stepperBoxes = document.querySelectorAll('#active-ticket-stepper .step-box');
+        stepperBoxes.forEach((box, i) => {
+          box.classList.remove('completed', 'active');
+          const dot = box.querySelector('.step-dot');
+          if (i < stageIndex) {
+            box.classList.add('completed');
+            dot.textContent = '✓';
+          } else if (i === stageIndex) {
+            box.classList.add('active');
+            dot.textContent = String(i + 1);
+          } else {
+            dot.textContent = String(i + 1);
+          }
+        });
 
         // Reply Box
         const replyBox = document.getElementById('active-ticket-reply-box');
-        if (activeTicket.suggestedReply && activeTicket.stage !== 'Raised') {
+        if (active.suggestedReply && active.stage !== 'Raised') {
           replyBox.style.display = 'block';
-          document.getElementById('active-ticket-agent').textContent = `AGENT ${(activeTicket.assignedTo || 'Sarah Jenkins').toUpperCase()}`;
-          document.getElementById('active-ticket-reply-text').textContent = activeTicket.suggestedReply;
+          document.getElementById('active-ticket-agent').textContent = `AGENT ${(active.assignedTo || 'SARAH JENKINS').toUpperCase()} (SUPPORT SPECIALIST)`;
+          document.getElementById('active-ticket-reply-text').textContent = active.suggestedReply;
         } else {
           replyBox.style.display = 'none';
         }
 
-        // CSAT Prompt (shown on Resolved)
+        // Reopen / CSAT visibility
+        const isResolved = active.status === 'Resolved' || active.stage === 'Resolved';
+        document.getElementById('customer-reply-area').style.display = isResolved ? 'none' : 'block';
+        document.getElementById('reopen-ticket-area').style.display = isResolved ? 'block' : 'none';
+
         const csatCard = document.getElementById('csat-card');
-        if (activeTicket.stage === 'Resolved') {
+        if (isResolved) {
           csatCard.style.display = 'block';
-          if (activeTicket.csat) {
+          if (active.csat) {
             csatCard.innerHTML = `
-              <div class="csat-title">Feedback Submitted (Rating: ${activeTicket.csat.rating}/5)</div>
-              <p class="csat-sub">"${activeTicket.csat.comment || 'No comment provided.'}"</p>
-              <span style="font-size:11px; font-family:var(--font-mono); color:var(--muted);">Submitted on ${new Date(activeTicket.csat.submittedAt).toLocaleDateString()}</span>
+              <div style="font-weight:700; color:#92400E;">Thank you for your feedback!</div>
+              <div style="font-size:13px; color:#B45309; margin-top:2px;">Rating: <strong>${active.csat.rating} / 5 stars</strong> — "${active.csat.comment || 'Verified review'}"</div>
             `;
           }
         } else {
@@ -798,23 +681,40 @@
         }
       }
 
-      // Render History Table
+      // Render History Table with filter
+      renderHistoryTable(allTickets);
+      renderKbArticles();
+    }
+
+    function renderHistoryTable(allTickets) {
       const tbody = document.getElementById('portal-history-body');
-      tbody.innerHTML = visibleTickets.map(t => {
-        const isResolved = t.stage === 'Resolved';
-        const badgeCls = isResolved ? 'resolved' : (t.priority === 'Urgent' ? 'urgent' : 'active');
+      let filtered = allTickets;
+      if (historyFilter === 'open') {
+        filtered = allTickets.filter(t => t.status !== 'Resolved');
+      } else if (historyFilter === 'resolved') {
+        filtered = allTickets.filter(t => t.status === 'Resolved');
+      }
+
+      tbody.innerHTML = filtered.map(t => {
+        const isResolved = t.status === 'Resolved';
+        const badgeCls = isResolved ? 'badge-resolved' : (t.priority === 'Urgent' ? 'badge-urgent' : 'badge-normal');
         return `
           <tr onclick="selectActiveTicket('${t.id}')">
-            <td><strong>#${t.code}</strong></td>
+            <td><strong style="color:var(--primary);">#${t.code}</strong></td>
             <td><strong>${t.subject}</strong></td>
             <td>${t.category}</td>
             <td>${t.priority}</td>
-            <td><span class="status-badge ${badgeCls}">${t.stage}</span></td>
+            <td><span class="badge-pill ${badgeCls}">${t.stage}</span></td>
           </tr>
         `;
       }).join('');
+    }
 
-      renderKnowledgeBase();
+    function filterHistory(filter, btn) {
+      historyFilter = filter;
+      document.querySelectorAll('.segmented-control .segmented-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHistoryTable(window.BizAssistStore.getTickets());
     }
 
     function selectActiveTicket(id) {
@@ -825,168 +725,230 @@
 
     function refreshTicketStatus() {
       renderPortal();
-      alert('Ticket status refreshed.');
+      alert('Ticket status refreshed with real-time audit milestones.');
     }
 
-    // Dynamic Knowledge Base Deflection Search
-    let deflectionTimer = null;
-    function handleDeflectionSearch(query) {
-      clearTimeout(deflectionTimer);
-      deflectionTimer = setTimeout(() => {
-        const box = document.getElementById('deflection-container');
-        const list = document.getElementById('deflection-articles-list');
-        if (!query || query.trim().length < 4) {
-          box.classList.remove('is-visible');
-          return;
-        }
-
-        if (window.BizAssistStore) {
-          const matches = window.BizAssistStore.getArticles(query).slice(0, 2);
-          if (matches.length > 0) {
-            list.innerHTML = matches.map(a => `
-              <div class="deflection-card">
-                <div class="deflection-card-title">${a.title}</div>
-                <div class="deflection-card-desc">${a.summary}</div>
-                <div class="deflection-actions">
-                  <a href="#knowledge" style="font-size:11px; color:var(--accent); text-decoration:underline;">Read Article</a>
-                  <button type="button" class="support-btn secondary" style="padding:4px 8px; font-size:10px;" onclick="resolveByDeflection('${a.title}')">This solved my issue</button>
-                </div>
-              </div>
-            `).join('');
-            box.classList.add('is-visible');
-          } else {
-            box.classList.remove('is-visible');
-          }
-        }
-      }, 250);
-    }
-
-    function resolveByDeflection(articleTitle) {
-      if (window.BizAssistStore) {
-        window.BizAssistStore.recordDeflection();
-      }
-      document.getElementById('form-raise-ticket').reset();
-      document.getElementById('deflection-container').classList.remove('is-visible');
-      alert(`Glad to hear! Marked "${articleTitle}" as resolving your issue. Ticket intake closed without waiting in queue.`);
-    }
-
-    // File Upload Handling
-    function handleFileUpload(e) {
-      const files = Array.from(e.target.files);
-      if (currentUploadedFiles.length + files.length > 3) {
-        alert('Maximum of 3 files allowed.');
+    function submitCustomerReply() {
+      const input = document.getElementById('customer-reply-input');
+      const text = input.value.trim();
+      if (!text) {
+        alert('Please enter a reply message.');
         return;
       }
-
-      files.forEach(f => {
-        if (f.size > 5 * 1024 * 1024) {
-          alert(`File ${f.name} exceeds 5MB limit.`);
-          return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (uploadEvent) => {
-          currentUploadedFiles.push({
-            name: f.name,
-            size: (f.size / 1024).toFixed(0) + ' KB',
-            type: f.type,
-            url: uploadEvent.target.result
-          });
-          renderUploadedPreview();
-        };
-        reader.readAsDataURL(f);
-      });
+      window.BizAssistStore.customerReply(activeTicketId, text);
+      input.value = '';
+      alert('Reply added to ticket conversation thread.');
+      renderPortal();
     }
 
-    function renderUploadedPreview() {
-      const container = document.getElementById('upload-preview');
-      container.innerHTML = currentUploadedFiles.map((f, i) => `
-        <div class="attachment-chip">
-          <span>${f.name} (${f.size})</span>
-          <button type="button" class="attachment-chip-remove" onclick="removeAttachment(${i})">✕</button>
-        </div>
-      `).join('');
-    }
-
-    function removeAttachment(index) {
-      currentUploadedFiles.splice(index, 1);
-      renderUploadedPreview();
-    }
-
-    // Handle Raise Ticket Submit
-    function handlePortalSubmit(e) {
-      e.preventDefault();
-      const subject = document.getElementById('ticket-subject').value.trim();
-      const category = document.getElementById('ticket-category').value;
-      const priority = document.getElementById('ticket-priority').value;
-      const desc = document.getElementById('ticket-desc').value.trim();
-
-      if (!subject || !desc) {
-        alert('Please fill in both subject and description.');
-        return;
-      }
-
-      const session = window.BizAssistAuth ? window.BizAssistAuth.getSession() : null;
-      const contactEmail = session ? session.email : 'customer@bizassist.ai';
-      const contactName = session ? session.name : 'Customer';
-
-      if (window.BizAssistStore) {
-        const newTicket = window.BizAssistStore.createTicket({
-          subject,
-          category,
-          priority,
-          description: desc,
-          contactEmail,
-          contactName,
-          attachments: [...currentUploadedFiles]
-        });
-
-        activeTicketId = newTicket.id;
-        currentUploadedFiles = [];
-        renderUploadedPreview();
-        document.getElementById('form-raise-ticket').reset();
-        document.getElementById('deflection-container').classList.remove('is-visible');
-
-        const site = window.BIZASSIST_SITE || window.SITE || {};
-        alert(`Ticket #${newTicket.code} created successfully and sent to AI Triage!\nNeed immediate help? Call support at ${site.supportPhoneDisplay || site.supportPhone}.`);
+    function reopenActiveTicket() {
+      const reason = prompt('Please explain why you need to reopen this ticket:');
+      if (reason) {
+        window.BizAssistStore.reopenTicket(activeTicketId, reason);
+        alert('Ticket successfully reopened and returned to active agent queue.');
         renderPortal();
       }
     }
 
-    // CSAT Handling
-    function selectCsatRating(val) {
-      selectedRating = val;
+    function selectCsat(val) {
+      selectedCsatRating = val;
       const btns = document.querySelectorAll('.csat-star-btn');
       btns.forEach((b, i) => {
         b.classList.toggle('selected', (i + 1) === val);
       });
     }
 
-    function submitActiveCsat() {
-      const comment = document.getElementById('csat-comment').value.trim();
-      if (window.BizAssistStore) {
-        window.BizAssistStore.submitCsat(activeTicketId, selectedRating, comment);
-        alert('Thank you! Your CSAT review has been recorded.');
-        renderPortal();
-      }
+    function submitCsatRating() {
+      const comment = document.getElementById('csat-comment-input').value.trim();
+      window.BizAssistStore.submitCsat(activeTicketId, selectedCsatRating, comment);
+      alert('Thank you! Your CSAT rating has been recorded.');
+      renderPortal();
     }
 
-    // Knowledge Base Browser
-    function renderKnowledgeBase(term = '') {
-      const container = document.getElementById('kb-list');
-      if (!container || !window.BizAssistStore) return;
-      const articles = window.BizAssistStore.getArticles(term);
+    // 3-Step Wizard Logic
+    function goToWizardStep(step) {
+      if (step === 2) {
+        const sub = document.getElementById('wizard-subject').value.trim();
+        if (!sub) {
+          alert('Please enter your inquiry subject in Step 1.');
+          return;
+        }
+      }
+
+      if (step === 3) {
+        // Populate review summary
+        document.getElementById('review-subject').textContent = document.getElementById('wizard-subject').value;
+        document.getElementById('review-desc').textContent = document.getElementById('wizard-quick-desc').value || 'No additional details provided.';
+        document.getElementById('review-badge-category').textContent = document.getElementById('wizard-category').value;
+        document.getElementById('review-badge-priority').textContent = document.getElementById('wizard-priority').value;
+
+        const attReview = document.getElementById('review-attachments');
+        if (wizardFiles.length > 0) {
+          attReview.textContent = `Attached files: ${wizardFiles.map(f => f.name).join(', ')}`;
+        } else {
+          attReview.textContent = 'No files attached.';
+        }
+      }
+
+      [1, 2, 3].forEach(s => {
+        document.getElementById(`wizard-pane-${s}`).classList.toggle('active', s === step);
+        const tab = document.getElementById(`wizard-tab-${s}`);
+        tab.classList.toggle('active', s === step);
+        if (s < step) tab.classList.add('completed');
+        else tab.classList.remove('completed');
+      });
+    }
+
+    let detectTimeout = null;
+    function handleWizardIntentDetection(text) {
+      clearTimeout(detectTimeout);
+      detectTimeout = setTimeout(() => {
+        const pill = document.getElementById('ai-intent-pill');
+        const intentText = document.getElementById('ai-intent-text');
+        const box = document.getElementById('deflection-box');
+        const defContainer = document.getElementById('deflection-articles-list');
+
+        if (!text || text.trim().length < 4) {
+          pill.style.display = 'none';
+          box.classList.remove('visible');
+          return;
+        }
+
+        const lower = text.toLowerCase();
+        let cat = 'General';
+        let prio = 'Normal';
+
+        if (lower.includes('invoice') || lower.includes('vat') || lower.includes('charge') || lower.includes('refund') || lower.includes('payment') || lower.includes('billing')) {
+          cat = 'Billing & Payments';
+        } else if (lower.includes('sso') || lower.includes('okta') || lower.includes('saml') || lower.includes('password') || lower.includes('2fa') || lower.includes('auth')) {
+          cat = 'Account & Security';
+          if (lower.includes('lockout') || lower.includes('emergency')) prio = 'High';
+        } else if (lower.includes('webhook') || lower.includes('latency') || lower.includes('outage') || lower.includes('500') || lower.includes('api')) {
+          cat = 'API & Infrastructure';
+          if (lower.includes('down') || lower.includes('spike')) prio = 'Urgent';
+        }
+
+        document.getElementById('wizard-category').value = cat;
+        document.getElementById('wizard-priority').value = prio;
+
+        intentText.innerHTML = `AI Detected: <strong>${cat}</strong> · ${prio} Urgency`;
+        pill.style.display = 'flex';
+
+        // Deflection search against Knowledge Base
+        const articles = window.BizAssistStore.getArticles(text).slice(0, 3);
+        if (articles.length > 0) {
+          defContainer.innerHTML = articles.map(a => `
+            <div class="deflection-card">
+              <div style="font-weight:700; font-size:12.5px; color:var(--ink);">${a.title}</div>
+              <div style="font-size:11.5px; color:var(--muted); margin:3px 0;">${a.summary}</div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                <a href="#knowledge" style="font-size:11px; color:var(--primary); font-weight:600;">Read article</a>
+                <button type="button" class="btn-secondary" style="padding:2px 8px; font-size:10px;" onclick="cancelByDeflection('${a.title}')">Solved my problem ✓</button>
+              </div>
+            </div>
+          `).join('');
+          box.classList.add('visible');
+        } else {
+          box.classList.remove('visible');
+        }
+      }, 200);
+    }
+
+    function cancelByDeflection(title) {
+      window.BizAssistStore.recordDeflection();
+      alert(`Glad to help! Ticket inquiry closed. Document "${title}" verified resolution.`);
+      document.getElementById('wizard-subject').value = '';
+      document.getElementById('wizard-quick-desc').value = '';
+      document.getElementById('deflection-box').classList.remove('visible');
+      document.getElementById('ai-intent-pill').style.display = 'none';
+      goToWizardStep(1);
+    }
+
+    function handleWizardFileUpload(e) {
+      const files = Array.from(e.target.files);
+      if (wizardFiles.length + files.length > 3) {
+        alert('Maximum of 3 files allowed.');
+        return;
+      }
+
+      files.forEach(f => {
+        wizardFiles.push({
+          name: f.name,
+          size: `${Math.round(f.size / 1024)} KB`,
+          type: f.type
+        });
+      });
+
+      renderWizardUploadPreview();
+    }
+
+    function renderWizardUploadPreview() {
+      const container = document.getElementById('wizard-upload-preview');
+      container.innerHTML = wizardFiles.map((f, i) => `
+        <span class="tag-pill-item">
+          <span>📎 ${f.name} (${f.size})</span>
+          <button type="button" class="tag-remove-btn" onclick="removeWizardFile(${i})">✕</button>
+        </span>
+      `).join('');
+    }
+
+    function removeWizardFile(idx) {
+      wizardFiles.splice(idx, 1);
+      renderWizardUploadPreview();
+    }
+
+    function submitWizardTicket() {
+      const subject = document.getElementById('wizard-subject').value.trim();
+      const desc = document.getElementById('wizard-quick-desc').value.trim();
+      const category = document.getElementById('wizard-category').value;
+      const priority = document.getElementById('wizard-priority').value;
+
+      const session = window.BizAssistAuth ? window.BizAssistAuth.getSession() : null;
+      const contactName = session ? session.name : 'Alex Rivera';
+      const contactEmail = session ? session.email : 'alex.r@acme.com';
+
+      const newTicket = window.BizAssistStore.createTicket({
+        subject,
+        description: desc,
+        category,
+        priority,
+        contactName,
+        contactEmail,
+        company: 'Acme Corp',
+        plan: 'Enterprise',
+        attachments: [...wizardFiles]
+      });
+
+      activeTicketId = newTicket.id;
+      wizardFiles = [];
+      document.getElementById('wizard-subject').value = '';
+      document.getElementById('wizard-quick-desc').value = '';
+      goToWizardStep(1);
+
+      alert(`Ticket #${newTicket.code} successfully created and dispatched to AI Triage queue!`);
+      renderPortal();
+    }
+
+    function renderKbArticles(query = '') {
+      const container = document.getElementById('kb-articles-list');
+      const articles = window.BizAssistStore.getArticles(query);
 
       container.innerHTML = articles.map(a => `
-        <div style="border:1px solid var(--line); padding:12px; background:#FFFFFF;">
-          <div style="font-size:11px; font-family:var(--font-mono); color:var(--muted); text-transform:uppercase;">${a.category}</div>
-          <div style="font-size:14px; font-weight:600; margin:3px 0; color:var(--ink);">${a.title}</div>
-          <p style="font-size:12px; color:var(--secondary); line-height:1.4;">${a.summary}</p>
+        <div style="background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:10px 12px;">
+          <div style="font-size:10px; color:var(--primary); font-weight:700; text-transform:uppercase; font-family:var(--font-mono);">${a.category}</div>
+          <div style="font-weight:600; font-size:13px; color:var(--ink); margin:2px 0;">${a.title}</div>
+          <p style="font-size:12px; color:var(--muted); line-height:1.4;">${a.summary}</p>
         </div>
       `).join('');
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const targetParam = params.get('ticket');
+      if (targetParam) {
+        activeTicketId = targetParam.toUpperCase();
+      }
+
       renderPortal();
       if (window.BizAssistStore) {
         window.BizAssistStore.subscribe(() => {

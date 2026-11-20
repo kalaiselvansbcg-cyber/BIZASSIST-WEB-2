@@ -273,7 +273,8 @@
       document.querySelectorAll('.tone-pill').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
       document.getElementById('studio-editor').value = drafts[tone];
-      window.NexusShowToast(`Loaded ${tone.toUpperCase()} tone template.`);
+      if (window.BizAssistShowToast) window.BizAssistShowToast(`Loaded ${tone.toUpperCase()} tone template.`);
+      else if (window.NexusShowToast) window.NexusShowToast(`Loaded ${tone.toUpperCase()} tone template.`);
     }
 
     function insertToken(token) {
@@ -284,7 +285,8 @@
       editor.value = text.substring(0, start) + token + text.substring(end);
       editor.focus();
       editor.setSelectionRange(start + token.length, start + token.length);
-      window.NexusShowToast(`Inserted variable: ${token}`);
+      if (window.BizAssistShowToast) window.BizAssistShowToast(`Inserted variable: ${token}`);
+      else if (window.NexusShowToast) window.NexusShowToast(`Inserted variable: ${token}`);
     }
 
     function regenerateDraft() {
@@ -293,22 +295,25 @@
       setTimeout(() => {
         editor.style.opacity = '1';
         setTone(currentTone);
-        window.NexusShowToast("AI draft regenerated using latest RAG vectors.");
+        if (window.BizAssistShowToast) window.BizAssistShowToast("AI draft regenerated using latest RAG vectors.");
+        else if (window.NexusShowToast) window.NexusShowToast("AI draft regenerated using latest RAG vectors.");
       }, 350);
     }
 
     function copyDraft() {
       const val = document.getElementById('studio-editor').value;
+      const toastFn = window.BizAssistShowToast || window.NexusShowToast || function(){};
       navigator.clipboard.writeText(val).then(() => {
-        window.NexusShowToast("Draft copied to clipboard!");
+        toastFn("Draft copied to clipboard!");
       }).catch(() => {
-        window.NexusShowToast("Draft copied!");
+        toastFn("Draft copied!");
       });
     }
 
     function approveAndDispatch() {
       const editorText = document.getElementById('studio-editor').value;
-      window.NexusShowToast("✓ Reply approved & dispatched to Sarah Jenkins (Acme Corp)!");
+      const toastFn = window.BizAssistShowToast || window.NexusShowToast || function(){};
+      toastFn("✓ Reply approved & dispatched to Sarah Jenkins (Acme Corp)!");
 
       // Update BizAssistStore ticket stage to Replied
       if (window.BizAssistStore) {

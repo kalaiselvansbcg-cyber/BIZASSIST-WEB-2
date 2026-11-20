@@ -593,7 +593,10 @@
   <!-- Top Bar -->
   <header class="top-bar">
     <a href="/about" class="wordmark">BIZASSIST AI</a>
-    <a href="/about" class="public-link">About Product Overview →</a>
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button type="button" class="btn-secondary" id="login-theme-btn" onclick="toggleLoginTheme()" title="Toggle Dark/Light Mode" style="padding:6px 10px; font-size:12px; margin:0; width:auto; min-height:auto;">🌓</button>
+      <a href="/about" class="public-link">About Product Overview →</a>
+    </div>
   </header>
 
   <!-- Main Content -->
@@ -1359,6 +1362,18 @@
         showAlert('Password update encountered an error.', 'error');
       }
     }
+
+    function toggleLoginTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('bizassist.theme', next);
+    }
+
+    (function initLoginTheme() {
+      const saved = localStorage.getItem('bizassist.theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
   </script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 /**
- * Supabase Client Configuration & Data Service for NexusAI / BIZASSIST
+ * Supabase Client Configuration & Data Service for BizAssist AI
  * Connected to project: https://imhfqkepsepiscyceoyk.supabase.co
  */
 (function () {
@@ -17,12 +17,12 @@
     if (window.supabase && typeof window.supabase.createClient === 'function') {
       try {
         client = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-        console.log('[NexusAI] Connected to Supabase:', SUPABASE_CONFIG.url);
+        console.log('[BizAssist AI] Connected to Supabase:', SUPABASE_CONFIG.url);
       } catch (err) {
-        console.warn('[NexusAI] Failed to initialize Supabase client:', err);
+        console.warn('[BizAssist AI] Failed to initialize Supabase client:', err);
       }
     } else {
-      console.warn('[NexusAI] Supabase JS SDK not loaded yet. Retrying...');
+      console.warn('[BizAssist AI] Supabase JS SDK not loaded yet. Retrying...');
     }
     return client;
   }
@@ -187,5 +187,5 @@
     }
   };
 
-  window.NexusSupabase = SupabaseService;
+  window.BizAssistSupabase = window.NexusSupabase = SupabaseService;
 })();

@@ -1,5 +1,5 @@
 /**
- * NexusAI Vector Graphic Assets
+ * BizAssist AI Vector Graphic Assets
  * Generates colorful abstract UI scenes as inline SVG data URIs
  * Gradient backgrounds: orange, blue, green, pink, yellow, teal
  */
@@ -204,7 +204,7 @@
         <text x="18" y="74" font-family="Inter, sans-serif" font-size="11.5" fill="#115E59">I have verified your payment of $1,200 and immediately</text>
         <text x="18" y="96" font-family="Inter, sans-serif" font-size="11.5" fill="#115E59">restored full Enterprise Tier 2 access to your team.</text>
         <text x="18" y="118" font-family="Inter, sans-serif" font-size="11.5" fill="#115E59">No duplicate charges were captured. You are all set!</text>
-        <text x="18" y="148" font-family="Inter, sans-serif" font-size="11.5" font-weight="600" fill="#134E4A">— NexusAI Support Team</text>
+        <text x="18" y="148" font-family="Inter, sans-serif" font-size="11.5" font-weight="600" fill="#134E4A">— BizAssist AI Support Team</text>
       </g>
       <g transform="translate(24, 320)">
         <rect x="0" y="0" width="260" height="46" rx="10" fill="#0D9488" /><text x="46" y="28" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#ffffff">APPROVE &amp; SEND (1-CLICK)</text>
@@ -265,7 +265,7 @@
       <rect width="680" height="500" rx="16" fill="#ffffff" fill-opacity="0.96" />
       <rect width="680" height="48" rx="16" fill="#F4F4F5" />
       <circle cx="28" cy="24" r="6" fill="#EF4444" /><circle cx="48" cy="24" r="6" fill="#F59E0B" /><circle cx="68" cy="24" r="6" fill="#10B981" />
-      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">nexusai.app/portal/my-tickets</text>
+      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">bizassist.ai/portal/my-tickets</text>
       <text x="32" y="85" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#18181B">Customer Support Portal</text>
       <text x="32" y="106" font-family="Inter, sans-serif" font-size="13" fill="#71717A">Track active requests or raise a new ticket anytime</text>
       <rect x="520" y="70" width="128" height="38" rx="8" fill="#4F46E5" /><text x="542" y="94" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#ffffff">+ NEW TICKET</text>
@@ -278,7 +278,7 @@
       </g>
       <g transform="translate(32, 274)">
         <rect x="0" y="0" width="616" height="186" rx="12" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="1" />
-        <text x="24" y="34" font-family="monospace" font-size="11" fill="#6366F1">TICKET #NX-8941</text><text x="24" y="60" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#18181B">Payment failure during enterprise renewal</text>
+        <text x="24" y="34" font-family="monospace" font-size="11" fill="#6366F1">TICKET #BA-1042</text><text x="24" y="60" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#18181B">Payment failure during enterprise renewal</text>
         <text x="24" y="82" font-family="Inter, sans-serif" font-size="12" fill="#52525B">Status: In Review · AI suggested draft approved by Tier-2 Agent</text>
         <g transform="translate(24, 110)">
           <line x1="30" y1="12" x2="540" y2="12" stroke="#E4E4E7" stroke-width="3" /><line x1="30" y1="12" x2="380" y2="12" stroke="#4F46E5" stroke-width="3" />
@@ -299,7 +299,7 @@
       <rect width="680" height="500" rx="16" fill="#ffffff" fill-opacity="0.96" />
       <rect width="680" height="48" rx="16" fill="#F4F4F5" />
       <circle cx="28" cy="24" r="6" fill="#EF4444" /><circle cx="48" cy="24" r="6" fill="#F59E0B" /><circle cx="68" cy="24" r="6" fill="#10B981" />
-      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">nexusai.app/agent/console</text>
+      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">bizassist.ai/agent/console</text>
       <g transform="translate(24, 68)">
         <text x="0" y="20" font-family="Inter, sans-serif" font-size="15" font-weight="700" fill="#18181B">Ticket Queue (18)</text>
         <g transform="translate(0, 36)">
@@ -351,7 +351,7 @@
       <rect width="680" height="500" rx="16" fill="#ffffff" fill-opacity="0.96" />
       <rect width="680" height="48" rx="16" fill="#F4F4F5" />
       <circle cx="28" cy="24" r="6" fill="#EF4444" /><circle cx="48" cy="24" r="6" fill="#F59E0B" /><circle cx="68" cy="24" r="6" fill="#10B981" />
-      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">nexusai.app/ai/triage-pipeline</text>
+      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">bizassist.ai/ai/triage-pipeline</text>
       <text x="32" y="85" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#18181B">Autonomous AI Triage Engine</text>
       <text x="32" y="106" font-family="Inter, sans-serif" font-size="13" fill="#71717A">Live semantic parsing, categorization &amp; priority assignment</text>
       <g transform="translate(32, 130)">
@@ -391,7 +391,7 @@
       <rect width="680" height="500" rx="16" fill="#ffffff" fill-opacity="0.96" />
       <rect width="680" height="48" rx="16" fill="#F4F4F5" />
       <circle cx="28" cy="24" r="6" fill="#EF4444" /><circle cx="48" cy="24" r="6" fill="#F59E0B" /><circle cx="68" cy="24" r="6" fill="#10B981" />
-      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">nexusai.app/copilot/draft-studio</text>
+      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">bizassist.ai/copilot/draft-studio</text>
       <text x="32" y="85" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#18181B">AI Copilot Suggested Replies</text>
       <text x="32" y="106" font-family="Inter, sans-serif" font-size="13" fill="#71717A">High-accuracy human-in-the-loop responses ready to approve</text>
       <g transform="translate(32, 126)">
@@ -403,7 +403,7 @@
         <rect width="616" height="210" rx="12" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="1" />
         <text x="24" y="32" font-family="Inter, sans-serif" font-size="13" font-weight="700" fill="#18181B">Generated Draft (Confidence: 98.4%)</text>
         <text x="24" y="66" font-family="Inter, sans-serif" font-size="13" fill="#27272A">Dear Sarah,</text>
-        <text x="24" y="92" font-family="Inter, sans-serif" font-size="13" fill="#27272A">Thank you for contacting NexusAI Support. We understand how critical Enterprise renewal is.</text>
+        <text x="24" y="92" font-family="Inter, sans-serif" font-size="13" fill="#27272A">Thank you for contacting BizAssist AI Support. We understand how critical Enterprise renewal is.</text>
         <text x="24" y="118" font-family="Inter, sans-serif" font-size="13" fill="#27272A">Our finance system verified your renewal payment of $1,200. We have manually cleared the 502</text>
         <text x="24" y="144" font-family="Inter, sans-serif" font-size="13" fill="#27272A">timeout status and unlocked your enterprise workspace immediately.</text>
         <g transform="translate(24, 166)">
@@ -426,7 +426,7 @@
       <rect width="680" height="500" rx="16" fill="#ffffff" fill-opacity="0.96" />
       <rect width="680" height="48" rx="16" fill="#F4F4F5" />
       <circle cx="28" cy="24" r="6" fill="#EF4444" /><circle cx="48" cy="24" r="6" fill="#F59E0B" /><circle cx="68" cy="24" r="6" fill="#10B981" />
-      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">nexusai.app/ai/instant-assistant</text>
+      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">bizassist.ai/ai/instant-assistant</text>
       <text x="32" y="85" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#18181B">Knowledge-Base Chatbot</text>
       <text x="32" y="106" font-family="Inter, sans-serif" font-size="13" fill="#71717A">Instant answers with citations &amp; seamless human handover</text>
       <g transform="translate(32, 130)">
@@ -437,7 +437,7 @@
         <g transform="translate(0, 72)">
           <rect width="520" height="150" rx="12" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1" />
           <circle cx="24" cy="24" r="10" fill="#0284C7" /><text x="20" y="28" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#ffffff">AI</text>
-          <text x="44" y="28" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0369A1">NexusAI Assistant</text>
+          <text x="44" y="28" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0369A1">BizAssist AI Assistant</text>
           <text x="24" y="56" font-family="Inter, sans-serif" font-size="12.5" fill="#0C4A6E">1. Go to Settings → Team &amp; Permissions and click "Invite Member".</text>
           <text x="24" y="78" font-family="Inter, sans-serif" font-size="12.5" fill="#0C4A6E">2. Enter their corporate email and select role (Admin / Agent).</text>
           <text x="24" y="100" font-family="Inter, sans-serif" font-size="12.5" fill="#0C4A6E">3. For SAML SSO, upload your IdP metadata in Settings → Security.</text>
@@ -462,7 +462,7 @@
       <rect width="680" height="500" rx="16" fill="#ffffff" fill-opacity="0.96" />
       <rect width="680" height="48" rx="16" fill="#F4F4F5" />
       <circle cx="28" cy="24" r="6" fill="#EF4444" /><circle cx="48" cy="24" r="6" fill="#F59E0B" /><circle cx="68" cy="24" r="6" fill="#10B981" />
-      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">nexusai.app/manager/overview</text>
+      <text x="96" y="29" font-family="monospace" font-size="12" fill="#71717A">bizassist.ai/manager/overview</text>
       <text x="32" y="85" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#18181B">Manager Operations Overview</text>
       <text x="32" y="106" font-family="Inter, sans-serif" font-size="13" fill="#71717A">Real-time team workload, SLA response times &amp; AI resolution analytics</text>
       <g transform="translate(32, 126)">
@@ -514,7 +514,7 @@
     svgToDataUri(proj6)
   ];
 
-  window.NexusAssets = {
+  window.BizAssistAssets = window.NexusAssets = {
     marqueeUris: marqueeUris,
     projectUris: projectUris
   };

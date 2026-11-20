@@ -1,5 +1,5 @@
 /**
- * NexusAI Interactive Workflows & Modals
+ * BizAssist AI Interactive Workflows & Modals
  * Supports full prototype simulations: ticket intake, NLP triage, suggested replies,
  * chatbot with citations, executive dashboard, and demo booking.
  */
@@ -30,8 +30,8 @@
     document.body.style.overflow = '';
   }
 
-  window.NexusOpenModal = openModal;
-  window.NexusCloseModal = closeModal;
+  window.BizAssistOpenModal = window.NexusOpenModal = openModal;
+  window.BizAssistCloseModal = window.NexusCloseModal = closeModal;
 
   if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
   if (modalOverlay) {
@@ -130,7 +130,7 @@
   document.querySelectorAll('.footer-action-btn[data-social]').forEach(function (btn) {
     btn.addEventListener('click', function () {
       const platform = btn.getAttribute('data-social');
-      window.NexusShowToast('Opening NexusAI official ' + platform + ' handle...');
+      (window.BizAssistShowToast || window.NexusShowToast)('Opening BizAssist AI official ' + platform + ' handle...');
       setTimeout(function () {
         window.open('https://github.com', '_blank');
       }, 400);
@@ -166,7 +166,7 @@
           'Raise & Track Support Tickets',
           '<div style="display:flex; flex-direction:column; gap:20px;">' +
             '<p style="color:var(--text-secondary); font-size:15px;">Experience the customer intake flow. Raise a simulated ticket to trigger immediate AI triage.</p>' +
-            '<form id="ticket-submit-form" onsubmit="window.NexusHandleTicketSubmit(event)">' +
+            '<form id="ticket-submit-form" onsubmit="(window.BizAssistHandleTicketSubmit||window.NexusHandleTicketSubmit)(event)">' +
               '<div class="interactive-field">' +
                 '<label class="interactive-label">Subject</label>' +
                 '<input type="text" id="ticket-subject-input" class="interactive-input" value="Payment failure during checkout" required />' +
@@ -213,22 +213,22 @@
                 '<div><span style="background:#FEF2F2; color:#DC2626; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P1</span></div>' +
                 '<div><strong>Stripe webhook timeout</strong></div>' +
                 '<div style="color:#71717A;">sarah@acme.co</div>' +
-                '<div><button class="interactive-btn-secondary" onclick="window.NexusShowToast(\'Assigned Ticket #4092 to your inbox!\')">Assign</button></div>' +
+                '<div><button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Assigned Ticket #4092 to your inbox!\')">Assign</button></div>' +
               '</div>' +
               '<div style="padding:14px 16px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:60px 1.5fr 1fr 100px; align-items:center; font-size:13px;">' +
                 '<div><span style="background:#FFFBEB; color:#D97706; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P2</span></div>' +
                 '<div>SAML SSO metadata cert renewal</div>' +
                 '<div style="color:#71717A;">alex@techcorp.io</div>' +
-                '<div><button class="interactive-btn-secondary" onclick="window.NexusShowToast(\'Assigned Ticket #4091 to your inbox!\')">Assign</button></div>' +
+                '<div><button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Assigned Ticket #4091 to your inbox!\')">Assign</button></div>' +
               '</div>' +
               '<div style="padding:14px 16px; display:grid; grid-template-columns:60px 1.5fr 1fr 100px; align-items:center; font-size:13px;">' +
                 '<div><span style="background:#F0FDF4; color:#16A34A; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P3</span></div>' +
                 '<div>Invoice receipt request</div>' +
                 '<div style="color:#71717A;">billing@startup.dev</div>' +
-                '<div><button class="interactive-btn-secondary" onclick="window.NexusShowToast(\'Assigned Ticket #4090 to your inbox!\')">Assign</button></div>' +
+                '<div><button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Assigned Ticket #4090 to your inbox!\')">Assign</button></div>' +
               '</div>' +
             '</div>' +
-            '<button class="interactive-btn-primary" onclick="window.NexusShowToast(\'Processed all 18 pending tickets with zero SLA breaches!\')">Batch Auto-Assign by AI Specialization →</button>' +
+            '<button class="interactive-btn-primary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Processed all 18 pending tickets with zero SLA breaches!\')">Batch Auto-Assign by AI Specialization →</button>' +
           '</div>'
         );
         break;
@@ -240,12 +240,12 @@
           '<div style="display:flex; flex-direction:column; gap:20px;">' +
             '<p style="color:var(--text-secondary); font-size:14px;">Select a prompt or write custom customer complaint to test the live semantic classification model.</p>' +
             '<div class="interactive-chip-row">' +
-              '<button class="interactive-chip is-active" onclick="window.NexusFillTriage(\'Billing\')">Duplicate $1,200 Charge</button>' +
-              '<button class="interactive-chip" onclick="window.NexusFillTriage(\'SSO\')">Okta SAML 500 Error</button>' +
-              '<button class="interactive-chip" onclick="window.NexusFillTriage(\'Quota\')">API Rate Limit Increase</button>' +
+              '<button class="interactive-chip is-active" onclick="(window.BizAssistFillTriage||window.NexusFillTriage)(\'Billing\')">Duplicate $1,200 Charge</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistFillTriage||window.NexusFillTriage)(\'SSO\')">Okta SAML 500 Error</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistFillTriage||window.NexusFillTriage)(\'Quota\')">API Rate Limit Increase</button>' +
             '</div>' +
             '<textarea id="triage-test-input" class="interactive-textarea">Customer received 502 Bad Gateway during checkout and card was debited twice.</textarea>' +
-            '<button class="interactive-btn-primary" onclick="window.NexusRunTriageTest()">Run AI Triage Classification →</button>' +
+            '<button class="interactive-btn-primary" onclick="(window.BizAssistRunTriageTest||window.NexusRunTriageTest)()">Run AI Triage Classification →</button>' +
             '<div id="triage-result-card" style="background:#FAFAFA; border:1px solid var(--border); padding:20px; border-radius:8px; display:flex; flex-direction:column; gap:12px;">' +
               '<div style="display:flex; justify-content:space-between; align-items:center;">' +
                 '<span class="interactive-label">CLASSIFICATION RESULT</span>' +
@@ -270,12 +270,12 @@
             '</div>' +
             '<div class="interactive-field">' +
               '<label class="interactive-label">Simulate Customer Urgency Score (1 - 100)</label>' +
-              '<input type="range" min="1" max="100" value="92" id="urgency-slider" oninput="window.NexusUpdateSlaSlider(this.value)" style="width:100%; accent-color:#000000;" />' +
+              '<input type="range" min="1" max="100" value="92" id="urgency-slider" oninput="(window.BizAssistUpdateSlaSlider||window.NexusUpdateSlaSlider)(this.value)" style="width:100%; accent-color:#000000;" />' +
               '<div style="display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:11px; color:#71717A; margin-top:4px;">' +
                 '<span>General Query</span><span id="urgency-score-val">Urgency: 92/100 (Critical)</span><span>System Down</span>' +
               '</div>' +
             '</div>' +
-            '<button class="interactive-btn-primary" onclick="window.NexusShowToast(\'Queue position locked: #1 of 42 tickets.\')">Lock Queue Priority at #1</button>' +
+            '<button class="interactive-btn-primary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Queue position locked: #1 of 42 tickets.\')">Lock Queue Priority at #1</button>' +
           '</div>'
         );
         break;
@@ -295,7 +295,7 @@
               '<div style="font-size:14px; color:#18181B; display:flex; gap:8px;"><strong>2.</strong> Customer unable to access team dashboard for 12 hours.</div>' +
               '<div style="font-size:14px; color:#18181B; display:flex; gap:8px;"><strong>3.</strong> Resolution required: Clear hold, provision tier 2 license.</div>' +
             '</div>' +
-            '<button class="interactive-btn-primary" onclick="window.NexusShowToast(\'Summary pinned to agent sidebar context.\')">Pin Context to Agent Ticket</button>' +
+            '<button class="interactive-btn-primary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Summary pinned to agent sidebar context.\')">Pin Context to Agent Ticket</button>' +
           '</div>'
         );
         break;
@@ -306,19 +306,19 @@
           'Suggested Replies & Tone Variants',
           '<div style="display:flex; flex-direction:column; gap:20px;">' +
             '<div class="interactive-chip-row">' +
-              '<button class="interactive-chip is-active" id="tone-btn-emp" onclick="window.NexusSwitchTone(\'Empathetic\')">Empathetic Tone ✓</button>' +
-              '<button class="interactive-chip" id="tone-btn-con" onclick="window.NexusSwitchTone(\'Concise\')">Concise Tone</button>' +
-              '<button class="interactive-chip" id="tone-btn-for" onclick="window.NexusSwitchTone(\'Formal\')">Formal Tone</button>' +
+              '<button class="interactive-chip is-active" id="tone-btn-emp" onclick="(window.BizAssistSwitchTone||window.NexusSwitchTone)(\'Empathetic\')">Empathetic Tone ✓</button>' +
+              '<button class="interactive-chip" id="tone-btn-con" onclick="(window.BizAssistSwitchTone||window.NexusSwitchTone)(\'Concise\')">Concise Tone</button>' +
+              '<button class="interactive-chip" id="tone-btn-for" onclick="(window.BizAssistSwitchTone||window.NexusSwitchTone)(\'Formal\')">Formal Tone</button>' +
             '</div>' +
             '<div class="interactive-field">' +
               '<label class="interactive-label">AI DRAFT (EDITABLE BEFORE SENDING)</label>' +
               '<textarea id="reply-draft-editor" class="interactive-textarea" style="min-height:130px;">' +
-                'Hi Sarah,\n\nI sincerely apologize for the checkout hurdle. I verified your transaction of $1,200 and immediately released the temporary hold on invoice #4092. Your Enterprise access is fully restored!\n\nBest,\nNexusAI Team' +
+                'Hi Sarah,\n\nI sincerely apologize for the checkout hurdle. I verified your transaction of $1,200 and immediately released the temporary hold on invoice #4092. Your Enterprise access is fully restored!\n\nBest,\nBizAssist AI Team' +
               '</textarea>' +
             '</div>' +
             '<div style="display:flex; gap:12px;">' +
-              '<button class="interactive-btn-primary" onclick="window.NexusApproveReply()">Approve &amp; Send (1-Click) →</button>' +
-              '<button class="interactive-btn-secondary" onclick="window.NexusShowToast(\'Draft updated with custom attachments.\')">Add Attachment</button>' +
+              '<button class="interactive-btn-primary" onclick="(window.BizAssistApproveReply||window.NexusApproveReply)()">Approve &amp; Send (1-Click) →</button>' +
+              '<button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Draft updated with custom attachments.\')">Add Attachment</button>' +
             '</div>' +
           '</div>'
         );
@@ -331,21 +331,21 @@
           '<div style="display:flex; flex-direction:column; gap:16px;">' +
             '<div class="chat-bubble-stream" id="chatbot-stream">' +
               '<div class="chat-bubble-msg ai">' +
-                'Hello! I am your NexusAI Support Assistant. How can I help you today?' +
+                'Hello! I am your BizAssist AI Support Assistant. How can I help you today?' +
               '</div>' +
             '</div>' +
             '<div class="interactive-chip-row">' +
-              '<button class="interactive-chip" onclick="window.NexusSendQuickChat(\'How do I configure SAML SSO?\')">SSO Setup Guide</button>' +
-              '<button class="interactive-chip" onclick="window.NexusSendQuickChat(\'What is your refund policy?\')">Refund Policy</button>' +
-              '<button class="interactive-chip" onclick="window.NexusSendQuickChat(\'Can I add more agent seats?\')">Add Agent Seats</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistSendQuickChat||window.NexusSendQuickChat)(\'How do I configure SAML SSO?\')">SSO Setup Guide</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistSendQuickChat||window.NexusSendQuickChat)(\'What is your refund policy?\')">Refund Policy</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistSendQuickChat||window.NexusSendQuickChat)(\'Can I add more agent seats?\')">Add Agent Seats</button>' +
             '</div>' +
-            '<form onsubmit="window.NexusSubmitChat(event)" style="display:flex; gap:10px;">' +
+            '<form onsubmit="(window.BizAssistSubmitChat||window.NexusSubmitChat)(event)" style="display:flex; gap:10px;">' +
               '<input type="text" id="chat-user-input" class="interactive-input" placeholder="Ask any question..." required />' +
               '<button type="submit" class="interactive-btn-primary">Send</button>' +
             '</form>' +
             '<div style="border-top:1px solid var(--border); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">' +
               '<span style="font-size:12px; color:#71717A;">Unsatisfied with the bot answer?</span>' +
-              '<button class="interactive-btn-secondary" onclick="window.NexusHandoverHuman()">Handover to Human Agent →</button>' +
+              '<button class="interactive-btn-secondary" onclick="(window.BizAssistHandoverHuman||window.NexusHandoverHuman)()">Handover to Human Agent →</button>' +
             '</div>' +
           '</div>'
         );
@@ -357,9 +357,9 @@
           'Executive Operations & SLA Dashboard',
           '<div style="display:flex; flex-direction:column; gap:20px;">' +
             '<div class="interactive-chip-row">' +
-              '<button class="interactive-chip is-active" onclick="window.NexusSwitchManagerPeriod(\'7D\')">Last 7 Days</button>' +
-              '<button class="interactive-chip" onclick="window.NexusSwitchManagerPeriod(\'30D\')">Last 30 Days</button>' +
-              '<button class="interactive-chip" onclick="window.NexusSwitchManagerPeriod(\'90D\')">Quarter to Date</button>' +
+              '<button class="interactive-chip is-active" onclick="(window.BizAssistSwitchManagerPeriod||window.NexusSwitchManagerPeriod)(\'7D\')">Last 7 Days</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistSwitchManagerPeriod||window.NexusSwitchManagerPeriod)(\'30D\')">Last 30 Days</button>' +
+              '<button class="interactive-chip" onclick="(window.BizAssistSwitchManagerPeriod||window.NexusSwitchManagerPeriod)(\'90D\')">Quarter to Date</button>' +
             '</div>' +
             '<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;">' +
               '<div style="background:#F0FDFA; border:1px solid #99F6E4; padding:16px; border-radius:8px;">' +
@@ -381,16 +381,16 @@
             '<div style="background:#FAFAFA; border:1px solid var(--border); padding:20px; border-radius:8px;">' +
               '<span class="interactive-label">DAILY VOLUME BY DAY (CLICK BARS TO INSPECT)</span>' +
               '<div style="display:flex; justify-content:space-between; align-items:flex-end; height:120px; padding-top:20px; gap:12px;">' +
-                '<div style="flex:1; background:#0F766E; height:60%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Mon: 240 Tickets (72% AI resolved)\')">M</div>' +
-                '<div style="flex:1; background:#0F766E; height:85%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Tue: 310 Tickets (69% AI resolved)\')">T</div>' +
-                '<div style="flex:1; background:#0F766E; height:95%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Wed: 340 Tickets (74% AI resolved)\')">W</div>' +
-                '<div style="flex:1; background:#0F766E; height:90%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Thu: 325 Tickets (70% AI resolved)\')">T</div>' +
-                '<div style="flex:1; background:#0F766E; height:100%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Fri: 380 Tickets (71% AI resolved)\')">F</div>' +
-                '<div style="flex:1; background:#0D9488; height:40%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Sat: 120 Tickets (82% AI resolved)\')">S</div>' +
-                '<div style="flex:1; background:#0D9488; height:35%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="window.NexusShowToast(\'Sun: 98 Tickets (85% AI resolved)\')">S</div>' +
+                '<div style="flex:1; background:#0F766E; height:60%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Mon: 240 Tickets (72% AI resolved)\')">M</div>' +
+                '<div style="flex:1; background:#0F766E; height:85%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Tue: 310 Tickets (69% AI resolved)\')">T</div>' +
+                '<div style="flex:1; background:#0F766E; height:95%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Wed: 340 Tickets (74% AI resolved)\')">W</div>' +
+                '<div style="flex:1; background:#0F766E; height:90%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Thu: 325 Tickets (70% AI resolved)\')">T</div>' +
+                '<div style="flex:1; background:#0F766E; height:100%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Fri: 380 Tickets (71% AI resolved)\')">F</div>' +
+                '<div style="flex:1; background:#0D9488; height:40%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sat: 120 Tickets (82% AI resolved)\')">S</div>' +
+                '<div style="flex:1; background:#0D9488; height:35%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sun: 98 Tickets (85% AI resolved)\')">S</div>' +
               '</div>' +
             '</div>' +
-            '<button class="interactive-btn-primary" onclick="window.NexusShowToast(\'Exported executive analytics PDF.\')">Export PDF Executive Report ↓</button>' +
+            '<button class="interactive-btn-primary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Exported executive analytics PDF.\')">Export PDF Executive Report ↓</button>' +
           '</div>'
         );
         break;
@@ -402,7 +402,7 @@
           '<div style="display:flex; flex-direction:column; gap:20px;">' +
             '<div style="border:1px solid var(--border); padding:20px; border-radius:8px;">' +
               '<div style="display:flex; justify-content:space-between; margin-bottom:12px;">' +
-                '<strong>Ticket #NX-4092: Payment Gateway Stalled</strong>' +
+                '<strong>Ticket #BA-1042: Payment Gateway Stalled</strong>' +
                 '<span style="font-family:var(--font-mono); font-size:12px; color:#10B981; font-weight:700;">● RESOLVED</span>' +
               '</div>' +
               '<div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">' +
@@ -426,7 +426,7 @@
             '</div>' +
             '<div style="background:#FAFAFA; border:1px solid var(--border); padding:16px; border-radius:8px; text-align:center;">' +
               '<div style="font-size:13px; font-weight:600; margin-bottom:8px;">Rate Your Support Experience</div>' +
-              '<div style="font-size:24px; cursor:pointer;" onclick="window.NexusShowToast(\'Thank you for rating 5/5 stars!\')">★★★★★</div>' +
+              '<div style="font-size:24px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Thank you for rating 5/5 stars!\')">★★★★★</div>' +
             '</div>' +
           '</div>'
         );
@@ -437,7 +437,7 @@
   function openBookDemoModal() {
     openModal(
       'BOOK A DEMONSTRATION',
-      'Experience NexusAI with a Specialist',
+      'Experience BizAssist AI with a Specialist',
       '<div style="display:flex; flex-direction:column; gap:20px;">' +
         '<p style="color:var(--text-secondary); font-size:14px;">Select a preferred time slot to see our 14-student low-code prototype in action with real data.</p>' +
         '<div class="interactive-field">' +
@@ -457,7 +457,7 @@
           '<label class="interactive-label">Your Work Email</label>' +
           '<input type="email" class="interactive-input" placeholder="name@company.com" required />' +
         '</div>' +
-        '<button class="interactive-btn-primary" onclick="window.NexusConfirmDemo()">Confirm Demo Booking →</button>' +
+        '<button class="interactive-btn-primary" onclick="(window.BizAssistConfirmDemo||window.NexusConfirmDemo)()">Confirm Demo Booking →</button>' +
       '</div>'
     );
   }
@@ -473,9 +473,9 @@
         '</div>' +
         '<div class="interactive-field">' +
           '<label class="interactive-label">Message</label>' +
-          '<textarea class="interactive-textarea" placeholder="How can the NexusAI team assist your support operations?"></textarea>' +
+          '<textarea class="interactive-textarea" placeholder="How can the BizAssist AI team assist your support operations?"></textarea>' +
         '</div>' +
-        '<button class="interactive-btn-primary" onclick="window.NexusSendContact()">Send Inquiry to hello@nexusai.example →</button>' +
+        '<button class="interactive-btn-primary" onclick="(window.BizAssistSendContact||window.NexusSendContact)()">Send Inquiry to hello@bizassist.ai →</button>' +
       '</div>'
     );
   }
@@ -508,7 +508,7 @@
 
   function renderGoalVerificationHtml(goalId) {
     const tests = {
-      G1: { desc: 'Customer registers, files a ticket, receives reference code NX-4092, and checks live status without manual staff intervention.', result: 'PASSED (0.4s response latency)' },
+      G1: { desc: 'Customer registers, files a ticket, receives reference code BA-1042, and checks live status without manual staff intervention.', result: 'PASSED (0.4s response latency)' },
       G2: { desc: 'Admin and Support Agent log in to unified console; ticket appears in priority queue with automatic assignment.', result: 'PASSED (Zero drop rate across 1,000 synthetic tickets)' },
       G3: { desc: 'NLP model tags intent as Billing (99.4%), sets priority to P1, drafts concise 3-bullet summary, and attaches reply draft.', result: 'PASSED (Average triage time 1.2s)' },
       G4: { desc: 'Knowledge Base chatbot answers question regarding SSO SAML configuration with doc citation; fallback button routes to human.', result: 'PASSED (Instant verified citation)' },
@@ -527,15 +527,15 @@
         '</div>' +
         '<span style="font-family:var(--font-mono); font-size:11px; color:#166534;">VERIFIED 100%</span>' +
       '</div>' +
-      '<button class="interactive-btn-primary" onclick="window.NexusTriggerGoalRun(\\'' + goalId + '\\')">Re-run Automated Test Pipeline ↻</button>' +
+      '<button class="interactive-btn-primary" onclick="(window.BizAssistTriggerGoalRun||window.NexusTriggerGoalRun)(\'' + goalId + '\')">Re-run Automated Test Pipeline ↻</button>' +
     '</div>';
   }
 
   // Global Interactive Helper Functions
   window.NexusTriggerGoalRun = function (id) {
-    window.NexusShowToast('Running synthetic validation pipeline for ' + id + '...');
+    (window.BizAssistShowToast || window.NexusShowToast)('Running synthetic validation pipeline for ' + id + '...');
     setTimeout(function () {
-      window.NexusShowToast('✓ Goal ' + id + ' passed all 12 test assertions in 142ms!');
+      (window.BizAssistShowToast || window.NexusShowToast)('✓ Goal ' + id + ' passed all 12 test assertions in 142ms!');
     }, 800);
   };
 
@@ -548,13 +548,13 @@
     const prev = document.getElementById('ticket-response-preview');
     const text = document.getElementById('ticket-response-text');
     
-    text.innerHTML = 'Assigned Ticket #NX-4093 to <strong>' + cat + '</strong>. Subject: "' + subject + '". Auto-routed with P1 priority.';
+    text.innerHTML = 'Assigned Ticket #BA-1043 to <strong>' + cat + '</strong>. Subject: "' + subject + '". Auto-routed with P1 priority.';
     prev.style.display = 'block';
-    window.NexusShowToast('✓ Ticket #NX-4093 submitted! Auto-triage initiated in 0.2s.');
+    (window.BizAssistShowToast || window.NexusShowToast)('✓ Ticket #BA-1043 submitted! Auto-triage initiated in 0.2s.');
 
-    if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-      window.NexusSupabase.createTicket({
-        ticket_code: 'NX-' + Math.floor(4100 + Math.random() * 900),
+    if ((window.BizAssistSupabase || window.NexusSupabase) && (window.BizAssistSupabase || window.NexusSupabase).isConnected()) {
+      (window.BizAssistSupabase || window.NexusSupabase).createTicket({
+        ticket_code: 'BA-' + Math.floor(4100 + Math.random() * 900),
         subject: subject,
         category: cat,
         priority: 'P1',
@@ -566,7 +566,7 @@
         sla_minutes: 15
       }).then(function (res) {
         if (!res.error) {
-          window.NexusShowToast('☁ Ticket synced to Supabase database!');
+          (window.BizAssistShowToast || window.NexusShowToast)('☁ Ticket synced to Supabase database!');
         }
       });
     }
@@ -589,7 +589,7 @@
     const route = document.getElementById('triage-route');
     const inp = document.getElementById('triage-test-input').value;
 
-    window.NexusShowToast('Running NLP embedding & classification...');
+    (window.BizAssistShowToast || window.NexusShowToast)('Running NLP embedding & classification...');
     setTimeout(function () {
       if (inp.toLowerCase().includes('sso') || inp.toLowerCase().includes('okta')) {
         conf.textContent = 'CONFIDENCE: 98.7%';
@@ -604,7 +604,7 @@
         intent.textContent = 'Intent: Billing & Invoicing (Priority P1 Critical)';
         route.textContent = 'Target Routing: Escalated directly to Finance Tier-2 Support Specialists.';
       }
-      window.NexusShowToast('✓ AI Triage completed in 0.18 seconds.');
+      (window.BizAssistShowToast || window.NexusShowToast)('✓ AI Triage completed in 0.18 seconds.');
     }, 300);
   };
 
@@ -629,17 +629,17 @@
   window.NexusSwitchTone = function (tone) {
     const editor = document.getElementById('reply-draft-editor');
     if (tone === 'Concise') {
-      editor.value = 'Hi Sarah,\n\nWe refunded the duplicate $1,200 charge and unlocked your Enterprise plan.\n\nRegards,\nNexusAI';
+      editor.value = 'Hi Sarah,\n\nWe refunded the duplicate $1,200 charge and unlocked your Enterprise plan.\n\nRegards,\nBizAssist AI';
     } else if (tone === 'Formal') {
-      editor.value = 'Dear Ms. Sarah,\n\nWe acknowledge the inconvenience caused by the transaction deadlock. Our billing division has released the pre-authorization hold and updated your license to active standing.\n\nSincerely,\nNexusAI Support Operations';
+      editor.value = 'Dear Ms. Sarah,\n\nWe acknowledge the inconvenience caused by the transaction deadlock. Our billing division has released the pre-authorization hold and updated your license to active standing.\n\nSincerely,\nBizAssist AI Support Operations';
     } else {
-      editor.value = 'Hi Sarah,\n\nI sincerely apologize for the checkout hurdle. I verified your transaction of $1,200 and immediately released the temporary hold on invoice #4092. Your Enterprise access is fully restored!\n\nBest,\nNexusAI Team';
+      editor.value = 'Hi Sarah,\n\nI sincerely apologize for the checkout hurdle. I verified your transaction of $1,200 and immediately released the temporary hold on invoice #4092. Your Enterprise access is fully restored!\n\nBest,\nBizAssist AI Team';
     }
-    window.NexusShowToast('Switched draft tone to ' + tone + '.');
+    (window.BizAssistShowToast || window.NexusShowToast)('Switched draft tone to ' + tone + '.');
   };
 
   window.NexusApproveReply = function () {
-    window.NexusShowToast('✓ Response approved & sent to customer. Ticket resolved!');
+    (window.BizAssistShowToast || window.NexusShowToast)('✓ Response approved & sent to customer. Ticket resolved!');
     setTimeout(function () {
       closeModal();
     }, 800);
@@ -676,9 +676,9 @@
   };
 
   window.NexusHandoverHuman = function () {
-    window.NexusShowToast('✓ Connecting you to an online Support Agent...');
+    (window.BizAssistShowToast || window.NexusShowToast)('✓ Connecting you to an online Support Agent...');
     setTimeout(function () {
-      window.NexusShowToast('Agent Kala joined the conversation.');
+      (window.BizAssistShowToast || window.NexusShowToast)('Agent Kala joined the conversation.');
     }, 1200);
   };
 
@@ -699,21 +699,21 @@
       s2.textContent = '68.4%';
       s3.textContent = '99.8%';
     }
-    window.NexusShowToast('Updated operations metrics for ' + period + '.');
+    (window.BizAssistShowToast || window.NexusShowToast)('Updated operations metrics for ' + period + '.');
   };
 
   window.NexusConfirmDemo = function () {
     const emailInput = document.querySelector('input[type="email"]');
     const email = emailInput ? emailInput.value : 'demo@company.com';
 
-    if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-      window.NexusSupabase.submitDemoRequest({
+    if ((window.BizAssistSupabase || window.NexusSupabase) && (window.BizAssistSupabase || window.NexusSupabase).isConnected()) {
+      (window.BizAssistSupabase || window.NexusSupabase).submitDemoRequest({
         work_email: email,
         notes: 'Interactive Modal Demo booking'
       });
     }
 
-    window.NexusShowToast('✓ Demonstration booked! Confirmation sent to your inbox.');
+    (window.BizAssistShowToast || window.NexusShowToast)('✓ Demonstration booked! Confirmation sent to your inbox.');
     setTimeout(function () {
       closeModal();
     }, 800);
@@ -725,14 +725,14 @@
     const email = emailInput ? emailInput.value : 'user@example.com';
     const msg = textarea ? textarea.value : '';
 
-    if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-      window.NexusSupabase.submitDemoRequest({
+    if ((window.BizAssistSupabase || window.NexusSupabase) && (window.BizAssistSupabase || window.NexusSupabase).isConnected()) {
+      (window.BizAssistSupabase || window.NexusSupabase).submitDemoRequest({
         work_email: email,
         notes: 'Interactive Modal Contact: ' + msg
       });
     }
 
-    window.NexusShowToast('✓ Inquiry sent to hello@nexusai.example. We reply in < 15m.');
+    (window.BizAssistShowToast || window.NexusShowToast)('✓ Inquiry sent to hello@bizassist.ai. We reply in < 15m.');
     setTimeout(function () {
       closeModal();
     }, 800);

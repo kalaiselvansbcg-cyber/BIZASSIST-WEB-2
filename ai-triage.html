@@ -190,7 +190,7 @@
             2. Multi-Stage Inference Result
           </h2>
           <span style="font-family:var(--font-mono); font-size:11px; color:#059669; background:#ECFDF5; padding:2px 8px; border-radius:4px;" id="inference-time">
-            Latency: 94ms · Model: Nexus-Triage-v4
+            Latency: 94ms · Model: BizAssist-Triage-v4
           </span>
         </div>
 
@@ -377,7 +377,7 @@
         btn.style.opacity = "1";
 
         const latency = Math.floor(Math.random() * 25) + 75;
-        document.getElementById('inference-time').textContent = `Latency: ${latency}ms · Model: Nexus-Triage-v4`;
+        document.getElementById('inference-time').textContent = `Latency: ${latency}ms · Model: BizAssist-Triage-v4`;
 
         document.getElementById('res-priority-title').textContent = s.priority;
         const slaEl = document.getElementById('res-sla');
@@ -410,7 +410,8 @@
         log.appendChild(div);
         log.scrollTop = log.scrollHeight;
 
-        window.NexusShowToast("AI Triage evaluation complete: " + s.intent1.label);
+        const toastFn = window.BizAssistShowToast || window.NexusShowToast || function(){};
+        toastFn("AI Triage evaluation complete: " + s.intent1.label);
 
         // Advance any pending Raised tickets to Categorised
         if (window.BizAssistStore) {
@@ -422,7 +423,8 @@
     function runTriageEngine() {
       const val = document.getElementById('raw-inquiry').value.trim();
       if (!val) {
-        window.NexusShowToast("Please enter customer message or select a test scenario.");
+        const toastFn = window.BizAssistShowToast || window.NexusShowToast || function(){};
+        toastFn("Please enter customer message or select a test scenario.");
         return;
       }
       // Simple dynamic match

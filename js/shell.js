@@ -1,9 +1,9 @@
 /**
  * BizAssist AI — Shared Layout & Shell Component (js/shell.js)
  * 
- * Injects the shared Quiet Luxury header, role-based navigation, breadcrumbs,
- * notification centre bell, user dropdown, global keyboard shortcut (/),
- * call-back request modal, and intelligent streaming AI assistant.
+ * Injects the shared Modern SaaS header, role-based navigation, breadcrumbs,
+ * dark mode toggle, command palette (Cmd+K), notification centre bell,
+ * user dropdown, call-back request modal, and intelligent streaming AI assistant.
  */
 (function (global) {
   'use strict';
@@ -20,6 +20,17 @@
 
   // Persistent session chat history for the drawer (capped at 12 turns)
   let drawerChatHistory = [];
+
+  // Theme Management
+  function initTheme() {
+    const saved = global.localStorage ? global.localStorage.getItem('bizassist.theme') : null;
+    const prefersDark = global.matchMedia && global.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    return theme;
+  }
+
+  const currentTheme = initTheme();
 
   function getCurrentRoute() {
     let p = global.location.pathname.replace(/\.html$/, '');
@@ -92,6 +103,13 @@
           </nav>
         </div>
 
+        <!-- Role Quick Switcher -->
+        <div class="biz-shell-role-switcher" title="Quickly preview workspace in different roles">
+          <button type="button" class="biz-shell-role-btn ${userRole === 'Customer' ? 'active' : ''}" onclick="BizAssistShell.switchRole('Customer')">Customer</button>
+          <button type="button" class="biz-shell-role-btn ${userRole === 'Agent' ? 'active' : ''}" onclick="BizAssistShell.switchRole('Agent')">Agent</button>
+          <button type="button" class="biz-shell-role-btn ${userRole === 'Manager' || userRole === 'Admin' ? 'active' : ''}" onclick="BizAssistShell.switchRole('Manager')">Manager</button>
+        </div>
+
         <nav class="biz-shell-nav" aria-label="Main Navigation">
           ${navLinks.map(link => {
             const isActive = currentRoute === link.href ? 'active' : '';
@@ -101,10 +119,38 @@
 
         <div class="biz-shell-actions">
           
+          <!-- SEARCH / COMMAND PALETTE TRIGGER -->
+          <button type="button" class="biz-shell-search-btn" onclick="BizAssistShell.openCommandPalette()" aria-label="Search or Quick Command">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <span>Search</span>
+            <span class="biz-shell-kbd">⌘K</span>
+          </button>
+
+          <!-- THEME TOGGLE (LIGHT / DARK) -->
+          <button type="button" class="biz-shell-theme-btn" id="biz-theme-btn" onclick="BizAssistShell.toggleTheme()" aria-label="Toggle Light / Dark theme" title="Toggle theme">
+            <svg id="theme-icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="${document.documentElement.getAttribute('data-theme') === 'dark' ? 'display:none;' : 'display:block;'}">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <svg id="theme-icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="${document.documentElement.getAttribute('data-theme') === 'dark' ? 'display:block;' : 'display:none;'}">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </button>
+
           <!-- NOTIFICATION CENTRE BELL -->
           <div class="biz-shell-notif-wrapper">
             <button type="button" class="biz-shell-notif-btn" id="biz-notif-btn" onclick="BizAssistShell.toggleNotifMenu()" aria-label="Notifications" aria-expanded="false" aria-haspopup="true">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
                 <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
               </svg>
@@ -124,6 +170,9 @@
 
           <!-- ASK AI TRIGGER -->
           <button type="button" class="biz-shell-ask-ai-btn" onclick="BizAssistShell.toggleFloatingChat()" aria-label="Open AI Assistant">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+            </svg>
             <span>Ask AI</span>
           </button>
 
@@ -132,7 +181,7 @@
             <button type="button" class="biz-shell-user-btn" id="biz-user-menu-btn" onclick="BizAssistShell.toggleUserMenu()" aria-expanded="false" aria-haspopup="true">
               <span style="font-weight:600; font-size:13px;">${session ? session.name : 'Demo User'}</span>
               <span class="biz-shell-user-role-badge">${userRole}</span>
-              <span style="font-size:10px;">▼</span>
+              <span style="font-size:10px; color:var(--shell-muted);">▼</span>
             </button>
 
             <div class="biz-shell-user-menu" id="biz-user-menu" role="menu" aria-label="User profile options">
@@ -144,6 +193,10 @@
               <button type="button" class="biz-shell-user-menu-item" onclick="BizAssistShell.openCallbackModal()">
                 <span>Request a Call Back</span>
                 <span style="font-size:11px; color:var(--shell-muted);">Phone support</span>
+              </button>
+              <button type="button" class="biz-shell-user-menu-item" onclick="BizAssistShell.openShortcutsModal()">
+                <span>Keyboard Shortcuts</span>
+                <span style="font-size:11px; color:var(--shell-muted);"><kbd>?</kbd></span>
               </button>
               <button type="button" class="biz-shell-user-menu-item" onclick="BizAssistShell.handleResetData()">
                 <span>Reset Demo Data</span>
@@ -157,7 +210,7 @@
                 <span>About BizAssist</span>
                 <span style="font-size:11px; color:var(--shell-muted);">Product Overview</span>
               </a>
-              <button type="button" class="biz-shell-user-menu-item" onclick="BizAssistAuth.signOut()">
+              <button type="button" class="biz-shell-user-menu-item danger" onclick="BizAssistAuth.signOut()">
                 <span>Sign Out</span>
                 <span style="font-size:12px;">→</span>
               </button>
@@ -186,15 +239,35 @@
       }
     });
 
-    // Global keyboard shortcut '/' to focus search or open chat
+    // Keyboard shortcuts listener
     document.addEventListener('keydown', (e) => {
-      if (e.key === '/' && !['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+      // 1. Cmd/Ctrl + K => Open Command Palette
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        BizAssistShell.openCommandPalette();
+        return;
+      }
+
+      // If typing in input, don't trigger global shortcuts
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) {
+        return;
+      }
+
+      // 2. '?' => Open Shortcuts Cheat Sheet
+      if (e.key === '?' || (e.shiftKey && e.key === '/')) {
+        e.preventDefault();
+        BizAssistShell.openShortcutsModal();
+        return;
+      }
+
+      // 3. '/' => Focus search or trigger palette
+      if (e.key === '/') {
         e.preventDefault();
         const searchInput = document.getElementById('ticket-search') || document.getElementById('search-input') || document.querySelector('input[type="search"]');
         if (searchInput) {
           searchInput.focus();
         } else {
-          BizAssistShell.toggleFloatingChat();
+          BizAssistShell.openCommandPalette();
         }
       }
     });
@@ -265,37 +338,145 @@
     document.body.appendChild(modal);
   }
 
+  function injectCommandPalette() {
+    if (document.getElementById('biz-command-palette')) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'biz-command-palette';
+    modal.className = 'biz-modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Command Palette');
+
+    modal.innerHTML = `
+      <div class="command-palette-card" onclick="event.stopPropagation()">
+        <input type="text" id="command-palette-input" class="command-palette-input" placeholder="Search tickets, customers, articles, or jump to page... (Esc to close)" autocomplete="off">
+        <ul id="command-palette-results" class="command-results-list">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+    `;
+
+    modal.addEventListener('click', () => {
+      BizAssistShell.closeCommandPalette();
+    });
+
+    document.body.appendChild(modal);
+
+    const input = document.getElementById('command-palette-input');
+    input.addEventListener('input', (e) => {
+      BizAssistShell.filterCommandResults(e.target.value.trim());
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        BizAssistShell.closeCommandPalette();
+      }
+    });
+  }
+
+  function injectShortcutsModal() {
+    if (document.getElementById('biz-shortcuts-modal')) return;
+
+    const modal = document.createElement('div');
+    modal.id = 'biz-shortcuts-modal';
+    modal.className = 'biz-modal-overlay';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Keyboard Shortcuts');
+
+    modal.innerHTML = `
+      <div class="biz-modal-card" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h2 style="font-size:18px;">Keyboard Shortcuts</h2>
+          <button type="button" onclick="BizAssistShell.closeShortcutsModal()" style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--muted);">✕</button>
+        </div>
+        <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">
+          Navigate and process customer inquiries at high speed without touching your mouse.
+        </p>
+
+        <table class="shortcuts-table">
+          <tbody>
+            <tr>
+              <td><span class="shortcuts-key">J</span></td>
+              <td>Select next ticket in agent queue</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">K</span></td>
+              <td>Select previous ticket in agent queue</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">R</span></td>
+              <td>Focus reply composer</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">E</span></td>
+              <td>Mark selected ticket as Resolved</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">/</span></td>
+              <td>Focus queue search box / canned responses menu</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">⌘K</span> / <span class="shortcuts-key">Ctrl+K</span></td>
+              <td>Open global command palette & universal search</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">?</span></td>
+              <td>Open this shortcuts cheat sheet</td>
+            </tr>
+            <tr>
+              <td><span class="shortcuts-key">Esc</span></td>
+              <td>Close active modal or drawer</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:20px; text-align:right;">
+          <button type="button" class="btn-primary" onclick="BizAssistShell.closeShortcutsModal()">Got it</button>
+        </div>
+      </div>
+    `;
+
+    modal.addEventListener('click', () => {
+      BizAssistShell.closeShortcutsModal();
+    });
+
+    document.body.appendChild(modal);
+  }
+
   function injectFloatingChat() {
     if (document.getElementById('biz-floating-chat')) return;
 
     const session = global.BizAssistAuth ? global.BizAssistAuth.getSession() : null;
     const userName = session ? session.name : 'Customer';
-    const userRole = session ? session.role : 'Customer';
 
     const wrap = document.createElement('div');
     wrap.id = 'biz-floating-chat';
     wrap.innerHTML = `
       <button type="button" class="biz-floating-chat-trigger" onclick="BizAssistShell.toggleFloatingChat()" aria-label="Toggle AI Assistant Drawer">
-        <span>●</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+        </svg>
         <span>AI Assistant</span>
       </button>
 
       <div class="biz-floating-chat-drawer" id="biz-chat-drawer" role="dialog" aria-modal="true" aria-label="BizAssist AI Assistant">
-        <div class="biz-chat-drawer-header">
-          <div class="biz-chat-drawer-title">BizAssist AI Assistant</div>
+        <div class="biz-floating-chat-header">
+          <div style="font-size:14px; font-weight:700;">BizAssist AI Assistant</div>
           <div style="display:flex; align-items:center; gap:8px;">
             <button type="button" class="biz-chat-bubble-tool-btn" onclick="BizAssistShell.downloadTranscript()" title="Download conversation transcript">Export</button>
-            <button type="button" class="biz-chat-drawer-close" onclick="BizAssistShell.toggleFloatingChat()" aria-label="Close Assistant">✕</button>
+            <button type="button" onclick="BizAssistShell.toggleFloatingChat()" aria-label="Close Assistant" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--muted);">✕</button>
           </div>
         </div>
         
-        <div class="biz-chat-drawer-messages" id="biz-drawer-messages">
-          <div class="biz-chat-bubble assistant">
-            Hello, ${userName}. I am grounded in BizAssist AI knowledge. I can look up ticket status, draft inquiries, find documentation, or connect you with support.
+        <div class="biz-floating-chat-body" id="biz-drawer-messages">
+          <div class="biz-chat-bubble bot">
+            Hello, ${userName}. I am grounded in BizAssist AI knowledge. I can look up ticket status, draft inquiries, find documentation, or connect you with human support.
             
             <div class="biz-chat-quick-actions">
               <button type="button" class="biz-chat-chip" onclick="BizAssistShell.sendQuickMessage('Track ticket #BA-1042')">Track #BA-1042</button>
-              <button type="button" class="biz-chat-chip" onclick="BizAssistShell.sendQuickMessage('Track ticket #BA-2089')">Track #BA-2089</button>
+              <button type="button" class="biz-chat-chip" onclick="BizAssistShell.sendQuickMessage('Track ticket #BA-3310')">Track #BA-3310</button>
               <button type="button" class="biz-chat-chip" onclick="BizAssistShell.sendQuickMessage('Browse knowledge base articles')">Browse Knowledge Base</button>
               <button type="button" class="biz-chat-chip" onclick="BizAssistShell.openCallbackModal()">Request Call Back</button>
               <button type="button" class="biz-chat-chip" onclick="BizAssistShell.sendQuickMessage('I need to speak with a human support agent')">Speak with Human</button>
@@ -303,9 +484,9 @@
           </div>
         </div>
 
-        <form class="biz-chat-drawer-input-row" onsubmit="BizAssistShell.handleDrawerSubmit(event)">
-          <input type="text" id="biz-drawer-input" class="biz-chat-drawer-input" placeholder="Ask a question or track #BA-..." autocomplete="off">
-          <button type="submit" class="biz-chat-drawer-send">Send</button>
+        <form class="biz-floating-chat-input-row" onsubmit="BizAssistShell.handleDrawerSubmit(event)">
+          <input type="text" id="biz-drawer-input" class="biz-floating-chat-input" placeholder="Ask a question or track #BA-..." autocomplete="off">
+          <button type="submit" class="biz-floating-chat-send">Send</button>
         </form>
       </div>
     `;
@@ -321,8 +502,137 @@
       if (session && !isPublic) {
         renderShellHeader(session);
         injectCallbackModal();
+        injectCommandPalette();
+        injectShortcutsModal();
         injectFloatingChat();
       }
+    },
+
+    toggleTheme: function () {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      if (global.localStorage) {
+        global.localStorage.setItem('bizassist.theme', next);
+      }
+
+      // Update sun/moon icons
+      const moon = document.getElementById('theme-icon-moon');
+      const sun = document.getElementById('theme-icon-sun');
+      if (moon && sun) {
+        if (next === 'dark') {
+          moon.style.display = 'none';
+          sun.style.display = 'block';
+        } else {
+          moon.style.display = 'block';
+          sun.style.display = 'none';
+        }
+      }
+    },
+
+    switchRole: function (role) {
+      if (global.BizAssistAuth) {
+        const session = global.BizAssistAuth.getSession() || { name: 'Demo User', email: 'user@bizassist.ai' };
+        session.role = role;
+        global.BizAssistAuth.setSession(session);
+
+        // Route to default view
+        if (role === 'Customer') global.location.href = '/portal';
+        else if (role === 'Agent') global.location.href = '/agent-dashboard';
+        else global.location.href = '/manager-overview';
+      }
+    },
+
+    openCommandPalette: function () {
+      const modal = document.getElementById('biz-command-palette');
+      if (modal) {
+        modal.classList.add('active');
+        const input = document.getElementById('command-palette-input');
+        if (input) {
+          input.value = '';
+          input.focus();
+          this.filterCommandResults('');
+        }
+      }
+    },
+
+    closeCommandPalette: function () {
+      const modal = document.getElementById('biz-command-palette');
+      if (modal) modal.classList.remove('active');
+    },
+
+    filterCommandResults: function (query) {
+      const list = document.getElementById('command-palette-results');
+      if (!list) return;
+
+      const q = query.toLowerCase();
+      const results = [];
+
+      // 1. Navigation items
+      const NAV_ITEMS = [
+        { title: 'Agent Queue Dashboard', category: 'Navigation', url: '/agent-dashboard' },
+        { title: 'Customer Ticket Portal', category: 'Navigation', url: '/portal' },
+        { title: 'Manager Overview & SLA Analytics', category: 'Navigation', url: '/manager-overview' },
+        { title: 'AI Triage Engine Studio', category: 'Navigation', url: '/ai-triage' },
+        { title: 'AI Suggested Replies Studio', category: 'Navigation', url: '/suggested-replies' },
+        { title: 'Knowledge Assistant Chatbot', category: 'Navigation', url: '/chatbot' },
+        { title: 'Home Hub', category: 'Navigation', url: '/app' }
+      ];
+
+      NAV_ITEMS.forEach(item => {
+        if (!q || item.title.toLowerCase().includes(q)) {
+          results.push(item);
+        }
+      });
+
+      // 2. Tickets
+      if (global.BizAssistStore) {
+        const tickets = global.BizAssistStore.getTickets();
+        tickets.forEach(t => {
+          if (!q || t.code.toLowerCase().includes(q) || t.subject.toLowerCase().includes(q) || t.contactName.toLowerCase().includes(q)) {
+            results.push({
+              title: `#${t.code} — ${t.subject}`,
+              category: `Ticket (${t.priority})`,
+              url: `/agent-dashboard?ticket=${t.code}`
+            });
+          }
+        });
+
+        // 3. Articles
+        const articles = global.BizAssistStore.getArticles();
+        articles.forEach(a => {
+          if (!q || a.title.toLowerCase().includes(q) || a.tags.some(tag => tag.toLowerCase().includes(q))) {
+            results.push({
+              title: a.title,
+              category: `Knowledge Base (${a.category})`,
+              url: `/portal#knowledge`
+            });
+          }
+        });
+      }
+
+      const display = results.slice(0, 10);
+      if (display.length === 0) {
+        list.innerHTML = `<li style="padding:16px 20px; font-size:13px; color:var(--muted); text-align:center;">No matching results for "${query}".</li>`;
+        return;
+      }
+
+      list.innerHTML = display.map(r => `
+        <li class="command-result-item" onclick="window.location.href='${r.url}'">
+          <div style="font-weight:500; font-size:13px; color:var(--ink);">${r.title}</div>
+          <div style="font-size:11px; color:var(--muted); font-family:var(--font-mono);">${r.category}</div>
+        </li>
+      `).join('');
+    },
+
+    openShortcutsModal: function () {
+      const modal = document.getElementById('biz-shortcuts-modal');
+      if (modal) modal.classList.add('active');
+    },
+
+    closeShortcutsModal: function () {
+      const modal = document.getElementById('biz-shortcuts-modal');
+      if (modal) modal.classList.remove('active');
     },
 
     toggleUserMenu: function () {
@@ -332,7 +642,6 @@
       const isOpen = menu.classList.toggle('is-open');
       if (btn) btn.setAttribute('aria-expanded', String(isOpen));
       
-      // Close notif menu if open
       const notifMenu = document.getElementById('biz-notif-menu');
       if (notifMenu) notifMenu.classList.remove('is-open');
     },
@@ -344,7 +653,6 @@
       const isOpen = menu.classList.toggle('is-open');
       if (btn) btn.setAttribute('aria-expanded', String(isOpen));
       
-      // Close user menu if open
       const userMenu = document.getElementById('biz-user-menu');
       if (userMenu) userMenu.classList.remove('is-open');
     },
@@ -388,7 +696,7 @@
     openCallbackModal: function () {
       const modal = document.getElementById('biz-callback-modal');
       if (modal) {
-        modal.classList.add('is-open');
+        modal.classList.add('active');
         const session = global.BizAssistAuth ? global.BizAssistAuth.getSession() : null;
         if (session && session.name) {
           const nameInput = document.getElementById('cb-name');
@@ -403,7 +711,7 @@
 
     closeCallbackModal: function () {
       const modal = document.getElementById('biz-callback-modal');
-      if (modal) modal.classList.remove('is-open');
+      if (modal) modal.classList.remove('active');
     },
 
     handleCallbackSubmit: function (e) {
@@ -479,7 +787,6 @@
       const text = input ? input.value.trim() : '';
       if (!text) return;
 
-      // Append user bubble
       const userBubble = document.createElement('div');
       userBubble.className = 'biz-chat-bubble user';
       userBubble.textContent = text;
@@ -487,13 +794,12 @@
       input.value = '';
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      // Append to session memory
       drawerChatHistory.push({ role: 'user', content: text });
       if (drawerChatHistory.length > 12) drawerChatHistory.shift();
 
       const site = getSiteConfig();
 
-      // 1. Check for immediate ticket lookup #BA-XXXX
+      // Ticket lookup #BA-XXXX
       const match = text.match(/#?(BA-\d{4})/i);
       if (match && global.BizAssistStore) {
         const t = global.BizAssistStore.getTicket(match[1]);
@@ -502,15 +808,14 @@
           const currentIdx = STAGES.indexOf(t.stage);
 
           const replyBubble = document.createElement('div');
-          replyBubble.className = 'biz-chat-bubble assistant';
+          replyBubble.className = 'biz-chat-bubble bot';
           replyBubble.innerHTML = `
-            <div class="biz-chat-card-title">Ticket #${t.code}</div>
+            <div style="font-weight:700; margin-bottom:4px;">Ticket #${t.code}</div>
             <div><strong>Subject:</strong> ${t.subject}</div>
             <div style="margin:4px 0;"><strong>Category:</strong> ${t.category} · <strong>Priority:</strong> ${t.priority}</div>
             <div><strong>Assigned to:</strong> ${t.assignedTo} (${t.assignedTeam})</div>
 
-            <!-- 5-Stage Tracker Card -->
-            <div class="biz-chat-tracker">
+            <div class="biz-chat-tracker" style="margin:10px 0;">
               ${STAGES.map((s, idx) => {
                 let cls = '';
                 if (idx < currentIdx) cls = 'completed';
@@ -536,23 +841,22 @@
         }
       }
 
-      // 2. Check for Knowledge Base Search keyword
+      // Knowledge Base keyword
       if (text.toLowerCase().includes('browse') || text.toLowerCase().includes('knowledge base') || text.toLowerCase().includes('help articles')) {
         const articles = global.BizAssistStore ? global.BizAssistStore.getArticles().slice(0, 3) : [];
         const replyBubble = document.createElement('div');
-        replyBubble.className = 'biz-chat-bubble assistant';
+        replyBubble.className = 'biz-chat-bubble bot';
         replyBubble.innerHTML = `
-          <div class="biz-chat-card-title">Knowledge Base Articles</div>
-          <p style="margin-bottom:8px;">Here are starter articles from our documentation:</p>
+          <div style="font-weight:700; margin-bottom:4px;">Knowledge Base Articles</div>
+          <p style="margin-bottom:8px; font-size:12px;">Here are articles from our verified documentation:</p>
           ${articles.map(a => `
-            <div class="biz-chat-card">
-              <div style="font-weight:600; color:var(--shell-ink);">${a.title}</div>
-              <div style="color:var(--shell-secondary); font-size:11px; margin:2px 0;">${a.category}</div>
-              <div style="font-size:11px; color:var(--shell-muted);">${a.summary}</div>
+            <div style="background:var(--surface); border:1px solid var(--shell-line); border-radius:6px; padding:8px; margin-bottom:6px;">
+              <div style="font-weight:600; color:var(--shell-ink); font-size:12px;">${a.title}</div>
+              <div style="font-size:11px; color:var(--shell-muted); margin-top:2px;">${a.summary}</div>
             </div>
           `).join('')}
           <div class="biz-chat-card-actions">
-            <a href="/portal#knowledge" class="biz-chat-card-btn">Browse All 12 Articles</a>
+            <a href="/portal#knowledge" class="biz-chat-card-btn">Browse All Articles</a>
           </div>
         `;
         messagesContainer.appendChild(replyBubble);
@@ -561,13 +865,13 @@
         return;
       }
 
-      // 3. Check for Human Handover / Call / Phone
+      // Handover / Call
       if (text.toLowerCase().includes('human') || text.toLowerCase().includes('call') || text.toLowerCase().includes('phone') || text.toLowerCase().includes('whatsapp') || text.toLowerCase().includes('person')) {
         const replyBubble = document.createElement('div');
-        replyBubble.className = 'biz-chat-bubble assistant';
+        replyBubble.className = 'biz-chat-bubble bot';
         replyBubble.innerHTML = `
-          <div class="biz-chat-card-title">Connect with Support Team</div>
-          <p style="margin-bottom:8px;">You can reach our human operations team via phone, WhatsApp, or schedule an automated call back:</p>
+          <div style="font-weight:700; margin-bottom:4px;">Connect with Support Team</div>
+          <p style="margin-bottom:8px; font-size:12px;">You can reach our human operations team via phone, WhatsApp, or schedule an automated call back:</p>
           
           <div class="biz-chat-card-actions">
             <a href="tel:${site.supportPhone.replace(/\s+/g, '')}" class="biz-chat-card-btn">Call: ${site.supportPhoneDisplay || site.supportPhone}</a>
@@ -581,9 +885,9 @@
         return;
       }
 
-      // 4. Server-Side /api/chat invocation with streaming
+      // Server /api/chat invocation with streaming
       const thinkingBubble = document.createElement('div');
-      thinkingBubble.className = 'biz-chat-bubble assistant';
+      thinkingBubble.className = 'biz-chat-bubble bot';
       thinkingBubble.textContent = 'Thinking...';
       messagesContainer.appendChild(thinkingBubble);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -592,9 +896,7 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: drawerChatHistory
-          })
+          body: JSON.stringify({ messages: drawerChatHistory })
         });
 
         if (res.ok) {
@@ -626,17 +928,16 @@
 
           if (fullText) {
             drawerChatHistory.push({ role: 'assistant', content: fullText });
-            // Add copy button
             const toolsBar = document.createElement('div');
             toolsBar.className = 'biz-chat-bubble-tools';
             toolsBar.innerHTML = `<button type="button" class="biz-chat-bubble-tool-btn" onclick="navigator.clipboard.writeText('${fullText.replace(/'/g, "\\'").replace(/\n/g, ' ')}')">Copy</button>`;
             thinkingBubble.appendChild(toolsBar);
           } else {
-            thinkingBubble.textContent = 'Thank you for reaching out. You can raise a ticket in the Customer Portal or track existing tickets #BA-1042, #BA-2089, or #BA-3310.';
+            thinkingBubble.textContent = 'Thank you for reaching out. You can raise a ticket in the Customer Portal or track existing tickets #BA-1042, #BA-3310, or #BA-2089.';
           }
         } else {
           thinkingBubble.innerHTML = `
-            I am currently operating in prototype mode. You can check ticket status (#BA-1042, #BA-2089, #BA-3310), search articles, or request a call back from support.
+            I am currently operating in prototype mode. You can check ticket status (#BA-1042, #BA-3310, #BA-2089), search articles, or request a call back from support.
             <div class="biz-chat-card-actions">
               <button type="button" class="biz-chat-card-btn secondary" onclick="BizAssistShell.openCallbackModal()">Schedule Call Back</button>
             </div>

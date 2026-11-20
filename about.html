@@ -1090,8 +1090,8 @@
   <!-- Header -->
   <header class="site-header" id="main-site-header" role="banner">
     <div class="container header-inner">
-      <!-- Zone 1: Left Menu Button -->
-      <div class="header-zone-left">
+      <!-- Zone 1: Left Menu Button & Role Switcher -->
+      <div class="header-zone-left" style="display:flex; align-items:center; gap:16px;">
         <button class="header-menu-btn" id="open-menu-btn" onclick="toggleMenuOverlay(true)" aria-label="Open navigation menu" aria-haspopup="dialog" aria-expanded="false">
           <div class="menu-line-icon" aria-hidden="true">
             <span></span>
@@ -1099,6 +1099,13 @@
           </div>
           <span>Menu</span>
         </button>
+
+        <!-- Role Preview Quick-Links -->
+        <div class="header-role-switcher" style="display:inline-flex; background:var(--surface-alt); padding:2px; border-radius:6px; border:1px solid var(--line); gap:2px;">
+          <a href="/portal" class="btn-secondary" style="padding:4px 8px; font-size:11px; border:none; text-decoration:none;">Customer</a>
+          <a href="/agent-dashboard" class="btn-secondary" style="padding:4px 8px; font-size:11px; border:none; text-decoration:none;">Agent</a>
+          <a href="/manager-overview" class="btn-secondary" style="padding:4px 8px; font-size:11px; border:none; text-decoration:none;">Manager</a>
+        </div>
       </div>
 
       <!-- Zone 2: Center Logo -->
@@ -1107,7 +1114,8 @@
       </div>
 
       <!-- Zone 3: Right Actions -->
-      <div class="header-zone-right">
+      <div class="header-zone-right" style="display:flex; align-items:center; gap:10px;">
+        <button type="button" class="btn-secondary" id="about-theme-toggle" onclick="toggleAboutTheme()" title="Toggle Dark/Light Mode" style="padding:6px 10px; font-size:12px;">🌓</button>
         <a href="/" class="header-link-signin">Sign in</a>
         <button class="header-btn-demo" onclick="openDemoModal()" aria-haspopup="dialog">Book a demo</button>
       </div>
@@ -1161,21 +1169,33 @@
           </div>
         </div>
 
-        <!-- Pure HTML/CSS Ticket Card Frame -->
+        <!-- Interactive Modern SaaS Ticket Card Frame -->
         <div class="hero-frame-container">
-          <div class="hero-ticket-card">
-            <div class="ticket-meta-tag">
-              <span class="ticket-id-label">TICKET #BA-1042</span>
-              <span class="ticket-urgent-dot">URGENT</span>
-            </div>
-            <h2 class="hero-ticket-title">Payment failed on renewal checkout</h2>
-            <div class="hero-ticket-details">
-              <div><strong>Category:</strong> Billing & Payments</div>
-              <div><strong>Priority:</strong> Urgent P1 (15m SLA)</div>
-              <div><strong>Assigned to:</strong> Sarah Jenkins (Tier-2 SRE)</div>
+          <div class="hero-ticket-card" style="border-left: 4px solid var(--prio-urgent); box-shadow: var(--shadow-md);">
+            <!-- Line 1: Priority dot + Subject -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span class="prio-dot urgent"></span>
+                <span class="badge-pill badge-urgent" style="font-size:10px;">URGENT P1</span>
+                <span class="ticket-id-copy" style="font-size:11px;">#BA-1042</span>
+              </div>
+              <span class="sla-chip critical">7m remaining</span>
             </div>
 
-            <!-- Five-Square Ticket Tracker -->
+            <h2 class="hero-ticket-title" style="font-size:20px; font-weight:700; margin-bottom:8px;">Enterprise SSO integration failure with Okta SAML 2.0</h2>
+            
+            <!-- Line 2: Customer, Company, Time -->
+            <div style="font-size:12.5px; color:var(--muted); margin-bottom:14px; display:flex; justify-content:space-between;">
+              <span>Alex Rivera · Acme Corp (Enterprise)</span>
+              <span>via Web Portal · 48m ago</span>
+            </div>
+
+            <div style="background:var(--ai-gradient-subtle); border:1px solid rgba(20,184,166,0.3); border-radius:6px; padding:10px 12px; font-size:12px; margin-bottom:14px;">
+              <strong style="color:var(--secondary-ai);">AI Triage Analysis:</strong>
+              <span style="color:var(--ink-soft);"> x509 cert fingerprint mismatch detected. Grounded empathetic draft dispatched. Target SLA: 15m.</span>
+            </div>
+
+            <!-- Milestone progression -->
             <div class="tracker-five-squares" aria-label="Five stage milestone progress">
               <div class="tracker-square-node done" title="Stage 1: Raised"></div>
               <div class="tracker-square-node done" title="Stage 2: Categorised"></div>
@@ -1183,8 +1203,9 @@
               <div class="tracker-square-node current" title="Stage 4: Replied"></div>
               <div class="tracker-square-node" title="Stage 5: Resolved"></div>
             </div>
-            <div style="font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em;">
-              Current Stage: Replied (Step 04 / 05)
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); font-family:var(--font-mono); margin-top:6px;">
+              <span>Stage 4/5: Agent Dispatched</span>
+              <span style="color:var(--primary); font-weight:600;">Live Queue Preview</span>
             </div>
           </div>
         </div>
@@ -1323,47 +1344,70 @@
     </section>
 
     <!-- ==========================================================================
-         SECTION 3: #flow (6-Stage Numbered Editorial List)
+         SECTION 3: #features-overview (Modern Colorful SaaS Capabilities Grid)
          ========================================================================== -->
-    <section id="flow" class="section-spacing container" aria-label="The life of a ticket">
-      <span class="eyebrow">03 / LIFECYCLE</span>
-      <h2 style="margin: 16px 0 24px 0;">The life of a <em>ticket.</em></h2>
-      <p class="body-copy" style="max-width: 60ch;">
-        Every customer inquiry journeys through six rigorously automated stages, eliminating handoffs and manual backlog delays.
+    <section id="features-overview" class="section-spacing container" aria-label="Platform Capabilities">
+      <span class="badge-pill badge-ai" style="margin-bottom:12px;">03 / PLATFORM CAPABILITIES</span>
+      <h2 style="margin: 12px 0 20px 0; font-size:clamp(28px, 4vw, 38px); font-weight:700;">Engineered for <em>resolution speed.</em></h2>
+      <p class="body-copy" style="max-width: 65ch; margin-bottom: 32px;">
+        Six cohesive intelligence layers automate repetitive triage, protect SLAs, and assist agents with grounded AI drafts.
       </p>
 
-      <ul class="flow-list">
-        <li class="flow-row">
-          <span class="flow-num">01</span>
-          <h3 class="flow-title">Intake</h3>
-          <p class="flow-desc">Inquiries arrive via customer portal, webhooks, or support email and receive a unique immutable ticket reference code immediately.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">02</span>
-          <h3 class="flow-title">Entity Triage</h3>
-          <p class="flow-desc">Natural language models extract order numbers, error codes, and billing IDs in under 120ms to assign the exact technical queue.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">03</span>
-          <h3 class="flow-title">Priority Regression</h3>
-          <p class="flow-desc">SLA timers regress urgency into Normal (P3), High (P2), or Urgent (P1), locking in guaranteed response commitments.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">04</span>
-          <h3 class="flow-title">Executive Summary</h3>
-          <p class="flow-desc">A succinct technical brief is generated so the arriving support engineer understands root causes without reading 20-message threads.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">05</span>
-          <h3 class="flow-title">Suggested Reply</h3>
-          <p class="flow-desc">Grounded response drafts cite verified product documentation and offer tone customization before human agent dispatch.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">06</span>
-          <h3 class="flow-title">Status Tracked</h3>
-          <p class="flow-desc">Customers inspect real-time progress across 5 milestone nodes, preventing repetitive "any updates?" inbound tickets.</p>
-        </li>
-      </ul>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+        <!-- Card 1 -->
+        <div class="card-modern" style="border-top:3px solid #4F46E5;">
+          <div style="font-size:24px; margin-bottom:8px;">⚡</div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;">Sub-120ms AI Triage</h3>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">
+            Extracts order numbers, error codes, and customer intent instantly from inbound text to assign the exact specialist queue.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card-modern" style="border-top:3px solid #EF4444;">
+          <div style="font-size:24px; margin-bottom:8px;">🚨</div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;">Live SLA Risk Board</h3>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">
+            Horizontal risk strip alerts teams to tickets nearing breach with pulsing amber/red indicators and automated escalations.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card-modern" style="border-top:3px solid #14B8A6;">
+          <div style="font-size:24px; margin-bottom:8px;">✦</div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;">Grounded RAG Draft Studio</h3>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">
+            Synthesizes empathetic or concise responses citing verified product documentation before human agent 1-click dispatch.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card-modern" style="border-top:3px solid #F59E0B;">
+          <div style="font-size:24px; margin-bottom:8px;">👀</div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;">Collision & Duplicate Merge</h3>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">
+            Shows who is viewing a ticket in real time to prevent duplicate replies, with 1-click semantic ticket deduplication.
+          </p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card-modern" style="border-top:3px solid #3B82F6;">
+          <div style="font-size:24px; margin-bottom:8px;">🛡️</div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;">Self-Service Deflection</h3>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">
+            Surfaces verified solutions as customers type their inquiry, resolving common issues instantly and deflecting queue load.
+          </p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card-modern" style="border-top:3px solid #8B5CF6;">
+          <div style="font-size:24px; margin-bottom:8px;">📊</div>
+          <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:6px;">AI Workload Auto-Rebalance</h3>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5;">
+            Monitors real-time agent ticket loads and automatically recommends optimal ticket rebalancing across support tiers.
+          </p>
+        </div>
+      </div>
     </section>
 
     <!-- ==========================================================================
@@ -1614,7 +1658,211 @@
         </div>
       </div>
     </section>
-  </main>
+
+    <!-- ==========================================================================
+         SECTION: #pricing (Interactive Transparent SaaS Pricing)
+         ========================================================================== -->
+    <section id="pricing" class="section-spacing container" aria-label="Pricing Plans">
+      <div style="text-align:center; max-width:650px; margin:0 auto 36px auto;">
+        <span class="badge-pill badge-ai" style="margin-bottom:12px;">TRANSPARENT PLANS</span>
+        <h2 style="font-size:clamp(28px, 4vw, 40px); font-weight:700; margin:10px 0;">Predictable pricing for <em>growing support teams.</em></h2>
+        <p class="body-copy">Scale from your first support inbox to an enterprise omnichannel operations cluster.</p>
+        
+        <!-- Monthly / Annual Toggle -->
+        <div style="display:inline-flex; align-items:center; gap:12px; margin-top:20px; background:var(--surface-alt); padding:4px 12px; border-radius:var(--radius-pill); border:1px solid var(--line);">
+          <span style="font-size:13px; font-weight:600;" id="billing-cycle-label">Monthly</span>
+          <button type="button" class="btn-secondary" id="pricing-cycle-btn" style="padding:4px 10px; font-size:11px; border-radius:var(--radius-pill);" onclick="togglePricingCycle()">
+            Switch to Annual (Save 20%)
+          </button>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:24px;">
+        <!-- Starter Plan -->
+        <div class="card-modern" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:16px; font-weight:700; color:var(--ink);">Starter</div>
+            <p style="font-size:12.5px; color:var(--muted); margin-top:4px;">For small startups and prototype evaluations.</p>
+            <div style="font-size:36px; font-weight:700; margin:18px 0 6px 0; color:var(--ink);">$0 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ month</span></div>
+            <ul style="list-style:none; padding:0; margin:16px 0; display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-soft);">
+              <li>✓ 1 Active Support Agent Seat</li>
+              <li>✓ Up to 100 tickets / month</li>
+              <li>✓ Automated NLP Entity Triage</li>
+              <li>✓ Customer Self-Service Portal</li>
+              <li>✓ Community Support Documentation</li>
+            </ul>
+          </div>
+          <a href="/" class="btn-secondary" style="width:100%; text-align:center;">Get Started Free</a>
+        </div>
+
+        <!-- Team Plan (Featured) -->
+        <div class="card-modern" style="display:flex; flex-direction:column; justify-content:space-between; border-color:var(--primary); box-shadow:0 8px 24px rgba(79,70,229,0.15); position:relative;">
+          <div style="position:absolute; top:-12px; right:20px;">
+            <span class="badge-pill badge-ai" style="background:var(--primary); color:#FFFFFF;">MOST POPULAR</span>
+          </div>
+          <div>
+            <div style="font-size:16px; font-weight:700; color:var(--primary);">Team</div>
+            <p style="font-size:12.5px; color:var(--muted); margin-top:4px;">For scaling support teams requiring automated drafts.</p>
+            <div style="font-size:36px; font-weight:700; margin:18px 0 6px 0; color:var(--ink);" id="price-team">$49 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ seat / mo</span></div>
+            <ul style="list-style:none; padding:0; margin:16px 0; display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-soft);">
+              <li>✓ Up to 15 Support Agent Seats</li>
+              <li>✓ 2,500 tickets / month</li>
+              <li>✓ Grounded AI Suggested Replies Studio</li>
+              <li>✓ Live SLA Risk Board & Countdown</li>
+              <li>✓ Macros / Canned Responses Library</li>
+              <li>✓ Workforce Capacity Auto-Rebalance</li>
+            </ul>
+          </div>
+          <button type="button" class="btn-primary" style="width:100%;" onclick="openDemoModal()">Start 14-Day Free Trial</button>
+        </div>
+
+        <!-- Enterprise Plan -->
+        <div class="card-modern" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div style="font-size:16px; font-weight:700; color:var(--ink);">Enterprise</div>
+            <p style="font-size:12.5px; color:var(--muted); margin-top:4px;">For high-volume operations requiring dedicated SLAs.</p>
+            <div style="font-size:36px; font-weight:700; margin:18px 0 6px 0; color:var(--ink);" id="price-enterprise">$149 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ seat / mo</span></div>
+            <ul style="list-style:none; padding:0; margin:16px 0; display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-soft);">
+              <li>✓ Unlimited Agent & Manager Seats</li>
+              <li>✓ Unlimited Multi-Channel Ingestion</li>
+              <li>✓ Okta SAML 2.0 SSO & SCIM Provisioning</li>
+              <li>✓ Dedicated Egress IP Pools & 99.99% SLA</li>
+              <li>✓ Custom Fine-Tuned Domain LLMs</li>
+              <li>✓ 24/7 Dedicated Support Phone & WhatsApp</li>
+            </ul>
+          </div>
+          <button type="button" class="btn-secondary" style="width:100%;" onclick="openDemoModal()">Contact Enterprise Sales</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: #testimonials (Verified Customer Stories)
+         ========================================================================== -->
+    <section id="testimonials" class="section-spacing container" aria-label="Customer Testimonials">
+      <div style="text-align:center; max-width:650px; margin:0 auto 36px auto;">
+        <span class="badge-pill badge-ai" style="margin-bottom:12px;">PROVEN OUTCOMES</span>
+        <h2 style="font-size:clamp(28px, 4vw, 40px); font-weight:700; margin:10px 0;">Trusted by <em>engineering-driven teams.</em></h2>
+        <p class="body-copy">How market leaders scale their customer operations without ballooning headcount.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+        <!-- Testimonial 1 -->
+        <div class="card-modern" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <p style="font-size:14px; color:var(--ink); line-height:1.6; margin-bottom:18px;">
+            "BizAssist cut our Tier-1 ticket backlog by 84% in our first month. The Okta SSO triage automation alone saved our security engineers 12 hours every week."
+          </p>
+          <div style="display:flex; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:14px;">
+            <div style="width:38px; height:38px; border-radius:50%; background:var(--primary-light); color:var(--primary); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px;">AR</div>
+            <div>
+              <div style="font-weight:700; font-size:13px; color:var(--ink);">Alex Rivera</div>
+              <div style="font-size:11px; color:var(--muted);">VP of Infrastructure · Acme Corp</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="card-modern" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <p style="font-size:14px; color:var(--ink); line-height:1.6; margin-bottom:18px;">
+            "The SLA risk board and live 3-line card hierarchy make managing 500+ daily tickets effortless. Zero SLA breaches recorded this quarter."
+          </p>
+          <div style="display:flex; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:14px;">
+            <div style="width:38px; height:38px; border-radius:50%; background:var(--secondary-ai-light); color:var(--secondary-ai); font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px;">MP</div>
+            <div>
+              <div style="font-weight:700; font-size:13px; color:var(--ink);">Maya Patel</div>
+              <div style="font-size:11px; color:var(--muted);">Head of SRE · OrbitIO</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="card-modern" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <p style="font-size:14px; color:var(--ink); line-height:1.6; margin-bottom:18px;">
+            "Our customers love the real-time milestone stepper and self-service deflection. Support CSAT climbed from 4.1 to 4.9 in under 60 days."
+          </p>
+          <div style="display:flex; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:14px;">
+            <div style="width:38px; height:38px; border-radius:50%; background:#FEF3C7; color:#B45309; font-weight:700; display:flex; align-items:center; justify-content:center; font-size:14px;">ER</div>
+            <div>
+              <div style="font-weight:700; font-size:13px; color:var(--ink);">Elena Rostova</div>
+              <div style="font-size:11px; color:var(--muted);">VP of Customer Operations · CloudCore</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION: #faq (6-Item Interactive FAQ Accordion)
+         ========================================================================== -->
+    <section id="faq" class="section-spacing container" aria-label="Frequently Asked Questions">
+      <div style="text-align:center; max-width:650px; margin:0 auto 36px auto;">
+        <span class="badge-pill badge-ai" style="margin-bottom:12px;">KNOWLEDGE BASE</span>
+        <h2 style="font-size:clamp(28px, 4vw, 40px); font-weight:700; margin:10px 0;">Frequently answered <em>questions.</em></h2>
+        <p class="body-copy">Everything you need to know about AI safety, privacy, integrations, and setup.</p>
+      </div>
+
+      <div style="max-width:800px; margin:0 auto; display:flex; flex-direction:column; gap:12px;">
+        <div class="card-modern" style="padding:16px 20px; cursor:pointer;" onclick="toggleFaq(this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--ink);">
+            <span>How does AI triage ensure customer data privacy and GDPR/SOC2 compliance?</span>
+            <span style="color:var(--primary); font-size:16px;">▾</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5; margin-top:10px; display:none;">
+            BizAssist AI processes inquiries ephemerally using zero-retention API models. Customer PII (passwords, credit cards, SSNs) is masked client-side before ingestion. We offer dedicated data-residency VPCs for Enterprise customers across the EU and US.
+          </p>
+        </div>
+
+        <div class="card-modern" style="padding:16px 20px; cursor:pointer;" onclick="toggleFaq(this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--ink);">
+            <span>Can human support agents edit or override AI-generated suggested replies?</span>
+            <span style="color:var(--primary); font-size:16px;">▾</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5; margin-top:10px; display:none;">
+            Yes. Every suggested reply is purely a draft. Agents retain full control with one-click tone adaptation (Empathetic, Concise, Technical), rich text formatting, variable insertion, and manual edits prior to dispatch.
+          </p>
+        </div>
+
+        <div class="card-modern" style="padding:16px 20px; cursor:pointer;" onclick="toggleFaq(this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--ink);">
+            <span>How long does it take to integrate BizAssist AI with Okta, WhatsApp, and existing webhooks?</span>
+            <span style="color:var(--primary); font-size:16px;">▾</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5; margin-top:10px; display:none;">
+            Initial setup takes under 15 minutes. Okta SAML 2.0 connects via standard metadata XML paste, and WhatsApp Business API syncs via webhooks with zero custom infrastructure required.
+          </p>
+        </div>
+
+        <div class="card-modern" style="padding:16px 20px; cursor:pointer;" onclick="toggleFaq(this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--ink);">
+            <span>What happens if our inbound ticket volume experiences an unexpected 10x spike?</span>
+            <span style="color:var(--primary); font-size:16px;">▾</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5; margin-top:10px; display:none;">
+            Our serverless edge dispatcher buffers inbound requests with exponential retry queues. Automated self-service deflection deflects repetitive FAQs, while the SLA risk board prioritizes critical enterprise tickets automatically.
+          </p>
+        </div>
+
+        <div class="card-modern" style="padding:16px 20px; cursor:pointer;" onclick="toggleFaq(this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--ink);">
+            <span>Can we train or ground the AI on our internal documentation and past resolutions?</span>
+            <span style="color:var(--primary); font-size:16px;">▾</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5; margin-top:10px; display:none;">
+            Yes. You can connect your Markdown documentation, Notion databases, or Zendesk export. BizAssist creates vector embeddings that ground drafts in verified documentation with citation badges.
+          </p>
+        </div>
+
+        <div class="card-modern" style="padding:16px 20px; cursor:pointer;" onclick="toggleFaq(this)">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:700; font-size:14px; color:var(--ink);">
+            <span>What is the difference between Starter, Team, and Enterprise SLA commitments?</span>
+            <span style="color:var(--primary); font-size:16px;">▾</span>
+          </div>
+          <p style="font-size:13px; color:var(--muted); line-height:1.5; margin-top:10px; display:none;">
+            Starter includes best-effort normal queues (8h). Team provides guaranteed 1h High SLA response. Enterprise guarantees 15m P1 Urgent turnaround with dedicated SRE on-call escalation and phone callbacks.
+          </p>
+        </div>
+      </div>
+    </section>
 
   <!-- ==========================================================================
        SECTION 7: #contact / FOOTER
@@ -2398,8 +2646,8 @@
       const email = document.getElementById('demo-email')?.value || '';
       const size = document.getElementById('demo-size')?.value || '';
 
-      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-        window.NexusSupabase.submitDemoRequest({
+      if (window.BizAssistSupabase && window.BizAssistSupabase.isConnected()) {
+        window.BizAssistSupabase.submitDemoRequest({
           fullName: name,
           workEmail: email,
           companyName: 'Enterprise Inbound',
@@ -2413,6 +2661,50 @@
       closeDemoModal();
       showToast("Thank you, " + name + "! Demonstration request received.");
     }
+
+    // Pricing annual/monthly toggle
+    let isAnnualPricing = false;
+    function togglePricingCycle() {
+      isAnnualPricing = !isAnnualPricing;
+      const btn = document.getElementById('pricing-cycle-btn');
+      const label = document.getElementById('billing-cycle-label');
+      const team = document.getElementById('price-team');
+      const enterprise = document.getElementById('price-enterprise');
+
+      if (isAnnualPricing) {
+        label.textContent = 'Annual (20% Off)';
+        btn.textContent = 'Switch to Monthly';
+        team.innerHTML = '$39 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ seat / mo (billed annually)</span>';
+        enterprise.innerHTML = '$119 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ seat / mo (billed annually)</span>';
+      } else {
+        label.textContent = 'Monthly';
+        btn.textContent = 'Switch to Annual (Save 20%)';
+        team.innerHTML = '$49 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ seat / mo</span>';
+        enterprise.innerHTML = '$149 <span style="font-size:14px; font-weight:400; color:var(--muted);">/ seat / mo</span>';
+      }
+    }
+
+    // FAQ Accordion
+    function toggleFaq(card) {
+      const p = card.querySelector('p');
+      const arrow = card.querySelector('span:last-child');
+      const isVisible = p.style.display === 'block';
+      p.style.display = isVisible ? 'none' : 'block';
+      arrow.textContent = isVisible ? '▾' : '▴';
+    }
+
+    // Theme Toggle for Landing Page
+    function toggleAboutTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('bizassist.theme', next);
+    }
+
+    (function initLandingTheme() {
+      const saved = localStorage.getItem('bizassist.theme');
+      if (saved) document.documentElement.setAttribute('data-theme', saved);
+    })();
   </script>
   <script src="config/site.js"></script>
   <script>

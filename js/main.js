@@ -1,5 +1,5 @@
 /**
- * NexusAI Core UI Controller
+ * BizAssist AI Core UI Controller
  * Handles custom difference cursor (lerp 0.15, scale 2.5x),
  * fullscreen navigation overlay, toast notification system, and scroll reveals.
  */
@@ -26,7 +26,7 @@
       }, 500);
     }, 4000);
   }
-  window.NexusShowToast = showToast;
+  window.BizAssistShowToast = window.NexusShowToast = showToast;
 
   // 2. Custom Difference Cursor with LERP
   const cursor = document.getElementById('custom-cursor');
