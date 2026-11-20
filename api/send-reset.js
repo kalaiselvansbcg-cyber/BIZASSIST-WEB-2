@@ -15,8 +15,9 @@ async function parseBody(req) {
     let data = '';
     req.on('data', chunk => { data += chunk; });
     req.on('end', () => {
+      if (!data || !data.trim()) return resolve({});
       try {
-        resolve(JSON.parse(data || '{}'));
+        resolve(JSON.parse(data));
       } catch (e) {
         resolve({});
       }
