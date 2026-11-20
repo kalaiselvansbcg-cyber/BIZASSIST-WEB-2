@@ -107,9 +107,9 @@
     }
     .queue-search-input:focus {
       outline: none;
-      border-color: var(--primary);
+      border-color: var(--ink);
       background: var(--surface);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
     }
     .queue-search-icon {
       position: absolute;
@@ -195,12 +195,12 @@
       background: var(--surface-alt);
     }
     .ticket-card.active {
-      background: var(--primary-light);
-      border-left-color: var(--primary) !important;
+      background: var(--surface-alt);
+      border-left-color: var(--ink) !important;
     }
-    .ticket-card.prio-urgent { border-left-color: var(--prio-urgent); }
-    .ticket-card.prio-high { border-left-color: var(--prio-high); }
-    .ticket-card.prio-normal { border-left-color: var(--prio-normal); }
+    .ticket-card.prio-urgent { border-left-color: var(--ink); }
+    .ticket-card.prio-high { border-left-color: #555555; }
+    .ticket-card.prio-normal { border-left-color: var(--line); }
 
     /* Card Line 1: Priority dot + Bold Subject */
     .card-line-1 {
@@ -355,11 +355,11 @@
 
     /* Collision Indicator */
     .collision-banner {
-      background: #FEF3C7;
-      border-bottom: 1px solid #FCD34D;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--line);
       padding: 6px 20px;
       font-size: 12px;
-      color: #92400E;
+      color: var(--ink);
       display: none;
       align-items: center;
       gap: 6px;
@@ -370,11 +370,11 @@
 
     /* Duplicate Ticket Alert */
     .duplicate-alert-banner {
-      background: #EDE9FE;
-      border-bottom: 1px solid #C4B5FD;
+      background: var(--surface-alt);
+      border-bottom: 1px solid var(--line);
       padding: 8px 20px;
       font-size: 12px;
-      color: #5B21B6;
+      color: var(--ink);
       display: none;
       justify-content: space-between;
       align-items: center;
@@ -476,14 +476,14 @@
       color: var(--ink);
     }
     .msg-bubble-wrap.internal .msg-content-card {
-      background: #FFFBEB;
-      border-color: #FCD34D;
+      background: var(--surface-alt);
+      border-color: var(--line);
     }
 
     /* AI Draft Docked Banner */
     .ai-draft-banner {
-      background: var(--surface);
-      border: 1px solid var(--secondary-ai);
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
       border-radius: var(--radius-sm);
       padding: 10px 14px;
       margin: 0 20px 10px 20px;
@@ -491,7 +491,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      box-shadow: 0 2px 8px rgba(20, 184, 166, 0.15);
+      box-shadow: none;
       flex-shrink: 0;
     }
     .ai-draft-content {
@@ -507,8 +507,8 @@
       font-weight: 700;
       padding: 2px 6px;
       border-radius: 4px;
-      background: var(--secondary-ai-light);
-      color: var(--secondary-ai);
+      background: var(--ink);
+      color: var(--bg);
       text-transform: uppercase;
       font-family: var(--font-mono);
     }
@@ -540,15 +540,15 @@
       transition: all 120ms ease;
     }
     .composer-tab-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
+      color: var(--ink);
+      border-bottom-color: var(--ink);
       background: var(--surface);
       font-weight: 600;
     }
     .composer-tab-btn.tab-internal.active {
-      color: #B45309;
-      border-bottom-color: #B45309;
-      background: #FFFBEB;
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+      background: var(--surface-alt);
     }
 
     .composer-editor-wrap {
@@ -571,7 +571,7 @@
       outline: none;
     }
     .composer-textarea.mode-internal {
-      background: #FFFDF0;
+      background: var(--surface-alt);
     }
 
     .composer-footer-toolbar {
@@ -630,7 +630,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      border: 1px solid var(--line);
     }
 
     /* Accordion Sections */
@@ -698,7 +698,7 @@
       width: 340px;
       background: var(--surface);
       border-left: 1px solid var(--line);
-      box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+      box-shadow: -2px 0 8px rgba(0,0,0,0.06);
       z-index: 900;
       display: none;
       flex-direction: column;
@@ -1351,13 +1351,13 @@
         t.internalNotes.forEach(n => {
           threadHtml += `
             <div class="msg-bubble-wrap internal">
-              <div class="msg-avatar" style="background:#FEF3C7; color:#92400E;">🔒</div>
+              <div class="msg-avatar" style="background:var(--surface-alt); color:var(--ink); border:1px solid var(--line);">🔒</div>
               <div class="msg-content-card">
                 <div class="msg-header">
-                  <span class="msg-author-name" style="color:#92400E;">${n.author} (Internal Note)</span>
+                  <span class="msg-author-name">${n.author} (Internal Note)</span>
                   <span>${new Date(n.createdAt).toLocaleTimeString()}</span>
                 </div>
-                <div class="msg-body" style="color:#92400E;">${n.text}</div>
+                <div class="msg-body">${n.text}</div>
               </div>
             </div>
           `;

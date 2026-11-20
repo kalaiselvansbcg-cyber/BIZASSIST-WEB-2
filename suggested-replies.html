@@ -126,8 +126,8 @@
     }
 
     .citation-box {
-      border-left: 3px solid #2563EB;
-      background: #F8FAFC;
+      border-left: 3px solid #111111;
+      background: var(--surface-alt);
       padding: 12px 16px;
       border-radius: 0 6px 6px 0;
       margin-bottom: 12px;
@@ -156,7 +156,7 @@
         <div class="studio-card" style="margin-bottom:24px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
             <span class="meta-mono">Incoming Ticket Context</span>
-            <span style="font-family:var(--font-mono); font-size:11px; background:#FEF2F2; color:#DC2626; padding:2px 6px; border-radius:4px; font-weight:700;">P1 URGENT</span>
+            <span style="font-family:var(--font-mono); font-size:11px; background:#000000; color:#FFFFFF; padding:2px 8px; border-radius:4px; font-weight:700;">P1 URGENT</span>
           </div>
 
           <h3 style="font-size:16px; font-weight:700; margin-bottom:4px;">Sarah Jenkins</h3>
@@ -171,22 +171,22 @@
         <div class="studio-card">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
             <span class="meta-mono">RAG Grounded Citations (3)</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#059669;">100% Fact-Checked</span>
+            <span style="font-family:var(--font-mono); font-size:11px; color:var(--ink); font-weight:600;">100% Fact-Checked</span>
           </div>
 
           <div class="citation-box">
-            <strong style="color:#1E3A8A; display:block; margin-bottom:2px;">[KB-814] Stripe Webhook Latency Runbook</strong>
-            <span style="color:#475569; font-size:12px;">Stripe auth holds remain valid for 7 days. Failed HTTP 502 webhooks do not trigger immediate plan downgrades.</span>
+            <strong style="color:var(--ink); display:block; margin-bottom:2px;">[KB-814] Stripe Webhook Latency Runbook</strong>
+            <span style="color:var(--muted); font-size:12px;">Stripe auth holds remain valid for 7 days. Failed HTTP 502 webhooks do not trigger immediate plan downgrades.</span>
           </div>
 
           <div class="citation-box">
-            <strong style="color:#1E3A8A; display:block; margin-bottom:2px;">[POLICY-04] Enterprise 14-Day Grace Period</strong>
-            <span style="color:#475569; font-size:12px;">Enterprise accounts maintain uninterrupted SLA access for 14 days following renewal payment anomalies.</span>
+            <strong style="color:var(--ink); display:block; margin-bottom:2px;">[POLICY-04] Enterprise 14-Day Grace Period</strong>
+            <span style="color:var(--muted); font-size:12px;">Enterprise accounts maintain uninterrupted SLA access for 14 days following renewal payment anomalies.</span>
           </div>
 
           <div class="citation-box">
-            <strong style="color:#1E3A8A; display:block; margin-bottom:2px;">[LIVE-DATA] Stripe Transaction ch_3Ox948aL</strong>
-            <span style="color:#475569; font-size:12px;">Authorized \$48,000.00 on American Express ending in 4091. Manual capture required by agent.</span>
+            <strong style="color:var(--ink); display:block; margin-bottom:2px;">[LIVE-DATA] Stripe Transaction ch_3Ox948aL</strong>
+            <span style="color:var(--muted); font-size:12px;">Authorized $48,000.00 on American Express ending in 4091. Manual capture required by agent.</span>
           </div>
         </div>
       </div>
@@ -205,7 +205,7 @@
           </div>
           <div style="text-align:right;">
             <span class="meta-mono" style="font-size:11px;">Alignment Score</span>
-            <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:#059669;">99.4% CSAT Fit</div>
+            <div style="font-family:var(--font-mono); font-size:16px; font-weight:700; color:var(--ink);">99.4% CSAT Fit</div>
           </div>
         </div>
 
@@ -229,7 +229,7 @@
           <div style="display:flex; gap:16px;">
             <span>Reading Grade: <strong>8th Grade</strong></span>
             <span>Estimated Reading Time: <strong>26s</strong></span>
-            <span>Hallucination Risk: <strong style="color:#059669;">&lt; 0.01%</strong></span>
+            <span>Hallucination Risk: <strong style="color:var(--ink);">&lt; 0.01%</strong></span>
           </div>
           <button class="interactive-btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="regenerateDraft()">
             Regenerate Draft

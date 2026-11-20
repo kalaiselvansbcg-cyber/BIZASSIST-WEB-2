@@ -1,29 +1,29 @@
 /* ==========================================================================
    BizAssist AI — Shared App Shell Stylesheet (css/shell.css)
-   Modern SaaS Design: Indigo #4F46E5, Teal #14B8A6, Light & Dark Theme Support
+   Clean Monochrome Design: Black & White Theme with Dark Mode Support
    ========================================================================== */
 
 :root {
-  --shell-bg: var(--bg, #F8FAFC);
-  --shell-ink: var(--ink, #0F172A);
-  --shell-secondary: var(--ink-soft, #475569);
-  --shell-muted: var(--muted, #64748B);
-  --shell-line: var(--line, #E2E8F0);
-  --shell-accent: var(--primary, #4F46E5);
+  --shell-bg: var(--bg, #FFFFFF);
+  --shell-ink: var(--ink, #000000);
+  --shell-secondary: var(--ink-soft, #111111);
+  --shell-muted: var(--muted, #6B6B6B);
+  --shell-line: var(--line, #E5E5E5);
+  --shell-accent: var(--primary, #000000);
   --shell-surface: var(--surface, #FFFFFF);
   --shell-font-sans: var(--font-sans, 'Inter', -apple-system, sans-serif);
   --shell-font-mono: var(--font-mono, monospace);
-  --shell-radius: var(--radius-sm, 8px);
+  --shell-radius: var(--radius-sm, 6px);
 }
 
 [data-theme="dark"] {
-  --shell-bg: #0F172A;
-  --shell-ink: #F8FAFC;
-  --shell-secondary: #CBD5E1;
-  --shell-muted: #94A3B8;
-  --shell-line: #334155;
-  --shell-accent: #6366F1;
-  --shell-surface: #1E293B;
+  --shell-bg: #000000;
+  --shell-ink: #FFFFFF;
+  --shell-secondary: #E5E5E5;
+  --shell-muted: #888888;
+  --shell-line: #262626;
+  --shell-accent: #FFFFFF;
+  --shell-surface: #000000;
 }
 
 /* App Shell Global Header */
@@ -75,8 +75,8 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   padding: 2px 6px;
-  background: var(--primary, #4F46E5);
-  color: #FFFFFF;
+  background: var(--ink, #000000);
+  color: var(--surface, #FFFFFF);
   font-weight: 700;
   border-radius: 4px;
 }
@@ -137,13 +137,14 @@
 
 .biz-shell-nav-link:hover {
   color: var(--shell-ink);
-  background: var(--surface-alt, #F1F5F9);
+  background: var(--surface-alt, #F5F5F5);
 }
 
 .biz-shell-nav-link.active {
-  color: var(--primary, #4F46E5);
+  color: var(--shell-ink);
   font-weight: 600;
-  background: var(--primary-light, #EEF2FF);
+  background: var(--surface-alt, #F5F5F5);
+  border: 1px solid var(--shell-line);
 }
 
 /* Role Quick-Switcher Pills in Header */
@@ -176,8 +177,9 @@
 
 .biz-shell-role-btn.active {
   background: var(--shell-surface);
-  color: var(--primary, #4F46E5);
+  color: var(--shell-ink);
   font-weight: 600;
+  border: 1px solid var(--shell-line);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
@@ -205,7 +207,7 @@
 }
 
 .biz-shell-search-btn:hover {
-  border-color: var(--primary, #4F46E5);
+  border-color: var(--shell-ink);
   color: var(--shell-ink);
 }
 
@@ -235,9 +237,9 @@
 }
 
 .biz-shell-theme-btn:hover {
-  border-color: var(--primary, #4F46E5);
-  color: var(--primary, #4F46E5);
-  background: var(--surface-alt, #F1F5F9);
+  border-color: var(--shell-ink);
+  color: var(--shell-ink);
+  background: var(--surface-alt, #F5F5F5);
 }
 
 /* Notification Centre Bell */
@@ -261,17 +263,17 @@
 }
 
 .biz-shell-notif-btn:hover {
-  border-color: var(--primary, #4F46E5);
-  color: var(--primary, #4F46E5);
-  background: var(--surface-alt, #F1F5F9);
+  border-color: var(--shell-ink);
+  color: var(--shell-ink);
+  background: var(--surface-alt, #F5F5F5);
 }
 
 .biz-shell-notif-badge {
   position: absolute;
   top: -4px;
   right: -4px;
-  background: var(--prio-urgent, #EF4444);
-  color: #FFFFFF;
+  background: var(--shell-ink, #000000);
+  color: var(--shell-surface, #FFFFFF);
   font-family: var(--shell-font-mono);
   font-size: 10px;
   font-weight: 700;
@@ -280,7 +282,7 @@
   text-align: center;
   line-height: 1.2;
   border-radius: 999px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--shell-surface);
 }
 
 .biz-shell-notif-menu {
@@ -326,11 +328,12 @@
   border: none;
   font-size: 11px;
   font-weight: 500;
-  color: var(--primary, #4F46E5);
+  color: var(--shell-muted);
   cursor: pointer;
 }
 
 .biz-shell-notif-clear-btn:hover {
+  color: var(--shell-ink);
   text-decoration: underline;
 }
 
@@ -355,12 +358,12 @@
 }
 
 .biz-shell-notif-item:hover {
-  background: var(--surface-alt, #F1F5F9);
+  background: var(--surface-alt, #F5F5F5);
 }
 
 .biz-shell-notif-item.is-unread {
-  background: var(--primary-light, #EEF2FF);
-  border-left: 3px solid var(--primary, #4F46E5);
+  background: var(--surface-alt, #F5F5F5);
+  border-left: 3px solid var(--shell-ink, #000000);
 }
 
 .biz-shell-notif-item-title {
@@ -389,27 +392,28 @@
   color: var(--shell-muted);
 }
 
-/* Ask AI Button */
+/* Ask AI Button (Clean Neutral) */
 .biz-shell-ask-ai-btn {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   padding: 7px 14px;
-  border: none;
+  border: 1px solid var(--shell-line-strong, #111111);
   border-radius: var(--shell-radius);
-  background: var(--ai-gradient, linear-gradient(135deg, #4F46E5 0%, #14B8A6 100%));
-  color: #FFFFFF;
+  background: var(--surface-alt, #F5F5F5);
+  color: var(--shell-ink, #000000);
   font-family: var(--shell-font-sans);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   transition: all 150ms ease;
-  box-shadow: 0 2px 6px rgba(79, 70, 229, 0.25);
+  box-shadow: none;
 }
 
 .biz-shell-ask-ai-btn:hover {
-  opacity: 0.92;
-  transform: translateY(-1px);
+  background: var(--shell-ink, #000000);
+  color: var(--shell-surface, #FFFFFF);
+  border-color: var(--shell-ink, #000000);
 }
 
 /* User Menu Dropdown */
@@ -432,7 +436,7 @@
 }
 
 .biz-shell-user-btn:hover {
-  border-color: var(--primary, #4F46E5);
+  border-color: var(--shell-ink);
 }
 
 .biz-shell-user-role-badge {
@@ -502,30 +506,30 @@
 }
 
 .biz-shell-user-menu-item:hover {
-  background: var(--surface-alt, #F1F5F9);
-  color: var(--primary, #4F46E5);
+  background: var(--surface-alt, #F5F5F5);
+  color: var(--shell-ink);
 }
 
 .biz-shell-user-menu-item.danger {
-  color: var(--prio-urgent, #EF4444);
+  color: var(--shell-ink, #000000);
 }
 
 .biz-shell-user-menu-item.danger:hover {
-  background: var(--prio-urgent-bg, #FEE2E2);
-  color: var(--prio-urgent, #EF4444);
+  background: var(--surface-alt, #F5F5F5);
+  color: var(--shell-ink, #000000);
 }
 
-/* Floating AI Assistant Trigger & Drawer */
+/* Floating AI Assistant Trigger & Drawer (Clean Black & White) */
 .biz-floating-chat-trigger {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 900;
-  background: var(--ai-gradient, linear-gradient(135deg, #4F46E5 0%, #14B8A6 100%));
-  color: #FFFFFF;
-  border: none;
+  background: var(--shell-ink, #000000);
+  color: var(--shell-surface, #FFFFFF);
+  border: 1px solid var(--shell-ink, #000000);
   border-radius: 999px;
-  padding: 12px 20px;
+  padding: 11px 18px;
   font-family: var(--shell-font-sans);
   font-size: 13px;
   font-weight: 600;
@@ -533,11 +537,19 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.35);
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  transition: opacity 150ms ease;
+}
+
+[data-theme="dark"] .biz-floating-chat-trigger {
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
 }
 
 .biz-floating-chat-trigger:hover {
+  opacity: 0.9;
+}
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
 }
@@ -604,16 +616,16 @@
 
 .biz-floating-chat-input:focus {
   outline: none;
-  border-color: var(--primary, #4F46E5);
+  border-color: var(--shell-ink);
   background: var(--shell-surface);
 }
 
 .biz-floating-chat-send {
   padding: 0 14px;
-  background: var(--primary, #4F46E5);
-  color: #FFFFFF;
+  background: var(--shell-ink, #000000);
+  color: var(--shell-surface, #FFFFFF);
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -623,24 +635,22 @@
 .biz-chat-bubble {
   max-width: 85%;
   padding: 10px 14px;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 13px;
   line-height: 1.45;
 }
 
 .biz-chat-bubble.bot {
   align-self: flex-start;
-  background: var(--surface-alt, #F1F5F9);
+  background: var(--surface-alt, #F5F5F5);
   color: var(--shell-ink);
   border: 1px solid var(--shell-line);
-  border-bottom-left-radius: 2px;
 }
 
 .biz-chat-bubble.user {
   align-self: flex-end;
-  background: var(--primary, #4F46E5);
-  color: #FFFFFF;
-  border-bottom-right-radius: 2px;
+  background: var(--shell-ink, #000000);
+  color: var(--shell-surface, #FFFFFF);
 }
 
 /* Callback modal styles */
@@ -649,13 +659,13 @@
   width: 100%;
   background: var(--shell-surface);
   border: 1px solid var(--shell-line);
-  border-radius: 14px;
-  padding: 28px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .biz-callback-modal-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   margin-bottom: 6px;
   color: var(--shell-ink);
@@ -686,14 +696,14 @@
   padding: 9px 12px;
   font-family: var(--shell-font-sans);
   font-size: 13px;
-  background: var(--surface-alt, #F1F5F9);
+  background: var(--surface-alt, #F5F5F5);
   color: var(--shell-ink);
   border-radius: 6px;
 }
 
 .biz-callback-input:focus, .biz-callback-select:focus, .biz-callback-textarea:focus {
   outline: none;
-  border-color: var(--primary, #4F46E5);
+  border-color: var(--shell-ink);
   background: var(--shell-surface);
 }
 
@@ -706,9 +716,9 @@
 .biz-callback-submit-btn {
   flex: 1;
   padding: 10px 16px;
-  background: var(--primary, #4F46E5);
-  color: #FFFFFF;
-  border: none;
+  background: var(--shell-ink, #000000);
+  color: var(--shell-surface, #FFFFFF);
+  border: 1px solid var(--shell-ink, #000000);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
@@ -716,7 +726,7 @@
 }
 
 .biz-callback-submit-btn:hover {
-  background: var(--primary-hover, #4338CA);
+  opacity: 0.9;
 }
 
 .biz-callback-cancel-btn {

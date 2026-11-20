@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="bizassist-roles" content="agent,manager,admin">
   <title>AI Triage Engine — BIZASSIST AI</title>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -25,12 +26,14 @@
       backdrop-filter: blur(8px);
       z-index: 100;
     }
+
     .header-nav-links {
       display: flex;
       gap: 20px;
       align-items: center;
       list-style: none;
     }
+
     .header-nav-link {
       font-size: 13px;
       font-weight: 500;
@@ -38,7 +41,9 @@
       text-decoration: none;
       transition: color 500ms var(--ease);
     }
-    .header-nav-link:hover, .header-nav-link.active {
+
+    .header-nav-link:hover,
+    .header-nav-link.active {
       color: #000000;
     }
 
@@ -47,12 +52,14 @@
       margin: 0 auto;
       padding: 48px 32px 80px 32px;
     }
+
     .triage-grid {
       display: grid;
       grid-template-columns: 1fr 1.15fr;
       gap: 32px;
       margin-top: 36px;
     }
+
     @media (max-width: 900px) {
       .triage-grid {
         grid-template-columns: 1fr;
@@ -72,6 +79,7 @@
       gap: 8px;
       margin-bottom: 16px;
     }
+
     .preset-chip {
       background: #F4F4F5;
       border: 1px solid var(--border);
@@ -82,6 +90,7 @@
       transition: all 300ms var(--ease);
       font-family: var(--font-body);
     }
+
     .preset-chip:hover {
       background: #000000;
       color: #FFFFFF;
@@ -91,18 +100,21 @@
     .confidence-bar-wrap {
       margin-bottom: 14px;
     }
+
     .confidence-label-row {
       display: flex;
       justify-content: space-between;
       font-size: 13px;
       margin-bottom: 6px;
     }
+
     .confidence-track {
       height: 8px;
       background: #F4F4F5;
       border-radius: 4px;
       overflow: hidden;
     }
+
     .confidence-fill {
       height: 100%;
       border-radius: 4px;
@@ -115,6 +127,7 @@
       gap: 12px;
       margin-top: 16px;
     }
+
     .entity-tag-box {
       background: #FAFAFA;
       border: 1px solid var(--border);
@@ -134,25 +147,39 @@
       line-height: 1.6;
       margin-top: 32px;
     }
+
     .log-entry {
       margin-bottom: 6px;
     }
-    .log-success { color: #34D399; }
-    .log-alert { color: #F87171; }
-    .log-highlight { color: #60A5FA; }
+
+    .log-success {
+      color: #34D399;
+    }
+
+    .log-alert {
+      color: #F87171;
+    }
+
+    .log-highlight {
+      color: #60A5FA;
+    }
   </style>
 </head>
+
 <body>
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
   <main class="triage-container">
     <div>
       <span class="meta-mono">Autonomous NLP Classification Pipeline</span>
-      <h1 style="font-size:clamp(32px, 4vw, 56px); font-weight:700; letter-spacing:-0.05em; line-height:1.0; margin:8px 0 16px 0;">
+      <h1
+        style="font-size:clamp(32px, 4vw, 56px); font-weight:700; letter-spacing:-0.05em; line-height:1.0; margin:8px 0 16px 0;">
         Zero-Touch Ticket Triage.
       </h1>
       <p style="color:var(--text-secondary); font-size:17px; max-width:70ch; line-height:1.5;">
-        Every incoming ticket is processed in under 120 milliseconds. Our model extracts semantic entities, regresses SLA priority (P1–P3), computes customer sentiment and churn risk, and auto-routes to specialized tier queues with 98.4% precision.
+        Every incoming ticket is processed in under 120 milliseconds. Our model extracts semantic entities, regresses
+        SLA priority (P1–P3), computes customer sentiment and churn risk, and auto-routes to specialized tier queues
+        with 98.4% precision.
       </p>
     </div>
 
@@ -163,7 +190,7 @@
         <h2 style="font-size:16px; font-weight:700; letter-spacing:-0.02em; margin-bottom:12px;">
           1. Select Test Ingestion or Write Inquiry
         </h2>
-        
+
         <span class="meta-mono" style="margin-bottom:8px; display:block;">Sample Customer Scenarios</span>
         <div class="preset-chips">
           <button class="preset-chip" onclick="loadScenario(0)">🚨 API 502 Webhook Spike (P1)</button>
@@ -173,13 +200,18 @@
         </div>
 
         <div style="margin-top:16px;">
-          <label for="raw-inquiry" class="meta-mono" style="display:block; margin-bottom:6px;">Raw Customer Message</label>
-          <textarea id="raw-inquiry" style="width:100%; height:140px; padding:14px; border:1px solid var(--border); border-radius:6px; font-family:var(--font-body); font-size:14px; line-height:1.5; resize:none; background:#FAFAFA;" placeholder="Paste customer email, ticket body, or live chat message here..."></textarea>
+          <label for="raw-inquiry" class="meta-mono" style="display:block; margin-bottom:6px;">Raw Customer
+            Message</label>
+          <textarea id="raw-inquiry"
+            style="width:100%; height:140px; padding:14px; border:1px solid var(--border); border-radius:6px; font-family:var(--font-body); font-size:14px; line-height:1.5; resize:none; background:#FAFAFA;"
+            placeholder="Paste customer email, ticket body, or live chat message here..."></textarea>
         </div>
 
         <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
-          <button class="interactive-btn-secondary" onclick="document.getElementById('raw-inquiry').value='';">Clear Input</button>
-          <button class="interactive-btn-primary" id="btn-run-triage" onclick="runTriageEngine()">Run AI Triage Engine ⚡</button>
+          <button class="interactive-btn-secondary" onclick="document.getElementById('raw-inquiry').value='';">Clear
+            Input</button>
+          <button class="interactive-btn-primary" id="btn-run-triage" onclick="runTriageEngine()">Run AI Triage Engine
+            ⚡</button>
         </div>
       </div>
 
@@ -189,20 +221,24 @@
           <h2 style="font-size:16px; font-weight:700; letter-spacing:-0.02em;">
             2. Multi-Stage Inference Result
           </h2>
-          <span style="font-family:var(--font-mono); font-size:11px; color:#059669; background:#ECFDF5; padding:2px 8px; border-radius:4px;" id="inference-time">
+          <span
+            style="font-family:var(--font-mono); font-size:11px; color:var(--ink); background:var(--surface-alt); border:1px solid var(--line); padding:2px 8px; border-radius:4px;"
+            id="inference-time">
             Latency: 94ms · Model: BizAssist-Triage-v4
           </span>
         </div>
 
         <!-- Priority Regressor -->
-        <div style="background:#FAFAFA; border:1px solid var(--border); border-radius:6px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+        <div
+          style="background:#FAFAFA; border:1px solid var(--border); border-radius:6px; padding:16px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
           <div>
             <span class="meta-mono" style="font-size:11px;">Assigned Priority Level</span>
-            <div style="font-size:20px; font-weight:700; margin-top:2px;" id="res-priority-title">P1 — Critical Production Outage</div>
+            <div style="font-size:20px; font-weight:700; margin-top:2px;" id="res-priority-title">P1 — Critical
+              Production Outage</div>
           </div>
           <div style="text-align:right;">
             <span class="meta-mono" style="font-size:11px;">Guaranteed SLA</span>
-            <div style="font-family:var(--font-mono); font-size:18px; font-weight:700; color:#DC2626;" id="res-sla">
+            <div style="font-family:var(--font-mono); font-size:18px; font-weight:700; color:var(--ink);" id="res-sla">
               &lt; 15 Minutes
             </div>
           </div>
@@ -211,7 +247,7 @@
         <!-- Intent Probability Breakdown -->
         <div style="margin-bottom:20px;">
           <span class="meta-mono" style="margin-bottom:12px; display:block;">Intent Confidence Distribution</span>
-          
+
           <div class="confidence-bar-wrap">
             <div class="confidence-label-row">
               <span id="intent-1-label">Infrastructure / API Failure</span>
@@ -247,13 +283,13 @@
         <div class="entity-tag-grid">
           <div class="entity-tag-box">
             <span class="meta-mono" style="font-size:11px;">Target Routing Queue</span>
-            <strong style="font-size:13px; display:block; margin-top:4px; color:#2563EB;" id="res-queue">
+            <strong style="font-size:13px; display:block; margin-top:4px; color:var(--ink);" id="res-queue">
               tier2-sre-oncall
             </strong>
           </div>
           <div class="entity-tag-box">
             <span class="meta-mono" style="font-size:11px;">Sentiment & Churn Risk</span>
-            <strong style="font-size:13px; display:block; margin-top:4px; color:#DC2626;" id="res-sentiment">
+            <strong style="font-size:13px; display:block; margin-top:4px; color:var(--ink);" id="res-sentiment">
               -0.78 Critical (High Churn)
             </strong>
           </div>
@@ -265,7 +301,7 @@
           </div>
           <div class="entity-tag-box">
             <span class="meta-mono" style="font-size:11px;">Automated Runbook</span>
-            <strong style="font-size:13px; display:block; margin-top:4px; color:#059669;" id="res-runbook">
+            <strong style="font-size:13px; display:block; margin-top:4px; color:var(--ink);" id="res-runbook">
               RUNBOOK-419 Circuit Breaker
             </strong>
           </div>
@@ -273,10 +309,12 @@
 
         <!-- Action Links -->
         <div style="margin-top:20px; display:flex; gap:12px;">
-          <a href="agent-dashboard.html" class="interactive-btn-secondary" style="flex:1; text-align:center; font-size:12px; text-decoration:none;" data-hover>
+          <a href="agent-dashboard.html" class="interactive-btn-secondary"
+            style="flex:1; text-align:center; font-size:12px; text-decoration:none;" data-hover>
             View in Agent Dashboard →
           </a>
-          <a href="suggested-replies.html" class="interactive-btn-primary" style="flex:1; text-align:center; font-size:12px; text-decoration:none;" data-hover>
+          <a href="suggested-replies.html" class="interactive-btn-primary"
+            style="flex:1; text-align:center; font-size:12px; text-decoration:none;" data-hover>
             Draft AI Response →
           </a>
         </div>
@@ -287,15 +325,22 @@
     <div style="margin-top:40px;">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span class="meta-mono">Real-Time Ingestion Event Log</span>
-        <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">Live WebSocket Feed · Auto-scroll Active</span>
+        <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">Live WebSocket Feed · Auto-scroll
+          Active</span>
       </div>
       <div class="live-stream-log" id="live-console">
-        <div class="log-entry"><span class="log-highlight">[10:14:02.102]</span> INGESTION: Received payload from customer_id=usr_88291 (Acme Corp)</div>
-        <div class="log-entry"><span class="log-success">[10:14:02.196]</span> TRIAGE_COMPLETE: Intent="Infrastructure 502" Conf=96.8% Priority=P1 Routing="tier2-sre-oncall"</div>
-        <div class="log-entry"><span class="log-highlight">[10:14:15.420]</span> INGESTION: Received payload from customer_id=usr_90124 (FinScale)</div>
-        <div class="log-entry"><span class="log-success">[10:14:15.514]</span> TRIAGE_COMPLETE: Intent="Security Webhook" Conf=94.2% Priority=P1 Routing="tier2-security"</div>
-        <div class="log-entry"><span class="log-highlight">[10:14:28.810]</span> INGESTION: Received payload from customer_id=usr_19482 (CloudCore)</div>
-        <div class="log-entry"><span class="log-success">[10:14:28.899]</span> TRIAGE_COMPLETE: Intent="Seat Expansion" Conf=99.1% Priority=P3 Routing="sales-ops-auto"</div>
+        <div class="log-entry"><span class="log-highlight">[10:14:02.102]</span> INGESTION: Received payload from
+          customer_id=usr_88291 (Acme Corp)</div>
+        <div class="log-entry"><span class="log-success">[10:14:02.196]</span> TRIAGE_COMPLETE: Intent="Infrastructure
+          502" Conf=96.8% Priority=P1 Routing="tier2-sre-oncall"</div>
+        <div class="log-entry"><span class="log-highlight">[10:14:15.420]</span> INGESTION: Received payload from
+          customer_id=usr_90124 (FinScale)</div>
+        <div class="log-entry"><span class="log-success">[10:14:15.514]</span> TRIAGE_COMPLETE: Intent="Security
+          Webhook" Conf=94.2% Priority=P1 Routing="tier2-security"</div>
+        <div class="log-entry"><span class="log-highlight">[10:14:28.810]</span> INGESTION: Received payload from
+          customer_id=usr_19482 (CloudCore)</div>
+        <div class="log-entry"><span class="log-success">[10:14:28.899]</span> TRIAGE_COMPLETE: Intent="Seat Expansion"
+          Conf=99.1% Priority=P3 Routing="sales-ops-auto"</div>
       </div>
     </div>
   </main>
@@ -311,7 +356,7 @@
         text: "URGENT: Our production checkout endpoint is throwing HTTP 502 Bad Gateway errors for all customers renewing enterprise subscriptions. Revenue is blocked. Need immediate engineer on-call.",
         priority: "P1 — Critical Production Outage",
         sla: "< 15 Minutes",
-        slaColor: "#DC2626",
+        slaColor: "#111111",
         intent1: { label: "Infrastructure / API Failure", pct: "96.8%" },
         intent2: { label: "Billing & Gateway Renewal", pct: "2.4%" },
         intent3: { label: "Security & Access Management", pct: "0.8%" },
@@ -324,7 +369,7 @@
         text: "Please cancel our annual subscription immediately. We have decided to migrate away. Also please issue a prorated refund for the remaining 4 months left on our contract.",
         priority: "P2 — Cancellation / Retention Risk",
         sla: "< 2 Hours",
-        slaColor: "#D97706",
+        slaColor: "#111111",
         intent1: { label: "Billing / Refund Request", pct: "94.2%" },
         intent2: { label: "Churn & Contract Offboarding", pct: "5.1%" },
         intent3: { label: "General Feedback", pct: "0.7%" },
@@ -337,7 +382,7 @@
         text: "Our corporate Okta identity provider certificate expires in 48 hours. Can you assist in verifying our new x509 cert fingerprint and testing SSO SAML 2.0 logins on staging?",
         priority: "P2 — High Security Dependency",
         sla: "< 1 Hour",
-        slaColor: "#2563EB",
+        slaColor: "#111111",
         intent1: { label: "Security & SAML SSO", pct: "98.5%" },
         intent2: { label: "User Access Provisioning", pct: "1.2%" },
         intent3: { label: "General Technical", pct: "0.3%" },
@@ -350,7 +395,7 @@
         text: "Hello! We just hired 45 engineers in our Singapore hub and would like to add them to our existing master enterprise license pool. Please invoice our accounts payable.",
         priority: "P3 — Normal Expansion",
         sla: "< 4 Hours",
-        slaColor: "#059669",
+        slaColor: "#111111",
         intent1: { label: "Account Expansion / Licenses", pct: "99.1%" },
         intent2: { label: "Invoicing & Billing", pct: "0.7%" },
         intent3: { label: "Onboarding Inquiries", pct: "0.2%" },
@@ -410,7 +455,7 @@
         log.appendChild(div);
         log.scrollTop = log.scrollHeight;
 
-        const toastFn = window.BizAssistShowToast || window.NexusShowToast || function(){};
+        const toastFn = window.BizAssistShowToast || window.NexusShowToast || function () { };
         toastFn("AI Triage evaluation complete: " + s.intent1.label);
 
         // Advance any pending Raised tickets to Categorised
@@ -423,7 +468,7 @@
     function runTriageEngine() {
       const val = document.getElementById('raw-inquiry').value.trim();
       if (!val) {
-        const toastFn = window.BizAssistShowToast || window.NexusShowToast || function(){};
+        const toastFn = window.BizAssistShowToast || window.NexusShowToast || function () { };
         toastFn("Please enter customer message or select a test scenario.");
         return;
       }
@@ -445,4 +490,5 @@
     });
   </script>
 </body>
+
 </html>

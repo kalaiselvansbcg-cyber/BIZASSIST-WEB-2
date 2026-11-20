@@ -14,7 +14,7 @@
     toast.className = 'toast-card';
     toast.innerHTML = '<span>●</span><span>' + message + '</span>';
     toastContainer.appendChild(toast);
-    
+
     requestAnimationFrame(function () {
       toast.classList.add('is-visible');
     });

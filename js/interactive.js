@@ -210,19 +210,19 @@
                 '<div>SLA</div><div>TITLE</div><div>CUSTOMER</div><div>ACTION</div>' +
               '</div>' +
               '<div style="padding:14px 16px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:60px 1.5fr 1fr 100px; align-items:center; font-size:13px;">' +
-                '<div><span style="background:#FEF2F2; color:#DC2626; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P1</span></div>' +
+                '<div><span style="background:#000000; color:#FFFFFF; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P1</span></div>' +
                 '<div><strong>Stripe webhook timeout</strong></div>' +
                 '<div style="color:#71717A;">sarah@acme.co</div>' +
                 '<div><button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Assigned Ticket #4092 to your inbox!\')">Assign</button></div>' +
               '</div>' +
               '<div style="padding:14px 16px; border-bottom:1px solid var(--border); display:grid; grid-template-columns:60px 1.5fr 1fr 100px; align-items:center; font-size:13px;">' +
-                '<div><span style="background:#FFFBEB; color:#D97706; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P2</span></div>' +
+                '<div><span style="background:#F5F5F5; color:#111111; border:1px solid #111111; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P2</span></div>' +
                 '<div>SAML SSO metadata cert renewal</div>' +
                 '<div style="color:#71717A;">alex@techcorp.io</div>' +
                 '<div><button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Assigned Ticket #4091 to your inbox!\')">Assign</button></div>' +
               '</div>' +
               '<div style="padding:14px 16px; display:grid; grid-template-columns:60px 1.5fr 1fr 100px; align-items:center; font-size:13px;">' +
-                '<div><span style="background:#F0FDF4; color:#16A34A; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P3</span></div>' +
+                '<div><span style="background:#FFFFFF; color:#666666; border:1px solid #E5E5E5; padding:2px 6px; border-radius:4px; font-weight:700; font-size:10px;">P3</span></div>' +
                 '<div>Invoice receipt request</div>' +
                 '<div style="color:#71717A;">billing@startup.dev</div>' +
                 '<div><button class="interactive-btn-secondary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Assigned Ticket #4090 to your inbox!\')">Assign</button></div>' +
@@ -249,7 +249,7 @@
             '<div id="triage-result-card" style="background:#FAFAFA; border:1px solid var(--border); padding:20px; border-radius:8px; display:flex; flex-direction:column; gap:12px;">' +
               '<div style="display:flex; justify-content:space-between; align-items:center;">' +
                 '<span class="interactive-label">CLASSIFICATION RESULT</span>' +
-                '<span style="font-family:var(--font-mono); font-size:11px; color:#2563EB; font-weight:700;" id="triage-conf">CONFIDENCE: 99.4%</span>' +
+                '<span style="font-family:var(--font-mono); font-size:11px; color:var(--ink); font-weight:700;" id="triage-conf">CONFIDENCE: 99.4%</span>' +
               '</div>' +
               '<div style="font-size:16px; font-weight:700;" id="triage-intent">Intent: Billing &amp; Invoicing (Priority P1 Critical)</div>' +
               '<div style="font-size:13px; color:#52525B;" id="triage-route">Target Routing: Escalated directly to Finance Tier-2 Support Specialists.</div>' +
@@ -263,10 +263,10 @@
           'PRIORITY ENGINE · STEP 3',
           'Dynamic Urgency & SLA Calculator',
           '<div style="display:flex; flex-direction:column; gap:20px;">' +
-            '<div style="background:#FEF2F2; border:1px solid #F87171; padding:20px; border-radius:8px; text-align:center;">' +
-              '<span style="font-family:var(--font-mono); font-size:12px; color:#DC2626; font-weight:700;">CURRENT TICKET SLA COUNTDOWN</span>' +
-              '<div style="font-size:42px; font-weight:700; color:#991B1B; margin:8px 0;" id="sla-timer-display">14m : 28s</div>' +
-              '<span style="font-size:12px; color:#B91C1C;">P1 Guarantee: First human response under 15 minutes</span>' +
+            '<div style="background:#F5F5F5; border:1px solid var(--border); padding:20px; border-radius:8px; text-align:center;">' +
+              '<span style="font-family:var(--font-mono); font-size:12px; color:var(--ink); font-weight:700;">CURRENT TICKET SLA COUNTDOWN</span>' +
+              '<div style="font-size:42px; font-weight:700; color:var(--ink); margin:8px 0;" id="sla-timer-display">14m : 28s</div>' +
+              '<span style="font-size:12px; color:var(--muted);">P1 Guarantee: First human response under 15 minutes</span>' +
             '</div>' +
             '<div class="interactive-field">' +
               '<label class="interactive-label">Simulate Customer Urgency Score (1 - 100)</label>' +
@@ -362,32 +362,32 @@
               '<button class="interactive-chip" onclick="(window.BizAssistSwitchManagerPeriod||window.NexusSwitchManagerPeriod)(\'90D\')">Quarter to Date</button>' +
             '</div>' +
             '<div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;">' +
-              '<div style="background:#F0FDFA; border:1px solid #99F6E4; padding:16px; border-radius:8px;">' +
-                '<span class="interactive-label" style="color:#0D9488;">AVG FIRST RESPONSE</span>' +
-                '<div style="font-size:24px; font-weight:700; color:#134E4A; margin-top:4px;" id="mgr-stat-1">1m 24s</div>' +
-                '<span style="font-size:11px; color:#059669;">-84% vs industry baseline</span>' +
+              '<div style="background:#F5F5F5; border:1px solid var(--border); padding:16px; border-radius:8px;">' +
+                '<span class="interactive-label" style="color:var(--ink);">AVG FIRST RESPONSE</span>' +
+                '<div style="font-size:24px; font-weight:700; color:var(--ink); margin-top:4px;" id="mgr-stat-1">1m 24s</div>' +
+                '<span style="font-size:11px; color:var(--muted);">-84% vs industry baseline</span>' +
               '</div>' +
-              '<div style="background:#EEF2FF; border:1px solid #C7D2FE; padding:16px; border-radius:8px;">' +
-                '<span class="interactive-label" style="color:#4F46E5;">AI DEFLECTION</span>' +
-                '<div style="font-size:24px; font-weight:700; color:#1E1B4B; margin-top:4px;" id="mgr-stat-2">68.4%</div>' +
-                '<span style="font-size:11px; color:#4338CA;">Automated instant answers</span>' +
+              '<div style="background:#F5F5F5; border:1px solid var(--border); padding:16px; border-radius:8px;">' +
+                '<span class="interactive-label" style="color:var(--ink);">AI DEFLECTION</span>' +
+                '<div style="font-size:24px; font-weight:700; color:var(--ink); margin-top:4px;" id="mgr-stat-2">68.4%</div>' +
+                '<span style="font-size:11px; color:var(--muted);">Automated instant answers</span>' +
               '</div>' +
-              '<div style="background:#F4F4F5; border:1px solid var(--border); padding:16px; border-radius:8px;">' +
+              '<div style="background:#F5F5F5; border:1px solid var(--border); padding:16px; border-radius:8px;">' +
                 '<span class="interactive-label">SLA COMPLIANCE</span>' +
-                '<div style="font-size:24px; font-weight:700; color:#18181B; margin-top:4px;" id="mgr-stat-3">99.8%</div>' +
-                '<span style="font-size:11px; color:#10B981;">0 Breaches this period</span>' +
+                '<div style="font-size:24px; font-weight:700; color:var(--ink); margin-top:4px;" id="mgr-stat-3">99.8%</div>' +
+                '<span style="font-size:11px; color:var(--muted);">0 Breaches this period</span>' +
               '</div>' +
             '</div>' +
             '<div style="background:#FAFAFA; border:1px solid var(--border); padding:20px; border-radius:8px;">' +
               '<span class="interactive-label">DAILY VOLUME BY DAY (CLICK BARS TO INSPECT)</span>' +
               '<div style="display:flex; justify-content:space-between; align-items:flex-end; height:120px; padding-top:20px; gap:12px;">' +
-                '<div style="flex:1; background:#0F766E; height:60%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Mon: 240 Tickets (72% AI resolved)\')">M</div>' +
-                '<div style="flex:1; background:#0F766E; height:85%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Tue: 310 Tickets (69% AI resolved)\')">T</div>' +
-                '<div style="flex:1; background:#0F766E; height:95%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Wed: 340 Tickets (74% AI resolved)\')">W</div>' +
-                '<div style="flex:1; background:#0F766E; height:90%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Thu: 325 Tickets (70% AI resolved)\')">T</div>' +
-                '<div style="flex:1; background:#0F766E; height:100%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Fri: 380 Tickets (71% AI resolved)\')">F</div>' +
-                '<div style="flex:1; background:#0D9488; height:40%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sat: 120 Tickets (82% AI resolved)\')">S</div>' +
-                '<div style="flex:1; background:#0D9488; height:35%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sun: 98 Tickets (85% AI resolved)\')">S</div>' +
+                '<div style="flex:1; background:#171717; height:60%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Mon: 240 Tickets (72% AI resolved)\')">M</div>' +
+                '<div style="flex:1; background:#171717; height:85%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Tue: 310 Tickets (69% AI resolved)\')">T</div>' +
+                '<div style="flex:1; background:#171717; height:95%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Wed: 340 Tickets (74% AI resolved)\')">W</div>' +
+                '<div style="flex:1; background:#171717; height:90%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Thu: 325 Tickets (70% AI resolved)\')">T</div>' +
+                '<div style="flex:1; background:#171717; height:100%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Fri: 380 Tickets (71% AI resolved)\')">F</div>' +
+                '<div style="flex:1; background:#737373; height:40%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sat: 120 Tickets (82% AI resolved)\')">S</div>' +
+                '<div style="flex:1; background:#737373; height:35%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sun: 98 Tickets (85% AI resolved)\')">S</div>' +
               '</div>' +
             '</div>' +
             '<button class="interactive-btn-primary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Exported executive analytics PDF.\')">Export PDF Executive Report ↓</button>' +
@@ -611,17 +611,15 @@
   window.NexusUpdateSlaSlider = function (val) {
     const display = document.getElementById('sla-timer-display');
     const score = document.getElementById('urgency-score-val');
+    display.style.color = 'var(--ink)';
     if (val > 80) {
       display.textContent = '14m : 28s';
-      display.style.color = '#991B1B';
       score.textContent = 'Urgency: ' + val + '/100 (Critical P1)';
     } else if (val > 40) {
       display.textContent = '58m : 12s';
-      display.style.color = '#B45309';
       score.textContent = 'Urgency: ' + val + '/100 (High P2)';
     } else {
       display.textContent = '3h : 45m';
-      display.style.color = '#15803D';
       score.textContent = 'Urgency: ' + val + '/100 (Normal P3)';
     }
   };
