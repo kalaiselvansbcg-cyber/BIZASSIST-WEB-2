@@ -1,800 +1,766 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="js">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>BIZASSIST AI — AI-Assisted Customer Support Platform</title>
   
-  <!-- Inter Font from Google Fonts -->
+  <!-- Preload & Google Fonts: Cormorant Garamond & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
+  <!-- Quiet Luxury Design System Tokens -->
+  <link rel="stylesheet" href="css/theme.css">
+
   <style>
     /* ==========================================================================
-       1. DESIGN SYSTEM TOKENS & RESET
-       - Palette: Strict Black and White with 3 Status Accent Colors
-       - Typography: Inter, all body text >= 16px
-       - Touch & Control Targets: >= 44px height
-       - Transitions: 300ms to 600ms cubic-bezier(0.16, 1, 0.3, 1)
+       QUIET LUXURY STYLESHEET (index.html)
+       Editorial restraint, warm cream background, serif headlines, hairline borders.
        ========================================================================== */
+
     :root {
-      --bg: #FFFFFF;
-      --bg-alt: #F9F9FA;
-      --bg-surface: #FFFFFF;
-      --text: #000000;
-      --text-secondary: #4A4A4A;
-      --text-meta: #666666;
-      --border: rgba(0, 0, 0, 0.12);
-      --border-dark: rgba(0, 0, 0, 0.24);
-      --border-focus: #000000;
-      
-      /* Status Badge Accents */
-      --status-low: #10B981;
-      --status-low-bg: #ECFDF5;
-      --status-med: #D97706;
-      --status-med-bg: #FFFBEB;
-      --status-urgent: #DC2626;
-      --status-urgent-bg: #FEF2F2;
-      
-      /* Footer */
-      --footer-bg: #0A0A0A;
-      --footer-text: #FFFFFF;
-      --footer-border: rgba(255, 255, 255, 0.14);
-
-      /* Typography & Easing */
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
-      --ease: cubic-bezier(0.16, 1, 0.3, 1);
-      --duration: 400ms;
-    }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-      font-size: 16px;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      --bg: #FAF8F5;           /* warm cream */
+      --surface: #FFFFFF;      /* pure white cards */
+      --surface-alt: #EFEBE4;  /* panels, frames */
+      --ink: #111111;          /* text, primary buttons */
+      --ink-soft: #5E5A53;     /* body copy */
+      --muted: #6F6A61;        /* labels */
+      --line: #E3DED6;         /* hairlines */
+      --accent: #B3402A;       /* Urgent red dot & error only */
+      --radius: 0;
+      --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+      --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --duration: 450ms;
     }
 
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
       font-size: 16px;
       line-height: 1.6;
+      letter-spacing: -0.01em;
+      margin: 0;
+      padding: 0;
       overflow-x: hidden;
-      cursor: default;
     }
 
-    /* Accessibility Focus States */
-    :focus-visible {
-      outline: 2px solid var(--border-focus);
-      outline-offset: 3px;
-    }
-
-    /* Skip link */
-    .skip-link {
-      position: absolute;
-      top: -60px;
-      left: 16px;
-      background: #000000;
-      color: #FFFFFF;
-      padding: 12px 18px;
-      font-size: 16px;
-      font-weight: 600;
-      z-index: 9999;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: top 250ms ease;
-    }
-    .skip-link:focus {
-      top: 16px;
-    }
-
-    /* ==========================================================================
-       2. TYPOGRAPHY & LAYOUT UTILITIES (All text >= 16px, Controls >= 44px)
-       ========================================================================== */
     .container {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1380px;
       margin: 0 auto;
-      padding-left: clamp(16px, 4vw, 32px);
-      padding-right: clamp(16px, 4vw, 32px);
+      padding-left: clamp(20px, 5vw, 110px);
+      padding-right: clamp(20px, 5vw, 110px);
     }
 
     .section-spacing {
-      padding-top: clamp(64px, 8vw, 100px);
-      padding-bottom: clamp(64px, 8vw, 100px);
+      padding-top: clamp(96px, 12vw, 180px);
+      padding-bottom: clamp(96px, 12vw, 180px);
+      position: relative;
     }
 
-    .section-header {
-      margin-bottom: 36px;
-    }
-
-    .section-badge {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-meta);
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: clamp(28px, 4vw, 42px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.15;
-      color: var(--text);
-      margin-bottom: 14px;
-    }
-
-    .section-desc {
-      font-size: clamp(16px, 1.8vw, 18px);
-      color: var(--text-secondary);
-      max-width: 65ch;
-      line-height: 1.6;
-    }
-
-    /* Status Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: var(--font-mono);
-      letter-spacing: 0.04em;
-      line-height: 1.2;
-    }
-    .badge-urgent {
-      background: var(--status-urgent-bg);
-      color: var(--status-urgent);
-      border: 1px solid rgba(220, 38, 38, 0.25);
-    }
-    .badge-medium {
-      background: var(--status-med-bg);
-      color: var(--status-med);
-      border: 1px solid rgba(217, 119, 6, 0.25);
-    }
-    .badge-low {
-      background: var(--status-low-bg);
-      color: var(--status-low);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-    }
-
-    /* Buttons (all >= 44px tall) */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      min-height: 44px;
-      padding: 10px 22px;
-      font-size: 16px;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: background var(--duration) var(--ease),
-                  color var(--duration) var(--ease),
-                  border-color var(--duration) var(--ease),
-                  transform var(--duration) var(--ease);
-      font-family: var(--font-body);
-      white-space: nowrap;
-    }
-    .btn-primary {
-      background: #000000;
+    /* Accessibility Skip Link */
+    .skip-link {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 12px 20px;
+      background: var(--ink);
       color: #FFFFFF;
-      border-color: #000000;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      z-index: 10000;
+      transform: translateY(-200%);
+      transition: transform 250ms var(--ease);
     }
-    .btn-primary:hover {
-      background: #262626;
-      border-color: #262626;
-      transform: translateY(-1px);
+    .skip-link:focus {
+      transform: translateY(0);
     }
-    .btn-secondary {
-      background: #FFFFFF;
-      color: #000000;
-      border-color: var(--border-dark);
-    }
-    .btn-secondary:hover {
-      background: #F4F4F5;
-      border-color: #000000;
-      transform: translateY(-1px);
+
+    /* Fixed Section Counter (Bottom Left) */
+    .fixed-section-counter {
+      position: fixed;
+      bottom: 24px;
+      left: clamp(20px, 5vw, 110px);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      z-index: 900;
+      pointer-events: none;
     }
 
     /* ==========================================================================
-       3. STICKY TOP NAVIGATION & MOBILE DROPDOWN
+       HEADER (3-Zone: Left MENU, Center Logo, Right SIGN IN & BOOK A DEMO)
        ========================================================================== */
-    .site-nav {
-      position: sticky;
+    .site-header {
+      position: fixed;
       top: 0;
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      z-index: 1000;
+      left: 0;
+      width: 100%;
+      z-index: 950;
+      background: var(--bg);
+      transition: transform 300ms var(--ease), border-color 300ms var(--ease), background 300ms var(--ease);
     }
-    .nav-inner {
+    .site-header.has-scrolled {
+      border-bottom: 1px solid var(--line);
+      background: rgba(250, 248, 245, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .site-header.is-hidden {
+      transform: translateY(-100%);
+    }
+
+    .header-inner {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      min-height: 64px;
+      height: 84px;
+      position: relative;
     }
-    .nav-brand {
+
+    .header-zone-left {
+      flex: 1;
       display: flex;
+      align-items: center;
+    }
+
+    .header-menu-btn {
+      background: none;
+      border: none;
+      padding: 8px 0;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--ink);
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
       gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-    }
-    .nav-brand-mark {
-      width: 32px;
-      height: 32px;
-      background: #000000;
-      color: #FFFFFF;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 16px;
-    }
-    .nav-brand-text {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-    .nav-links-desktop {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-      list-style: none;
-    }
-    .nav-link {
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      text-decoration: none;
-      padding: 8px 0;
-      transition: color var(--duration) var(--ease);
-    }
-    .nav-link:hover, .nav-link:focus {
-      color: #000000;
-    }
-
-    /* Mobile Nav Toggle */
-    .nav-mobile-toggle {
-      display: none;
       min-height: 44px;
-      min-width: 44px;
-      padding: 10px;
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      cursor: pointer;
-      align-items: center;
-      justify-content: center;
     }
-    .nav-mobile-toggle svg {
-      width: 22px;
-      height: 22px;
-      stroke: #000000;
-      stroke-width: 2;
-      stroke-linecap: round;
-      fill: none;
+    .header-menu-btn:hover {
+      opacity: 0.7;
     }
-
-    /* Mobile Dropdown Menu */
-    .nav-dropdown-mobile {
-      display: none;
-      background: #FFFFFF;
-      border-bottom: 1px solid var(--border);
-      padding: 16px 20px 24px 20px;
-    }
-    .nav-dropdown-mobile.is-open {
-      display: block;
-    }
-    .nav-dropdown-mobile ul {
-      list-style: none;
+    .menu-line-icon {
+      width: 18px;
+      height: 12px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: space-between;
     }
-    .nav-dropdown-mobile .nav-link {
+    .menu-line-icon span {
       display: block;
-      font-size: 18px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.06);
-    }
-    .nav-dropdown-mobile .btn {
       width: 100%;
-      margin-top: 12px;
+      height: 1.5px;
+      background: var(--ink);
+    }
+
+    .header-zone-center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-logo {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.4em;
+      color: var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .header-zone-right {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .header-link-signin {
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--ink);
+      text-decoration: none;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .header-link-signin:hover {
+      opacity: 0.7;
+    }
+
+    .header-btn-demo {
+      min-height: 44px;
+      padding: 12px 24px;
+      background: var(--ink);
+      color: #FFFFFF;
+      border: 1px solid var(--ink);
+      border-radius: 0;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 250ms var(--ease), color 250ms var(--ease);
+    }
+    .header-btn-demo:hover {
+      background: var(--bg);
+      color: var(--ink);
     }
 
     @media (max-width: 860px) {
-      .nav-links-desktop { display: none; }
-      .nav-desktop-btn { display: none; }
-      .nav-mobile-toggle { display: inline-flex; }
+      .header-zone-left {
+        order: 2;
+        flex: 0;
+      }
+      .header-zone-center {
+        order: 1;
+        justify-content: flex-start;
+      }
+      .header-zone-right {
+        display: none;
+      }
+      .header-inner {
+        height: 72px;
+      }
     }
 
     /* ==========================================================================
-       4. HERO SECTION (One line fade-up animation)
+       FULL-SCREEN MENU OVERLAY (Accessible with Focus Trap & Large Serif Links)
        ========================================================================== */
-    .hero-section {
-      padding-top: clamp(60px, 8vw, 90px);
-      padding-bottom: clamp(48px, 6vw, 70px);
-      text-align: center;
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(24px, 5vw, 64px) clamp(20px, 5vw, 110px);
+      overflow-y: auto;
     }
-    .hero-pretitle {
-      display: inline-block;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+    .menu-overlay.is-active {
+      display: flex;
+    }
+    .menu-overlay-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+    .menu-close-btn {
+      background: none;
+      border: none;
+      font-size: 12px;
       text-transform: uppercase;
-      color: var(--text-meta);
-      margin-bottom: 16px;
+      letter-spacing: 0.22em;
+      color: var(--ink);
+      cursor: pointer;
+      min-height: 44px;
+      padding: 8px 16px;
     }
-    
-    /* Animate as one smooth line fading up */
-    .hero-headline {
-      font-size: clamp(38px, 6vw, 68px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.08;
-      color: var(--text);
-      max-width: 20ch;
-      margin: 0 auto 20px auto;
-      animation: heroFadeUp 500ms var(--ease) forwards;
+
+    .menu-links-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(16px, 3vh, 32px);
+      margin: 40px 0;
+      padding: 0;
     }
-    @keyframes heroFadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+    .menu-link-item a {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 400;
+      line-height: 1.1;
+      color: var(--ink);
+      text-decoration: none;
+      transition: padding-left 250ms var(--ease), opacity 200ms ease;
+    }
+    .menu-link-item a:hover {
+      opacity: 0.6;
+      padding-left: 16px;
+    }
+
+    .menu-overlay-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ==========================================================================
+       HERO SECTION
+       ========================================================================== */
+    .hero-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 120px;
+      padding-bottom: 80px;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: clamp(40px, 6vw, 100px);
+      align-items: center;
+      width: 100%;
+    }
+
+    @media (max-width: 860px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
       }
     }
 
-    .hero-subhead {
-      font-size: clamp(17px, 2vw, 20px);
-      color: var(--text-secondary);
-      max-width: 60ch;
-      margin: 0 auto 32px auto;
-      line-height: 1.5;
+    .hero-eyebrow {
+      display: block;
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      margin-bottom: 24px;
+    }
+    .hero-title em {
+      font-style: italic;
+    }
+    .hero-subcopy {
+      max-width: 44ch;
+      margin-bottom: 40px;
     }
     .hero-actions {
       display: flex;
-      justify-content: center;
-      gap: 14px;
+      align-items: center;
       flex-wrap: wrap;
+      gap: 24px;
+      margin-bottom: 48px;
     }
 
-    /* ==========================================================================
-       5. "TRY IT" LIVE INTERACTIVE TICKETING DEMO SECTION
-       ========================================================================== */
-    .try-it-section {
-      background: var(--bg-alt);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .demo-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 32px;
-      align-items: start;
-    }
-    @media (max-width: 900px) {
-      .demo-grid {
-        grid-template-columns: 1fr;
-      }
+    .hero-scroll-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--muted);
+      text-decoration: none;
     }
 
-    .demo-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: clamp(20px, 3vw, 32px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    /* Pure HTML/CSS Ticket Card in Surface-Alt Frame */
+    .hero-frame-container {
+      background: var(--surface-alt);
+      padding: clamp(24px, 4vw, 44px);
+      border: 1px solid var(--line);
     }
-
-    /* Chips */
-    .chips-label {
-      font-size: 15px;
+    .hero-ticket-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: clamp(24px, 4vw, 36px);
+    }
+    .ticket-meta-tag {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .ticket-id-label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .ticket-urgent-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
       font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 10px;
-      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
     }
-    .chips-row {
+    .ticket-urgent-dot::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .hero-ticket-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 20px;
+    }
+    .hero-ticket-details {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      font-size: 13px;
+      color: var(--ink-soft);
+      margin-bottom: 24px;
+    }
+    .hero-ticket-details div strong {
+      color: var(--ink);
+    }
+
+    /* ==========================================================================
+       SECTION: #try-it (Live Triage Demo)
+       ========================================================================== */
+    .triage-demo-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: clamp(24px, 5vw, 48px);
+    }
+    .demo-chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
       margin-bottom: 20px;
     }
     .demo-chip {
-      background: #FAFAFA;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-size: 15px;
-      line-height: 1.4;
-      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 10px 16px;
+      font-size: 13px;
+      font-family: var(--font-sans);
+      color: var(--ink);
       cursor: pointer;
-      color: var(--text);
-      transition: background var(--duration) var(--ease),
-                  border-color var(--duration) var(--ease),
-                  transform var(--duration) var(--ease);
-      font-family: var(--font-body);
       min-height: 44px;
-      display: flex;
-      align-items: center;
-    }
-    .demo-chip:hover {
-      background: #F0F0F2;
-      border-color: #000000;
-      transform: translateY(-1px);
-    }
-
-    .demo-textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 14px;
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.5;
-      border: 1px solid var(--border-dark);
-      border-radius: 6px;
-      background: #FFFFFF;
-      resize: vertical;
-      margin-bottom: 16px;
-    }
-    .demo-textarea:focus {
-      outline: none;
-      border-color: #000000;
-      box-shadow: 0 0 0 2px rgba(0,0,0,0.08);
-    }
-
-    /* Animated Processing Steps */
-    .pipeline-status {
-      display: none;
-      margin: 16px 0;
-      background: #F9F9FA;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 14px 18px;
-    }
-    .pipeline-status.is-active {
-      display: block;
-    }
-    .pipeline-step-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      color: var(--text-meta);
-      margin-bottom: 6px;
-      transition: color 250ms ease;
-    }
-    .pipeline-step-item.current {
-      color: #000000;
-      font-weight: 600;
-    }
-    .pipeline-step-item.done {
-      color: var(--status-low);
-    }
-    .step-indicator {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid currentColor;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      font-size: 11px;
+      transition: border-color 200ms ease, background 200ms ease;
+    }
+    .demo-chip:hover {
+      border-color: var(--ink);
+      background: var(--surface-alt);
+    }
+
+    .triage-textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      resize: vertical;
+      margin-bottom: 20px;
+      border-radius: 0;
+    }
+    .triage-textarea:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    /* 4-Step Pipeline Sequence with Thin Progress Line */
+    .pipeline-status-container {
+      display: none;
+      margin: 24px 0;
+      padding: 20px;
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+    }
+    .pipeline-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      position: relative;
+    }
+    .pipeline-steps-grid::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      right: 10px;
+      height: 1px;
+      background: var(--line);
+      z-index: 1;
+    }
+    .pipe-step-node {
+      position: relative;
+      z-index: 2;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: center;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      transition: all 300ms var(--ease);
+    }
+    .pipe-step-node.active {
+      border-color: var(--ink);
+      color: var(--ink);
+      font-weight: 600;
+      background: #FFFFFF;
+    }
+
+    @media (max-width: 680px) {
+      .pipeline-steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .pipeline-steps-grid::before {
+        display: none;
+      }
     }
 
     /* Result Card */
-    .result-panel {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: clamp(20px, 3vw, 32px);
+    .triage-result-card {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--ink);
+      padding: clamp(24px, 4vw, 36px);
+      margin-top: 24px;
     }
-    .result-meta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 18px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .result-summary-box {
-      background: #FAFAFA;
-      border-left: 3px solid #000000;
-      padding: 14px 16px;
-      border-radius: 0 6px 6px 0;
-      margin-bottom: 20px;
-      font-size: 16px;
-      line-height: 1.5;
+    .triage-result-card.is-visible {
+      display: block;
     }
 
-    /* Tone Selector Buttons */
-    .tone-buttons-group {
+    .tone-buttons-row {
       display: flex;
       gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin: 16px 0;
     }
-    .tone-btn {
-      min-height: 44px;
+    .btn-tone {
+      background: var(--surface);
+      border: 1px solid var(--line);
       padding: 8px 16px;
-      font-size: 15px;
-      font-weight: 600;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: #FAFAFA;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
       cursor: pointer;
-      transition: all var(--duration) var(--ease);
-      font-family: var(--font-body);
+      min-height: 44px;
+      transition: all 200ms ease;
     }
-    .tone-btn.active {
-      background: #000000;
+    .btn-tone.active {
+      background: var(--ink);
       color: #FFFFFF;
-      border-color: #000000;
+      border-color: var(--ink);
     }
 
-    .reply-editor {
+    .reply-editor-textarea {
       width: 100%;
-      min-height: 140px;
+      min-height: 90px;
       padding: 14px;
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.5;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: #FFFFFF;
-      resize: vertical;
-      margin-bottom: 16px;
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      margin-bottom: 20px;
     }
 
     /* Similar Ticket Alert */
     .similar-ticket-alert {
-      background: var(--status-med-bg);
-      border: 1px solid rgba(217, 119, 6, 0.3);
-      border-radius: 6px;
-      padding: 14px 18px;
+      display: none;
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      padding: 16px 20px;
       margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      justify-content: space-between;
+      gap: 16px;
     }
-    .similar-ticket-text {
-      font-size: 15px;
-      font-weight: 600;
-      color: #92400E;
-    }
-    .btn-merge {
-      min-height: 44px;
-      padding: 6px 16px;
-      font-size: 14px;
-      background: #92400E;
-      color: #FFFFFF;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
+    .similar-ticket-alert.is-visible {
+      display: flex;
     }
 
     /* ==========================================================================
-       6. TICKET STATUS TRACKER SECTION
+       SECTION: #tracker (Ticket Status Tracker)
        ========================================================================== */
-    .tracker-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: clamp(20px, 3vw, 36px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    .tracker-box {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: clamp(24px, 5vw, 48px);
     }
-    .tracker-search-bar {
+    .tracker-input-row {
       display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 24px;
     }
     .tracker-input {
       flex: 1;
-      min-width: 260px;
-      min-height: 44px;
-      padding: 10px 16px;
-      font-size: 16px;
-      border: 1px solid var(--border-dark);
-      border-radius: 6px;
-      font-family: var(--font-body);
-    }
-    .tracker-sample-pills {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .sample-pill {
-      min-height: 44px;
-      padding: 6px 14px;
-      font-size: 14px;
+      min-height: 48px;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
       font-family: var(--font-mono);
-      background: #F4F4F5;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .tracker-input:focus {
+      outline: none;
+      border-color: var(--ink);
     }
 
-    /* 5-Step Animated Timeline */
-    .timeline-wrap {
+    /* 5-Step Timeline Line with Animated Squares */
+    .tracker-timeline-wrap {
+      margin: 40px 0;
+      position: relative;
+    }
+    .tracker-stages-track {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
+      position: relative;
       gap: 12px;
-      margin-top: 24px;
+    }
+    .tracker-stages-track::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 10px;
+      right: 10px;
+      height: 2px;
+      background: var(--line);
+      z-index: 1;
+    }
+    .tracker-stage-item {
       position: relative;
-    }
-    @media (max-width: 768px) {
-      .timeline-wrap {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-    }
-    .timeline-node {
-      background: #FAFAFA;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      text-align: center;
-      transition: all var(--duration) var(--ease);
-    }
-    .timeline-node.active {
-      background: #FFFFFF;
-      border-color: #000000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-    }
-    .timeline-node-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: #E4E4E7;
-      color: #000000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 10px auto;
-      font-weight: 700;
-      font-size: 14px;
-    }
-    .timeline-node.active .timeline-node-icon {
-      background: #000000;
-      color: #FFFFFF;
-    }
-    .timeline-node.done .timeline-node-icon {
-      background: var(--status-low);
-      color: #FFFFFF;
-    }
-    .timeline-node-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .timeline-node-time {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-meta);
-    }
-
-    /* ==========================================================================
-       7. FLOW / MARQUEE: "The life of a ticket" (Full Color by Default)
-       ========================================================================== */
-    .marquee-outer {
-      overflow: hidden;
-      width: 100%;
-      position: relative;
-      padding: 16px 0;
-    }
-    .marquee-track {
-      display: flex;
-      width: max-content;
-      animation: marqueeRun 40s linear infinite;
-    }
-    .marquee-outer:hover .marquee-track {
-      animation-play-state: paused;
-    }
-    @keyframes marqueeRun {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .stage-card {
-      width: clamp(260px, 28vw, 320px);
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      margin-right: 20px;
-      flex-shrink: 0;
+      z-index: 2;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-      transition: transform var(--duration) var(--ease),
-                  border-color var(--duration) var(--ease);
-    }
-    .stage-card:hover {
-      transform: translateY(-4px);
-      border-color: #000000;
-    }
-    .stage-card-illustration {
-      height: 120px;
-      width: 100%;
-      border-radius: 6px;
-      display: flex;
       align-items: center;
-      justify-content: center;
-      background: #F4F4F5;
-      /* Full color by default */
-      filter: none;
+      text-align: center;
     }
-    .stage-number {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text-meta);
+    .stage-square-icon {
+      width: 14px;
+      height: 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      margin-bottom: 12px;
+      transition: all 300ms var(--ease);
+    }
+    .tracker-stage-item.done .stage-square-icon {
+      background: var(--ink);
+      border-color: var(--ink);
+    }
+    .tracker-stage-item.current .stage-square-icon {
+      background: var(--surface);
+      border: 2px solid var(--ink);
+      box-shadow: 0 0 0 3px var(--bg);
+    }
+    .stage-name {
+      font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.15em;
+      color: var(--muted);
     }
-    .stage-card-title {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    .tracker-stage-item.done .stage-name,
+    .tracker-stage-item.current .stage-name {
+      color: var(--ink);
+      font-weight: 600;
     }
-    .stage-card-desc {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.5;
+
+    @media (max-width: 680px) {
+      .tracker-stages-track {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .tracker-stages-track::before {
+        display: none;
+      }
+      .tracker-stage-item {
+        flex-direction: row;
+        gap: 14px;
+        text-align: left;
+      }
+    }
+
+    .tracker-details-card {
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      padding: 24px;
+      margin-top: 24px;
     }
 
     /* ==========================================================================
-       8. MANAGER INSIGHTS PANEL (Animated Bar Chart & AI Insight)
+       SECTION: #flow (6-Stage Numbered Editorial List)
        ========================================================================== */
-    .insights-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: clamp(20px, 3.5vw, 36px);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    .flow-list {
+      list-style: none;
+      padding: 0;
+      margin: 40px 0 0 0;
+      border-top: 1px solid var(--line);
     }
+    .flow-row {
+      display: grid;
+      grid-template-columns: 80px 1.2fr 2fr;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+      gap: 24px;
+      transition: background 250ms var(--ease);
+    }
+    .flow-row:hover {
+      background: var(--surface-alt);
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .flow-num {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .flow-title {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+    .flow-desc {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .flow-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+    }
+
+    /* ==========================================================================
+       SECTION: #insights (Manager Insights with Large Serif Numerals)
+       ========================================================================== */
     .insights-grid {
       display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 32px;
-      margin-bottom: 24px;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(32px, 5vw, 64px);
+      margin-top: 48px;
     }
     @media (max-width: 860px) {
       .insights-grid {
@@ -802,553 +768,263 @@
       }
     }
 
-    .chart-box {
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
-      background: #FAFAFA;
-    }
-    .chart-bar-row {
-      margin-bottom: 16px;
-    }
-    .chart-bar-labels {
+    .stat-comparison-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: clamp(32px, 5vw, 48px);
       display: flex;
+      flex-direction: column;
       justify-content: space-between;
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
     }
-    .chart-bar-track {
-      height: 10px;
-      background: #E4E4E7;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-    .chart-bar-fill {
-      height: 100%;
-      border-radius: 5px;
-      background: #000000;
-      width: 0%;
-      transition: width 800ms var(--ease);
+    .stat-huge-num {
+      font-family: var(--font-serif);
+      font-size: clamp(48px, 6vw, 76px);
+      font-weight: 400;
+      line-height: 1;
+      color: var(--ink);
+      margin: 16px 0;
     }
 
-    .ai-insight-sentence {
-      background: #EFF6FF;
-      border-left: 4px solid #2563EB;
-      border-radius: 0 8px 8px 0;
-      padding: 18px 22px;
-      font-size: 17px;
-      font-weight: 500;
-      color: #1E3A8A;
-      line-height: 1.5;
+    .chart-track-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .chart-track-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+    }
+    .chart-hairline-track {
+      width: 100%;
+      height: 4px;
+      background: var(--line);
+      position: relative;
+    }
+    .chart-hairline-bar {
+      height: 100%;
+      background: var(--ink);
+      width: 0;
+      transition: width 900ms var(--ease);
     }
 
     /* ==========================================================================
-       9. FEATURES / CAPABILITIES (What we built)
+       SECTION: #features (3x2 Hairline Grid)
        ========================================================================== */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      border-top: 1px solid var(--line);
+      border-left: 1px solid var(--line);
+      margin-top: 48px;
     }
-    @media (max-width: 960px) {
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .features-grid { grid-template-columns: 1fr; }
-    }
-    .feature-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 220px;
-      transition: border-color var(--duration) var(--ease),
-                  transform var(--duration) var(--ease);
-    }
-    .feature-card:hover {
-      border-color: #000000;
-      transform: translateY(-2px);
-    }
-    .feature-card-tag {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-meta);
-      margin-bottom: 8px;
-      display: block;
-    }
-    .feature-card-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: -0.02em;
-    }
-    .feature-card-desc {
-      font-size: 16px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      margin-bottom: 16px;
-    }
-
-    /* ==========================================================================
-       10. PAIN & SOLUTIONS (Interactive Accordion)
-       ========================================================================== */
-    .pain-item {
-      border-top: 1px solid var(--border);
-      padding: 20px 0;
-    }
-    .pain-item:last-child {
-      border-bottom: 1px solid var(--border);
-    }
-    .pain-header-btn {
-      width: 100%;
-      min-height: 44px;
-      background: transparent;
-      border: none;
-      text-align: left;
-      font-family: var(--font-body);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-    .pain-label-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #000000;
-      min-width: 120px;
-    }
-    .pain-statement {
-      font-size: 16px;
-      color: var(--text-secondary);
-      flex: 1;
-    }
-    .pain-drawer {
-      display: none;
-      padding-top: 12px;
-      padding-bottom: 8px;
-      font-size: 16px;
-      color: #000000;
-      line-height: 1.5;
-    }
-    .pain-drawer.is-open {
-      display: block;
-    }
-
-    /* ==========================================================================
-       11. GOALS TABLE
-       ========================================================================== */
-    .goals-list {
-      display: flex;
-      flex-direction: column;
-      border-top: 1px solid var(--border);
-    }
-    .goal-entry {
-      border-bottom: 1px solid var(--border);
-      padding: 20px 0;
-      display: grid;
-      grid-template-columns: 80px 1.2fr 1.6fr;
-      gap: 20px;
-      align-items: baseline;
-    }
-    @media (max-width: 768px) {
-      .goal-entry {
-        grid-template-columns: 1fr;
-        gap: 6px;
+    @media (max-width: 980px) {
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
-    .goal-badge {
-      font-family: var(--font-mono);
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text-meta);
-    }
-    .goal-name {
-      font-size: 17px;
-      font-weight: 700;
-    }
-    .goal-test {
-      font-size: 16px;
-      color: var(--text-secondary);
+    @media (max-width: 640px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
-    /* ==========================================================================
-       12. FLOATING CHAT WIDGET (Quiet Luxury & Accessible)
-       ========================================================================== */
-    .chat-widget-btn {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      min-height: 48px;
-      padding: 12px 22px;
-      background: #111111;
-      color: #FFFFFF;
-      border: 1px solid #111111;
-      border-radius: 0;
-      font-family: var(--font-body);
-      font-size: 13px;
-      font-weight: 500;
+    .feature-card-cell {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: clamp(28px, 4vw, 40px);
+      background: var(--surface);
+      text-decoration: none;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 240px;
+      transition: background 250ms var(--ease);
+    }
+    .feature-card-cell:hover {
+      background: var(--surface-alt);
+    }
+    .feature-card-cell:hover .feature-arrow {
+      transform: translateX(6px);
+    }
+    .feature-cat-mono {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
       text-transform: uppercase;
       letter-spacing: 0.15em;
+      margin-bottom: 12px;
+    }
+    .feature-title {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.25;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    .feature-desc {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .feature-link-bottom {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      z-index: 999;
-      transition: background 250ms var(--ease), color 250ms var(--ease), border-color 250ms var(--ease);
-    }
-    .chat-widget-btn:hover {
-      background: #FAF8F5;
-      color: #111111;
-      border-color: #111111;
-    }
-    .chat-widget-btn:focus-visible {
-      outline: 2px solid #111111;
-      outline-offset: 3px;
-    }
-    .chat-widget-icon {
-      width: 16px;
-      height: 16px;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 1.5;
-    }
-
-    .chat-panel {
-      position: fixed;
-      bottom: 84px;
-      right: 24px;
-      width: clamp(320px, 92vw, 410px);
-      height: 540px;
-      max-height: calc(100vh - 100px);
-      background: #FFFFFF;
-      border: 1px solid var(--border-dark);
-      border-radius: 0;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    .chat-panel.is-open {
-      display: flex;
-    }
-    .chat-panel-header {
-      padding: 14px 18px;
-      background: #111111;
-      color: #FFFFFF;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #111111;
-    }
-    .chat-panel-header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .chat-status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #FFFFFF;
-      display: inline-block;
-    }
-    .chat-panel-title {
-      font-size: 13px;
+      gap: 6px;
+      font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.15em;
+      color: var(--ink);
     }
-    .chat-panel-header-actions {
+    .feature-arrow {
+      transition: transform 250ms var(--ease);
+    }
+
+    /* ==========================================================================
+       SECTION: Customer Pain Points (Accordion)
+       ========================================================================== */
+    .accordion-wrap {
+      border-top: 1px solid var(--line);
+      margin-top: 40px;
+    }
+    .accordion-item {
+      border-bottom: 1px solid var(--line);
+    }
+    .accordion-btn {
+      width: 100%;
+      min-height: 72px;
+      padding: 20px 0;
+      background: none;
+      border: none;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
-    }
-    .chat-header-btn {
-      background: none;
-      border: none;
-      color: #FFFFFF;
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
+      text-align: left;
       cursor: pointer;
-      padding: 6px 10px;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.85;
-      transition: opacity 200ms ease;
+      font-family: var(--font-serif);
+      font-size: clamp(20px, 2.5vw, 28px);
+      color: var(--ink);
     }
-    .chat-header-btn:hover {
-      opacity: 1;
-      text-decoration: underline;
+    .accordion-btn:hover {
+      opacity: 0.7;
     }
-    .chat-panel-close {
-      background: none;
-      border: none;
-      color: #FFFFFF;
-      font-size: 18px;
-      cursor: pointer;
-      padding: 6px 10px;
+    .accordion-icon {
+      font-family: var(--font-sans);
+      font-size: 20px;
+      font-weight: 300;
+      transition: transform 300ms var(--ease);
       min-width: 44px;
       min-height: 44px;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
     }
-    .chat-panel-close:hover {
-      opacity: 0.7;
+    .accordion-btn[aria-expanded="true"] .accordion-icon {
+      transform: rotate(45deg);
     }
-
-    .chat-body {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background: #FAF8F5;
-      scroll-behavior: smooth;
+    .accordion-content {
+      display: none;
+      padding-bottom: 24px;
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      max-width: 65ch;
     }
-    .chat-bubble {
-      max-width: 88%;
-      padding: 12px 16px;
-      font-size: 14px;
-      line-height: 1.55;
-      word-break: break-word;
-    }
-    .chat-bubble.bot {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      color: #111111;
-      align-self: flex-start;
-    }
-    .chat-bubble.user {
-      background: #111111;
-      color: #FFFFFF;
-      align-self: flex-end;
+    .accordion-content.is-open {
+      display: block;
     }
 
-    /* Structured interactive cards in chat */
-    .chat-ticket-card, .chat-proposal-card, .chat-handover-card {
-      background: #FFFFFF;
-      border: 1px solid var(--border-dark);
-      padding: 14px 16px;
-      margin-top: 8px;
-      width: 100%;
-      font-size: 13px;
-      line-height: 1.5;
+    /* ==========================================================================
+       SECTION: #goals (G1 to G5 Large Serif Numerals)
+       ========================================================================== */
+    .goals-list {
+      border-top: 1px solid var(--line);
+      margin-top: 48px;
     }
-    .card-meta-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-      padding-bottom: 6px;
-      border-bottom: 1px solid var(--border);
+    .goal-row-item {
+      display: grid;
+      grid-template-columns: 120px 1.5fr 2fr;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: baseline;
+      gap: 24px;
     }
-    .card-code {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      color: #111111;
-      letter-spacing: 0.05em;
+    .goal-num-serif {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 4vw, 54px);
+      color: var(--ink);
+      line-height: 1;
     }
-    .card-badge {
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 2px 8px;
-      border: 1px solid #111111;
-      background: #FAF8F5;
+    .goal-heading {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      color: var(--ink);
     }
-    .card-row {
-      margin-bottom: 4px;
-      color: var(--text-secondary);
-    }
-    .card-row strong {
-      color: #111111;
-    }
-    .card-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .btn-card-action {
-      flex: 1;
-      min-height: 44px;
-      padding: 0 12px;
-      background: #111111;
-      color: #FFFFFF;
-      border: 1px solid #111111;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 200ms ease;
-    }
-    .btn-card-action:hover {
-      background: #FAF8F5;
-      color: #111111;
-    }
-    .btn-card-secondary {
-      background: #FFFFFF;
-      color: #111111;
-      border: 1px solid var(--border-dark);
-    }
-    .btn-card-secondary:hover {
-      border-color: #111111;
-      background: #FAF8F5;
+    .goal-text {
+      font-size: 15px;
+      color: var(--ink-soft);
     }
 
-    .chat-typing-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 12px;
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      align-self: flex-start;
-      font-size: 12px;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .chat-faq-chips {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 6px;
-    }
-    .chat-faq-chip {
-      background: #FFFFFF;
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      font-size: 13px;
-      text-align: left;
-      cursor: pointer;
-      min-height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      color: #111111;
-      transition: border-color 200ms ease, background 200ms ease;
-    }
-    .chat-faq-chip:hover {
-      border-color: #111111;
-      background: #FAF8F5;
-    }
-
-    .chat-input-row {
-      padding: 12px;
-      background: #FFFFFF;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
-    }
-    .chat-input {
-      flex: 1;
-      min-height: 44px;
-      padding: 10px 14px;
-      font-size: 14px;
-      border: 1px solid var(--border-dark);
-      border-radius: 0;
-      background: #FAF8F5;
-      color: #111111;
-      font-family: var(--font-body);
-    }
-    .chat-input:focus {
-      outline: none;
-      border-color: #111111;
-      background: #FFFFFF;
-    }
-    .chat-send-btn {
-      min-height: 44px;
-      padding: 0 18px;
-      background: #111111;
-      color: #FFFFFF;
-      border: 1px solid #111111;
-      border-radius: 0;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      cursor: pointer;
-      transition: background 200ms ease, color 200ms ease;
-    }
-    .chat-send-btn:hover {
-      background: #FAF8F5;
-      color: #111111;
-    }
-
-    .chat-panel-footer {
-      padding: 8px 16px;
-      background: #FAF8F5;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-    }
-    .chat-handover-link {
-      color: var(--text-secondary);
-      text-decoration: underline;
-      text-underline-offset: 3px;
-      cursor: pointer;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-    .chat-handover-link:hover {
-      color: #111111;
-    }
-    .chat-brand-meta {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-meta);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    @media (max-width: 480px) {
-      .chat-panel {
-        bottom: 0;
-        right: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        max-height: 100vh;
-        border: none;
-      }
-      .chat-widget-btn {
-        bottom: 16px;
-        right: 16px;
+    @media (max-width: 768px) {
+      .goal-row-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
       }
     }
 
     /* ==========================================================================
-       13. BOOK A DEMO MODAL (With Focus Trap)
+       FOOTER & BOOK DEMO MODAL
        ========================================================================== */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: clamp(64px, 8vw, 120px) 0 48px 0;
+      background: var(--bg);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 64px;
+    }
+    @media (max-width: 860px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .footer-brand {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .footer-bottom-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    /* Modal */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(4px);
+      background: rgba(17, 17, 17, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 2000;
       display: none;
       align-items: center;
@@ -1359,352 +1035,156 @@
       display: flex;
     }
     .modal-box {
-      background: #FFFFFF;
-      border-radius: 10px;
+      background: var(--surface);
+      border: 1px solid var(--ink);
       width: 100%;
       max-width: 520px;
-      padding: clamp(24px, 4vw, 36px);
-      box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+      padding: clamp(28px, 5vw, 48px);
       position: relative;
     }
     .modal-close-btn {
       position: absolute;
-      top: 16px;
-      right: 16px;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
       min-width: 44px;
       min-height: 44px;
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      font-size: 24px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
     }
-    .modal-title {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      margin-bottom: 8px;
-    }
-    .modal-desc {
-      font-size: 16px;
-      color: var(--text-secondary);
-      margin-bottom: 24px;
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-label {
-      display: block;
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .form-input {
-      width: 100%;
-      min-height: 44px;
-      padding: 10px 14px;
-      font-size: 16px;
-      border: 1px solid var(--border-dark);
-      border-radius: 6px;
-      font-family: var(--font-body);
-    }
-    .form-input:focus {
-      outline: none;
-      border-color: #000000;
-    }
 
-    /* Toast Notification */
-    .toast-msg {
+    /* Toast */
+    .toast-pill {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(100px);
-      background: #000000;
+      background: var(--ink);
       color: #FFFFFF;
       padding: 12px 24px;
-      border-radius: 6px;
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
       z-index: 3000;
-      transition: transform 300ms var(--ease), opacity 300ms ease;
       opacity: 0;
+      transition: all 300ms var(--ease);
       pointer-events: none;
+      border: 1px solid var(--ink);
     }
-    .toast-msg.show {
+    .toast-pill.is-visible {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
-    }
-
-    /* ==========================================================================
-       14. FOOTER
-       ========================================================================== */
-    .site-footer {
-      background: var(--footer-bg);
-      color: var(--footer-text);
-      padding: 64px 0 36px 0;
-      border-top: 1px solid var(--footer-border);
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 48px;
-    }
-    @media (max-width: 768px) {
-      .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-    }
-    .footer-brand {
-      font-size: 22px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .footer-bio {
-      font-size: 16px;
-      color: #A1A1AA;
-      max-width: 45ch;
-      line-height: 1.6;
-    }
-    .footer-heading {
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      color: #E4E4E7;
-    }
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .footer-links a, .footer-links button {
-      color: #A1A1AA;
-      text-decoration: none;
-      font-size: 16px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-align: left;
-      font-family: var(--font-body);
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      transition: color var(--duration) var(--ease);
-    }
-    .footer-links a:hover, .footer-links button:hover {
-      color: #FFFFFF;
-    }
-    .footer-bottom {
-      border-top: 1px solid var(--footer-border);
-      padding-top: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      font-size: 14px;
-      color: #71717A;
-    }
-
-    /* Accessibility: Respect Reduced Motion */
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .marquee-track {
-        animation: none !important;
-        flex-wrap: wrap;
-      }
     }
   </style>
 </head>
 <body>
-  <!-- Accessibility Skip Link -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Global Toast Alert -->
-  <div id="toast" class="toast-msg" role="status" aria-live="polite"></div>
+  <!-- Fixed Section Counter -->
+  <div class="fixed-section-counter" id="section-counter-display" aria-hidden="true">01 / 07</div>
 
-  <!-- ==========================================================================
-       STICKY TOP NAVIGATION
-       ========================================================================== -->
-  <header class="site-nav" role="banner">
-    <div class="container nav-inner">
-      <a href="index.html" class="nav-brand" aria-label="BIZASSIST AI home">
-        <span class="nav-brand-mark">BA</span>
-        <span class="nav-brand-text">BIZASSIST AI</span>
-      </a>
-
-      <!-- Desktop Links -->
-      <nav aria-label="Main Navigation">
-        <ul class="nav-links-desktop">
-          <li><a href="#try-it" class="nav-link">Try it</a></li>
-          <li><a href="#tracker" class="nav-link">Tracker</a></li>
-          <li><a href="#flow" class="nav-link">Flow</a></li>
-          <li><a href="#features" class="nav-link">Features</a></li>
-          <li><a href="#insights" class="nav-link">Insights</a></li>
-          <li><a href="#goals" class="nav-link">Goals</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
-        </ul>
-      </nav>
-
-      <!-- Desktop Action -->
-      <div class="nav-desktop-btn" style="display: flex; align-items: center; gap: 16px;">
-        <a href="login.html" class="nav-link" style="font-weight: 600;">Sign in</a>
-        <button class="btn btn-primary" onclick="openDemoModal()" aria-haspopup="dialog">Book a demo</button>
+  <!-- Header -->
+  <header class="site-header" id="main-site-header" role="banner">
+    <div class="container header-inner">
+      <!-- Zone 1: Left Menu Button -->
+      <div class="header-zone-left">
+        <button class="header-menu-btn" id="open-menu-btn" onclick="toggleMenuOverlay(true)" aria-label="Open navigation menu" aria-haspopup="dialog" aria-expanded="false">
+          <div class="menu-line-icon" aria-hidden="true">
+            <span></span>
+            <span></span>
+          </div>
+          <span>Menu</span>
+        </button>
       </div>
 
-      <!-- Mobile Dropdown Toggle -->
-      <button class="nav-mobile-toggle" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      </button>
-    </div>
+      <!-- Zone 2: Center Logo -->
+      <div class="header-zone-center">
+        <a href="index.html" class="header-logo" aria-label="BIZASSIST AI homepage">BIZASSIST AI</a>
+      </div>
 
-    <!-- Mobile Dropdown Container -->
-    <div class="nav-dropdown-mobile" id="mobile-menu-dropdown">
-      <ul>
-        <li><a href="#try-it" class="nav-link" onclick="toggleMobileMenu()">Try it</a></li>
-        <li><a href="#tracker" class="nav-link" onclick="toggleMobileMenu()">Ticket Tracker</a></li>
-        <li><a href="#flow" class="nav-link" onclick="toggleMobileMenu()">Flow</a></li>
-        <li><a href="#features" class="nav-link" onclick="toggleMobileMenu()">Features</a></li>
-        <li><a href="#insights" class="nav-link" onclick="toggleMobileMenu()">Manager Insights</a></li>
-        <li><a href="#goals" class="nav-link" onclick="toggleMobileMenu()">Goals</a></li>
-        <li><a href="#contact" class="nav-link" onclick="toggleMobileMenu()">Contact</a></li>
-        <li><a href="login.html" class="nav-link" onclick="toggleMobileMenu()" style="font-weight: 700;">Sign in →</a></li>
-      </ul>
-      <button class="btn btn-primary" onclick="toggleMobileMenu(); openDemoModal();">Book a demo</button>
+      <!-- Zone 3: Right Actions -->
+      <div class="header-zone-right">
+        <a href="login.html" class="header-link-signin">Sign in</a>
+        <button class="header-btn-demo" onclick="openDemoModal()" aria-haspopup="dialog">Book a demo</button>
+      </div>
     </div>
   </header>
 
+  <!-- Full-Screen Menu Overlay -->
+  <div class="menu-overlay" id="full-menu-overlay" role="dialog" aria-modal="true" aria-label="Main Navigation Menu">
+    <div class="menu-overlay-header">
+      <span class="header-logo" style="font-size: 18px;">BIZASSIST AI</span>
+      <button class="menu-close-btn" id="close-menu-btn" onclick="toggleMenuOverlay(false)" aria-label="Close navigation menu">Close [ESC]</button>
+    </div>
+
+    <ul class="menu-links-list">
+      <li class="menu-link-item"><a href="#try-it" onclick="toggleMenuOverlay(false)">01. Try Live Triage</a></li>
+      <li class="menu-link-item"><a href="#tracker" onclick="toggleMenuOverlay(false)">02. Ticket Tracker</a></li>
+      <li class="menu-link-item"><a href="#flow" onclick="toggleMenuOverlay(false)">03. Ticket Lifecycle</a></li>
+      <li class="menu-link-item"><a href="#insights" onclick="toggleMenuOverlay(false)">04. Manager Insights</a></li>
+      <li class="menu-link-item"><a href="#features" onclick="toggleMenuOverlay(false)">05. Platform Workspaces</a></li>
+      <li class="menu-link-item"><a href="#goals" onclick="toggleMenuOverlay(false)">06. System Goals</a></li>
+      <li class="menu-link-item"><a href="#contact" onclick="toggleMenuOverlay(false)">07. Contact & Enterprise</a></li>
+    </ul>
+
+    <div class="menu-overlay-footer">
+      <div>
+        <a href="login.html" style="color:var(--ink); text-decoration:underline; margin-right: 24px;">Sign In to Account →</a>
+        <button onclick="toggleMenuOverlay(false); openDemoModal();" class="btn-primary" style="padding: 10px 20px; font-size: 11px;">Book a Demo</button>
+      </div>
+      <span>Editorial Customer Support Infrastructure</span>
+    </div>
+  </div>
+
   <main id="main-content">
     <!-- ==========================================================================
-         HERO SECTION (Smooth single-line fade-up)
+         HERO SECTION
          ========================================================================== -->
-    <section class="hero-section container" aria-label="Introduction">
-      <span class="hero-pretitle">AI-Assisted Customer Support · Live Prototype</span>
-      <h1 class="hero-headline">Support, reimagined.</h1>
-      <p class="hero-subhead">
-        One place for customers to raise and track tickets, and for AI to categorise, prioritise, summarise and suggest replies instantly.
-      </p>
-      <div class="hero-actions">
-        <a href="#try-it" class="btn btn-primary">Try Live Demo ↓</a>
-        <button class="btn btn-secondary" onclick="openDemoModal()">Book a Demo</button>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         NEW SECTION: "TRY IT" LIVE INTERACTIVE TICKET DEMO
-         ========================================================================== -->
-    <section id="try-it" class="try-it-section section-spacing" aria-label="Live Demo Section">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-badge">Live Interactive Simulation</span>
-          <h2 class="section-title">Try it yourself.</h2>
-          <p class="section-desc">
-            Submit a customer message or pick a sample complaint. Watch BizAssist AI categorise intent, evaluate urgency, summarise key facts, and draft an approved response.
+    <section class="hero-wrap container" id="hero" aria-label="Introduction">
+      <div class="hero-grid">
+        <div class="hero-text-col">
+          <span class="eyebrow hero-eyebrow">AI-ASSISTED SUPPORT</span>
+          <h1 class="hero-title">Support, <em>reimagined.</em></h1>
+          <p class="body-copy hero-subcopy">
+            Inquiries are automatically classified, prioritized, summarized, and resolved in minutes with AI assistance and human oversight.
           </p>
+          <div class="hero-actions">
+            <a href="#try-it" class="btn-primary">RAISE A TICKET</a>
+            <a href="#tracker" class="text-link-arrow">TRACK A TICKET →</a>
+          </div>
+          <div>
+            <a href="#try-it" class="hero-scroll-hint">SCROLL TO EXPLORE ↓</a>
+          </div>
         </div>
 
-        <div class="demo-grid">
-          <!-- Left: Input & Example Chips -->
-          <div class="demo-card">
-            <span class="chips-label">Pick a sample customer inquiry:</span>
-            <div class="chips-row">
-              <button class="demo-chip" onclick="loadDemoScenario(0)">
-                💳 "Payment failed during renewal checkout and money deducted from Amex."
-              </button>
-              <button class="demo-chip" onclick="loadDemoScenario(1)">
-                🚨 "Our webhook endpoints are receiving HTTP 500 errors during traffic peak."
-              </button>
-              <button class="demo-chip" onclick="loadDemoScenario(2)">
-                🔐 "Need to update company billing address and VAT registration on invoice."
-              </button>
+        <!-- Pure HTML/CSS Ticket Card Frame -->
+        <div class="hero-frame-container">
+          <div class="hero-ticket-card">
+            <div class="ticket-meta-tag">
+              <span class="ticket-id-label">TICKET #BA-1042</span>
+              <span class="ticket-urgent-dot">URGENT</span>
+            </div>
+            <h2 class="hero-ticket-title">Payment failed on renewal checkout</h2>
+            <div class="hero-ticket-details">
+              <div><strong>Category:</strong> Billing & Payments</div>
+              <div><strong>Priority:</strong> Urgent P1 (15m SLA)</div>
+              <div><strong>Assigned to:</strong> Sarah Jenkins (Tier-2 SRE)</div>
             </div>
 
-            <label for="demo-input-text" class="chips-label">Or write your own complaint:</label>
-            <textarea id="demo-input-text" class="demo-textarea" placeholder="Describe the customer's problem here..."></textarea>
-
-            <button class="btn btn-primary" id="btn-run-ai" style="width:100%;" onclick="runAiProcessing()">
-              Analyze Ticket with AI ⚡
-            </button>
-
-            <!-- 4-Step Animated Pipeline Sequence -->
-            <div class="pipeline-status" id="pipeline-status-box">
-              <div class="pipeline-step-item" id="step-cat">
-                <span class="step-indicator">1</span>
-                <span>Categorising customer intent & surface...</span>
-              </div>
-              <div class="pipeline-step-item" id="step-prio">
-                <span class="step-indicator">2</span>
-                <span>Prioritising SLA urgency score...</span>
-              </div>
-              <div class="pipeline-step-item" id="step-sum">
-                <span class="step-indicator">3</span>
-                <span>Summarising key complaint points...</span>
-              </div>
-              <div class="pipeline-step-item" id="step-reply">
-                <span class="step-indicator">4</span>
-                <span>Drafting grounded reply with knowledge base...</span>
-              </div>
+            <!-- Five-Square Ticket Tracker -->
+            <div class="tracker-five-squares" aria-label="Five stage milestone progress">
+              <div class="tracker-square-node done" title="Stage 1: Raised"></div>
+              <div class="tracker-square-node done" title="Stage 2: Categorised"></div>
+              <div class="tracker-square-node done" title="Stage 3: Assigned"></div>
+              <div class="tracker-square-node current" title="Stage 4: Replied"></div>
+              <div class="tracker-square-node" title="Stage 5: Resolved"></div>
             </div>
-          </div>
-
-          <!-- Right: AI Result Card -->
-          <div class="result-panel" id="demo-result-card">
-            <div class="result-meta-row">
-              <div>
-                <span style="font-size:14px; color:var(--text-meta); display:block; margin-bottom:4px;">CATEGORY</span>
-                <strong style="font-size:17px;" id="res-category">Billing & Payments</strong>
-              </div>
-              <div>
-                <span style="font-size:14px; color:var(--text-meta); display:block; margin-bottom:4px;">PRIORITY</span>
-                <span class="badge badge-urgent" id="res-priority-badge">Urgent (SLA &lt; 15m)</span>
-              </div>
-              <div>
-                <span style="font-size:14px; color:var(--text-meta); display:block; margin-bottom:4px;">SENTIMENT</span>
-                <span class="badge" id="res-sentiment-badge" style="background:#F4F4F5; color:#18181B;">Frustrated (-0.82)</span>
-              </div>
-            </div>
-
-            <span class="chips-label">AI Two-Line Summary:</span>
-            <div class="result-summary-box" id="res-summary">
-              Customer attempted annual Enterprise renewal via corporate card. Gateway timed out with 502 error; card hold placed without workspace renewal confirmation.
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <span class="chips-label" style="margin-bottom:0;">Editable Suggested Reply:</span>
-              <span style="font-size:13px; color:var(--text-meta);">Tone Adaptation:</span>
-            </div>
-
-            <!-- Tone selector pills -->
-            <div class="tone-buttons-group">
-              <button class="tone-btn active" onclick="setReplyTone('friendly', this)">Friendly</button>
-              <button class="tone-btn" onclick="setReplyTone('formal', this)">Formal</button>
-              <button class="tone-btn" onclick="setReplyTone('short', this)">Short</button>
-            </div>
-
-            <textarea id="res-reply-editor" class="reply-editor"></textarea>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
-              <button class="btn btn-secondary" onclick="copySuggestedReply()">Copy Reply 📋</button>
-              <button class="btn btn-primary" onclick="sendSuggestedReply()">Approve & Dispatch ↗</button>
-            </div>
-
-            <!-- Similar Ticket Alert with Merge Button -->
-            <div class="similar-ticket-alert" id="similar-ticket-box">
-              <div class="similar-ticket-text" id="similar-ticket-msg">
-                ⚠️ 2 similar tickets found: #BA-1039 &amp; #BA-1041 (Checkout Stripe 502)
-              </div>
-              <button class="btn-merge" id="btn-merge-action" onclick="mergeSimilarTickets()">Merge 2 Tickets</button>
+            <div style="font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em;">
+              Current Stage: Replied (Step 04 / 05)
             </div>
           </div>
         </div>
@@ -1712,64 +1192,130 @@
     </section>
 
     <!-- ==========================================================================
-         NEW FEATURE: TICKET STATUS TRACKER
+         SECTION 1: #try-it (Live Triage Demo)
+         ========================================================================== -->
+    <section id="try-it" class="section-spacing container" aria-label="Live Demo Section">
+      <span class="eyebrow">01 / LIVE INTERACTION</span>
+      <h2 style="margin: 16px 0 32px 0;">Experience zero-touch <em>triage.</em></h2>
+      <p class="body-copy" style="max-width: 60ch; margin-bottom: 32px;">
+        Submit a customer issue or select an enterprise complaint scenario. Watch the NLP model categorize, prioritize, summarize, and draft a response.
+      </p>
+
+      <div class="triage-demo-box">
+        <div class="demo-chips-row">
+          <button type="button" class="demo-chip" onclick="loadDemoScenario(0)">Payment gateway renewal failure</button>
+          <button type="button" class="demo-chip" onclick="loadDemoScenario(1)">Webhook HTTP 500 error on sync</button>
+          <button type="button" class="demo-chip" onclick="loadDemoScenario(2)">Update company VAT and billing address</button>
+        </div>
+
+        <label for="demo-input-text" class="eyebrow" style="margin-bottom: 8px; display: block;">Customer Complaint Inbound</label>
+        <textarea id="demo-input-text" class="triage-textarea" placeholder="Paste or type a customer support inquiry..."></textarea>
+
+        <button type="button" id="btn-run-ai" class="btn-primary" onclick="runAiProcessing()">Analyze Ticket with AI</button>
+
+        <!-- 4-Step Pipeline Sequence -->
+        <div id="pipeline-status-box" class="pipeline-status-container" aria-live="polite">
+          <div class="pipeline-steps-grid">
+            <div class="pipe-step-node" id="step-cat">1. Categorising</div>
+            <div class="pipe-step-node" id="step-prio">2. Prioritising</div>
+            <div class="pipe-step-node" id="step-sum">3. Summarising</div>
+            <div class="pipe-step-node" id="step-reply">4. Drafting Reply</div>
+          </div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="demo-result-card" class="triage-result-card">
+          <div class="ticket-meta-tag">
+            <span class="ticket-id-label" id="res-category">CATEGORY: BILLING & PAYMENTS</span>
+            <div style="display:flex; gap:12px;">
+              <span id="res-priority-badge" class="status-badge-quiet urgent">URGENT</span>
+              <span id="res-sentiment-badge" class="status-badge-quiet">FRUSTRATED</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <span class="eyebrow" style="margin-bottom: 6px; display: block;">Executive 2-Line Summary</span>
+            <p id="res-summary" style="font-size: 15px; color: var(--ink); line-height: 1.5; font-weight: 500;">
+              Customer encountered checkout 500 gateway error on renewal invoice. Card charged without workspace license extension.
+            </p>
+          </div>
+
+          <div>
+            <span class="eyebrow" style="display: block;">Editable Suggested Response</span>
+            <div class="tone-buttons-row">
+              <button type="button" class="btn-tone active" onclick="setReplyTone('friendly', this)">Friendly</button>
+              <button type="button" class="btn-tone" onclick="setReplyTone('formal', this)">Formal</button>
+              <button type="button" class="btn-tone" onclick="setReplyTone('short', this)">Short</button>
+            </div>
+            <textarea id="res-reply-editor" class="reply-editor-textarea"></textarea>
+
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn-primary" onclick="sendSuggestedReply()">Approve and Dispatch</button>
+              <button type="button" class="btn-tone" onclick="copySuggestedReply()">Copy Reply</button>
+            </div>
+          </div>
+
+          <!-- Similar Ticket Alert -->
+          <div id="similar-ticket-box" class="similar-ticket-alert">
+            <span id="similar-ticket-msg" style="font-size: 13px; font-weight: 500;">2 similar tickets found in queue (#BA-1042, #BA-1039)</span>
+            <button type="button" id="btn-merge-action" class="btn-primary" style="padding: 10px 18px; font-size: 11px;" onclick="mergeSimilarTickets()">Merge 2 Tickets</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 2: #tracker (Ticket Status Tracker)
          ========================================================================== -->
     <section id="tracker" class="section-spacing container" aria-label="Ticket Tracker">
-      <div class="section-header">
-        <span class="section-badge">Self-Service Transparency</span>
-        <h2 class="section-title">Track your ticket progress.</h2>
-        <p class="section-desc">
-          Enter any ticket identifier to view live milestone updates, AI triage timestamps, and assigned agent notes.
-        </p>
-      </div>
+      <span class="eyebrow">02 / REAL-TIME TRANSPARENCY</span>
+      <h2 style="margin: 16px 0 32px 0;">Five-stage <em>milestones.</em></h2>
+      <p class="body-copy" style="max-width: 60ch; margin-bottom: 32px;">
+        Look up active tickets to track live milestone progression from intake to triage, engineering assignment, and final resolution.
+      </p>
 
-      <div class="tracker-card">
-        <div class="tracker-search-bar">
-          <input type="text" id="tracker-input-id" class="tracker-input" placeholder="Enter ticket ID (e.g. BA-1042)..." value="BA-1042">
-          <button class="btn btn-primary" onclick="searchTicketStatus()">Track Ticket 🔍</button>
+      <div class="tracker-box">
+        <div class="demo-chips-row">
+          <button type="button" class="demo-chip" onclick="loadSampleTicket('BA-1042')">#BA-1042 (Renewal Checkout)</button>
+          <button type="button" class="demo-chip" onclick="loadSampleTicket('BA-2089')">#BA-2089 (API HTTP 500)</button>
+          <button type="button" class="demo-chip" onclick="loadSampleTicket('BA-3310')">#BA-3310 (VAT & Invoicing)</button>
         </div>
 
-        <div class="tracker-sample-pills">
-          <span style="font-size:14px; color:var(--text-meta);">Try sample tickets:</span>
-          <button class="sample-pill" onclick="loadSampleTicket('BA-1042')">#BA-1042 (P1 Billing)</button>
-          <button class="sample-pill" onclick="loadSampleTicket('BA-2089')">#BA-2089 (API Latency)</button>
-          <button class="sample-pill" onclick="loadSampleTicket('BA-3310')">#BA-3310 (VAT Update)</button>
+        <div class="tracker-input-row">
+          <input type="text" id="tracker-input-id" class="tracker-input" placeholder="ENTER TICKET ID (E.G. BA-1042)" value="BA-1042">
+          <button type="button" class="btn-primary" onclick="searchTicketStatus()">Lookup Ticket</button>
         </div>
 
-        <!-- Animated 5-Milestone Stepper -->
-        <div class="timeline-wrap" id="ticket-timeline-container">
-          <div class="timeline-node done">
-            <div class="timeline-node-icon">✓</div>
-            <div class="timeline-node-title">1. Raised</div>
-            <div class="timeline-node-time" id="time-step-1">10:14 AM</div>
-          </div>
-          <div class="timeline-node done">
-            <div class="timeline-node-icon">✓</div>
-            <div class="timeline-node-title">2. Categorised</div>
-            <div class="timeline-node-time" id="time-step-2">10:14:15 AM</div>
-          </div>
-          <div class="timeline-node done">
-            <div class="timeline-node-icon">✓</div>
-            <div class="timeline-node-title">3. Assigned</div>
-            <div class="timeline-node-time" id="time-step-3">10:15 AM (FinOps)</div>
-          </div>
-          <div class="timeline-node active">
-            <div class="timeline-node-icon">●</div>
-            <div class="timeline-node-title">4. Replied</div>
-            <div class="timeline-node-time" id="time-step-4">10:18 AM (Agent Sarah)</div>
-          </div>
-          <div class="timeline-node" id="node-step-5">
-            <div class="timeline-node-icon">○</div>
-            <div class="timeline-node-title">5. Resolved</div>
-            <div class="timeline-node-time" id="time-step-5">Awaiting Confirmation</div>
+        <!-- 5-Step Timeline -->
+        <div id="ticket-timeline-container" class="tracker-timeline-wrap">
+          <div class="tracker-stages-track">
+            <div class="tracker-stage-item done" id="time-step-1">
+              <div class="stage-square-icon"></div>
+              <span class="stage-name">1. Raised</span>
+            </div>
+            <div class="tracker-stage-item done" id="time-step-2">
+              <div class="stage-square-icon"></div>
+              <span class="stage-name">2. Categorised</span>
+            </div>
+            <div class="tracker-stage-item done" id="time-step-3">
+              <div class="stage-square-icon"></div>
+              <span class="stage-name">3. Assigned</span>
+            </div>
+            <div class="tracker-stage-item current" id="time-step-4">
+              <div class="stage-square-icon"></div>
+              <span class="stage-name">4. Replied</span>
+            </div>
+            <div class="tracker-stage-item" id="time-step-5">
+              <div class="stage-square-icon" id="node-step-5"></div>
+              <span class="stage-name">5. Resolved</span>
+            </div>
           </div>
         </div>
 
-        <div style="margin-top:24px; padding:16px; background:#FAFAFA; border-radius:6px; border:1px solid var(--border);" id="tracker-status-details">
-          <strong style="display:block; font-size:16px; margin-bottom:4px;" id="tracker-detail-subject">
-            Active Ticket #BA-1042: Payment failure during enterprise renewal checkout
-          </strong>
-          <p style="font-size:15px; color:var(--text-secondary); margin:0;" id="tracker-detail-desc">
+        <!-- Details Card -->
+        <div id="tracker-status-details" class="tracker-details-card">
+          <h3 id="tracker-detail-subject" style="font-size: 20px; margin-bottom: 8px;">Ticket #BA-1042: Payment failure during enterprise renewal checkout</h3>
+          <p id="tracker-detail-desc" style="font-size: 14px; color: var(--ink-soft); line-height: 1.6;">
             Assigned Agent Sarah captured transaction ch_3Ox948aL on Stripe. Invoice #INV-2026-904 attached. Workspace access uninterrupted.
           </p>
         </div>
@@ -1777,431 +1323,340 @@
     </section>
 
     <!-- ==========================================================================
-         FLOW / MARQUEE: "The life of a ticket" (Full Color by default)
+         SECTION 3: #flow (6-Stage Numbered Editorial List)
          ========================================================================== -->
-    <section id="flow" class="section-spacing" style="background:#FBFBFB; border-top:1px solid var(--border); border-bottom:1px solid var(--border);" aria-label="The life of a ticket">
-      <div class="container" style="margin-bottom:28px;">
-        <span class="section-badge">End-to-End Workflow</span>
-        <h2 class="section-title">The life of a ticket.</h2>
-        <p class="section-desc">From initial customer intake to automated resolution and post-resolution insights.</p>
-      </div>
+    <section id="flow" class="section-spacing container" aria-label="The life of a ticket">
+      <span class="eyebrow">03 / LIFECYCLE</span>
+      <h2 style="margin: 16px 0 24px 0;">The life of a <em>ticket.</em></h2>
+      <p class="body-copy" style="max-width: 60ch;">
+        Every customer inquiry journeys through six rigorously automated stages, eliminating handoffs and manual backlog delays.
+      </p>
 
-      <div class="marquee-outer">
-        <div class="marquee-track">
-          <!-- Card 1 -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#ECFDF5;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-            </div>
-            <span class="stage-number">Stage 01</span>
-            <h3 class="stage-card-title">Ticket raised</h3>
-            <p class="stage-card-desc">Customer submits an inquiry via self-service portal, email, or chat with zero manual routing required.</p>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#EFF6FF;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            </div>
-            <span class="stage-number">Stage 02</span>
-            <h3 class="stage-card-title">Categorised</h3>
-            <p class="stage-card-desc">NLP extracts entities, detects intent, and tags billing, technical, or access issues in under 120ms.</p>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#FEF2F2;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            <span class="stage-number">Stage 03</span>
-            <h3 class="stage-card-title">Prioritised</h3>
-            <p class="stage-card-desc">Critical revenue outages and VIP accounts automatically jump to Priority 1 before agents even open the queue.</p>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#F5F3FF;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-            </div>
-            <span class="stage-number">Stage 04</span>
-            <h3 class="stage-card-title">Summarised</h3>
-            <p class="stage-card-desc">Multi-paragraph customer rants are distilled into a 2-line executive digest so agents save 80% reading time.</p>
-          </div>
-
-          <!-- Card 5 -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#FFFBEB;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            </div>
-            <span class="stage-number">Stage 05</span>
-            <h3 class="stage-card-title">Reply suggested</h3>
-            <p class="stage-card-desc">A fact-grounded response is prepared and waiting with 1-click tone adaptation (Friendly, Formal, or Short).</p>
-          </div>
-
-          <!-- Card 6 -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#ECFDF5;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            </div>
-            <span class="stage-number">Stage 06</span>
-            <h3 class="stage-card-title">Status tracked</h3>
-            <p class="stage-card-desc">Customers inspect progress at any time while managers track resolution health on the executive board.</p>
-          </div>
-
-          <!-- Duplicated for Infinite Loop -->
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#ECFDF5;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-            </div>
-            <span class="stage-number">Stage 01</span>
-            <h3 class="stage-card-title">Ticket raised</h3>
-            <p class="stage-card-desc">Customer submits an inquiry via self-service portal, email, or chat with zero manual routing required.</p>
-          </div>
-
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#EFF6FF;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-            </div>
-            <span class="stage-number">Stage 02</span>
-            <h3 class="stage-card-title">Categorised</h3>
-            <p class="stage-card-desc">NLP extracts entities, detects intent, and tags billing, technical, or access issues in under 120ms.</p>
-          </div>
-
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#FEF2F2;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-            </div>
-            <span class="stage-number">Stage 03</span>
-            <h3 class="stage-card-title">Prioritised</h3>
-            <p class="stage-card-desc">Critical revenue outages and VIP accounts automatically jump to Priority 1 before agents even open the queue.</p>
-          </div>
-
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#F5F3FF;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
-            </div>
-            <span class="stage-number">Stage 04</span>
-            <h3 class="stage-card-title">Summarised</h3>
-            <p class="stage-card-desc">Multi-paragraph customer rants are distilled into a 2-line executive digest so agents save 80% reading time.</p>
-          </div>
-
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#FFFBEB;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            </div>
-            <span class="stage-number">Stage 05</span>
-            <h3 class="stage-card-title">Reply suggested</h3>
-            <p class="stage-card-desc">A fact-grounded response is prepared and waiting with 1-click tone adaptation (Friendly, Formal, or Short).</p>
-          </div>
-
-          <div class="stage-card">
-            <div class="stage-card-illustration" style="background:#ECFDF5;">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-            </div>
-            <span class="stage-number">Stage 06</span>
-            <h3 class="stage-card-title">Status tracked</h3>
-            <p class="stage-card-desc">Customers inspect progress at any time while managers track resolution health on the executive board.</p>
-          </div>
-        </div>
-      </div>
+      <ul class="flow-list">
+        <li class="flow-row">
+          <span class="flow-num">01</span>
+          <h3 class="flow-title">Intake</h3>
+          <p class="flow-desc">Inquiries arrive via customer portal, webhooks, or support email and receive a unique immutable ticket reference code immediately.</p>
+        </li>
+        <li class="flow-row">
+          <span class="flow-num">02</span>
+          <h3 class="flow-title">Entity Triage</h3>
+          <p class="flow-desc">Natural language models extract order numbers, error codes, and billing IDs in under 120ms to assign the exact technical queue.</p>
+        </li>
+        <li class="flow-row">
+          <span class="flow-num">03</span>
+          <h3 class="flow-title">Priority Regression</h3>
+          <p class="flow-desc">SLA timers regress urgency into Normal (P3), High (P2), or Urgent (P1), locking in guaranteed response commitments.</p>
+        </li>
+        <li class="flow-row">
+          <span class="flow-num">04</span>
+          <h3 class="flow-title">Executive Summary</h3>
+          <p class="flow-desc">A succinct technical brief is generated so the arriving support engineer understands root causes without reading 20-message threads.</p>
+        </li>
+        <li class="flow-row">
+          <span class="flow-num">05</span>
+          <h3 class="flow-title">Suggested Reply</h3>
+          <p class="flow-desc">Grounded response drafts cite verified product documentation and offer tone customization before human agent dispatch.</p>
+        </li>
+        <li class="flow-row">
+          <span class="flow-num">06</span>
+          <h3 class="flow-title">Status Tracked</h3>
+          <p class="flow-desc">Customers inspect real-time progress across 5 milestone nodes, preventing repetitive "any updates?" inbound tickets.</p>
+        </li>
+      </ul>
     </section>
 
     <!-- ==========================================================================
-         NEW FEATURE: MANAGER INSIGHTS PANEL (Animated Bar Chart & Insight)
+         SECTION 4: #insights (Manager Insights with Large Serif Numerals)
          ========================================================================== -->
     <section id="insights" class="section-spacing container" aria-label="Manager Insights">
-      <div class="section-header">
-        <span class="section-badge">Operations Intelligence</span>
-        <h2 class="section-title">Manager insights.</h2>
-        <p class="section-desc">Real-time visibility into incoming ticket mix, deflection velocity, and team capacity.</p>
-      </div>
+      <span class="eyebrow">04 / OPERATIONS ANALYTICS</span>
+      <h2 style="margin: 16px 0 24px 0;">Executive <em>throughput.</em></h2>
+      <p class="body-copy" style="max-width: 60ch;">
+        Automated classification and response synthesis reduce mean resolution time by 93% across customer tiers.
+      </p>
 
-      <div class="insights-card">
-        <div class="insights-grid">
-          <!-- Animated Bar Chart -->
-          <div class="chart-box">
-            <h3 style="font-size:17px; font-weight:700; margin-bottom:16px;">Weekly Volume by Category</h3>
-            
-            <div class="chart-bar-row">
-              <div class="chart-bar-labels">
-                <span>Billing & Invoicing</span>
-                <strong>42% (6,254)</strong>
-              </div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" style="width:42%;"></div>
-              </div>
-            </div>
-
-            <div class="chart-bar-row">
-              <div class="chart-bar-labels">
-                <span>API & Infrastructure</span>
-                <strong>34% (5,063)</strong>
-              </div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" style="width:34%; background:#2563EB;"></div>
-              </div>
-            </div>
-
-            <div class="chart-bar-row">
-              <div class="chart-bar-labels">
-                <span>Account & Security SAML</span>
-                <strong>15% (2,233)</strong>
-              </div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" style="width:15%; background:#71717A;"></div>
-              </div>
-            </div>
-
-            <div class="chart-bar-row">
-              <div class="chart-bar-labels">
-                <span>General Questions</span>
-                <strong>9% (1,342)</strong>
-              </div>
-              <div class="chart-bar-track">
-                <div class="chart-bar-fill" style="width:9%; background:#A1A1AA;"></div>
-              </div>
-            </div>
+      <div class="insights-grid">
+        <!-- Stat Card 1 -->
+        <div class="stat-comparison-card">
+          <div>
+            <span class="eyebrow">AVERAGE RESOLUTION TIME</span>
+            <div class="stat-huge-num" id="stat-aht-val">3m 12s</div>
+            <p style="font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em;">
+              Industry Standard: <strong>48 minutes</strong>
+            </p>
           </div>
-
-          <!-- Handle Time Benchmark Box -->
-          <div class="chart-box" style="display:flex; flex-direction:column; justify-content:space-between;">
-            <div>
-              <h3 style="font-size:17px; font-weight:700; margin-bottom:8px;">Avg Handle Time</h3>
-              <span style="font-size:14px; color:var(--text-meta);">Resolution Velocity Comparison</span>
-            </div>
-
-            <div style="margin:20px 0;">
-              <div style="font-size:36px; font-weight:700; color:var(--status-low); letter-spacing:-0.03em;">
-                3m 12s
-              </div>
-              <span style="font-size:15px; color:var(--text-secondary);">With BizAssist AI (93% drop)</span>
-            </div>
-
-            <div style="border-top:1px solid var(--border); padding-top:14px;">
-              <span style="font-size:14px; color:var(--text-meta);">Previous manual baseline: <strong>48 minutes</strong></span>
-            </div>
-          </div>
+          <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
+            "Billing tickets rose 30% this week. Zero SLA breaches recorded with automated triage."
+          </p>
         </div>
 
-        <!-- AI Style Insight Sentence -->
-        <div class="ai-insight-sentence">
-          💡 <strong>AI Operations Insight:</strong> Billing tickets rose 30% this week — automated drafts deflected 68% of manual triage, maintaining 100% SLA compliance without extra headcount.
+        <!-- Stat Card 2: Thin Black Bars on Line Track -->
+        <div class="stat-comparison-card">
+          <span class="eyebrow" style="margin-bottom: 24px; display: block;">INBOUND VOLUME BY CATEGORY</span>
+          
+          <div class="chart-track-row">
+            <div class="chart-track-label">
+              <span>Billing & Invoicing</span>
+              <span>42%</span>
+            </div>
+            <div class="chart-hairline-track">
+              <div class="chart-hairline-bar" data-width="42%"></div>
+            </div>
+          </div>
+
+          <div class="chart-track-row">
+            <div class="chart-track-label">
+              <span>API & Webhook Gateway</span>
+              <span>28%</span>
+            </div>
+            <div class="chart-hairline-track">
+              <div class="chart-hairline-bar" data-width="28%"></div>
+            </div>
+          </div>
+
+          <div class="chart-track-row">
+            <div class="chart-track-label">
+              <span>Account & Security</span>
+              <span>18%</span>
+            </div>
+            <div class="chart-hairline-track">
+              <div class="chart-hairline-bar" data-width="18%"></div>
+            </div>
+          </div>
+
+          <div class="chart-track-row">
+            <div class="chart-track-label">
+              <span>General Technical</span>
+              <span>12%</span>
+            </div>
+            <div class="chart-hairline-track">
+              <div class="chart-hairline-bar" data-width="12%"></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ==========================================================================
-         FEATURES (What we built)
+         SECTION 5: #features (3x2 Hairline Grid Linking to Dedicated Pages)
          ========================================================================== -->
     <section id="features" class="section-spacing container" aria-label="Platform Features">
-      <div class="section-header">
-        <span class="section-badge">Platform Capabilities</span>
-        <h2 class="section-title">What we built.</h2>
-        <p class="section-desc">Six interconnected tools powering the modern customer support workflow.</p>
-      </div>
+      <span class="eyebrow">05 / PLATFORM WORKSPACES</span>
+      <h2 style="margin: 16px 0 24px 0;">Six specialized <em>interfaces.</em></h2>
+      <p class="body-copy" style="max-width: 60ch;">
+        Every role in the support organization operates in a dedicated, distraction-free environment.
+      </p>
 
       <div class="features-grid">
-        <a href="portal.html" class="feature-card">
+        <a href="portal.html" class="feature-card-cell">
           <div>
-            <span class="feature-card-tag">CUSTOMERS · G1</span>
-            <h3 class="feature-card-title">Customer ticket portal</h3>
-            <p class="feature-card-desc">Self-service intake where customers register, raise issues, and follow milestone progress in real-time.</p>
+            <div class="feature-cat-mono">WORKSPACE 01</div>
+            <h3 class="feature-title">Customer Portal</h3>
+            <p class="feature-desc">Self-service ticket intake, documentation search bar, and live milestone progression tracking.</p>
           </div>
-          <span style="font-weight:600; font-size:15px;">Open Portal Page →</span>
+          <div class="feature-link-bottom">
+            <span>OPEN PORTAL</span>
+            <span class="feature-arrow">→</span>
+          </div>
         </a>
 
-        <a href="agent-dashboard.html" class="feature-card">
+        <a href="agent-dashboard.html" class="feature-card-cell">
           <div>
-            <span class="feature-card-tag">AGENTS · G2</span>
-            <h3 class="feature-card-title">Agent dashboard</h3>
-            <p class="feature-card-desc">Unified workspace with filterable queues, Customer 360 intelligence, and real-time SLA countdown timers.</p>
+            <div class="feature-cat-mono">WORKSPACE 02</div>
+            <h3 class="feature-title">Agent Dashboard</h3>
+            <p class="feature-desc">3-pane support workspace, filterable priority inbox, Customer 360 card, and SLA timers.</p>
           </div>
-          <span style="font-weight:600; font-size:15px;">Open Agent Dashboard →</span>
+          <div class="feature-link-bottom">
+            <span>OPEN DASHBOARD</span>
+            <span class="feature-arrow">→</span>
+          </div>
         </a>
 
-        <a href="ai-triage.html" class="feature-card">
+        <a href="ai-triage.html" class="feature-card-cell">
           <div>
-            <span class="feature-card-tag">AI ENGINE · G3</span>
-            <h3 class="feature-card-title">AI triage engine</h3>
-            <p class="feature-card-desc">Autonomous classification pipeline extracting semantic entities, urgency regressor scores, and sentiment.</p>
+            <div class="feature-cat-mono">WORKSPACE 03</div>
+            <h3 class="feature-title">AI Triage Engine</h3>
+            <p class="feature-desc">Interactive NLP classifier, entity tagger, confidence meters, and live streaming triage event logs.</p>
           </div>
-          <span style="font-weight:600; font-size:15px;">Open Triage Engine →</span>
+          <div class="feature-link-bottom">
+            <span>OPEN TRIAGE</span>
+            <span class="feature-arrow">→</span>
+          </div>
         </a>
 
-        <a href="suggested-replies.html" class="feature-card">
+        <a href="suggested-replies.html" class="feature-card-cell">
           <div>
-            <span class="feature-card-tag">AGENTS · G3</span>
-            <h3 class="feature-card-title">Suggested replies studio</h3>
-            <p class="feature-card-desc">Human-in-the-loop draft generator with multi-tone adaptation and fact-grounded knowledge citations.</p>
+            <div class="feature-cat-mono">WORKSPACE 04</div>
+            <h3 class="feature-title">Replies Studio</h3>
+            <p class="feature-desc">Human-in-the-loop response composer with 4 tone switchers, dynamic tokens, and RAG citations.</p>
           </div>
-          <span style="font-weight:600; font-size:15px;">Open Draft Studio →</span>
+          <div class="feature-link-bottom">
+            <span>OPEN STUDIO</span>
+            <span class="feature-arrow">→</span>
+          </div>
         </a>
 
-        <a href="chatbot.html" class="feature-card">
+        <a href="chatbot.html" class="feature-card-cell">
           <div>
-            <span class="feature-card-tag">CUSTOMERS · G4</span>
-            <h3 class="feature-card-title">Knowledge chatbot</h3>
-            <p class="feature-card-desc">24/7 conversational assistant with 12,840 vector embeddings and smooth human agent handover.</p>
+            <div class="feature-cat-mono">WORKSPACE 05</div>
+            <h3 class="feature-title">Knowledge Bot</h3>
+            <p class="feature-desc">Vector-grounded conversational assistant with quick chips and 1-click human agent handover.</p>
           </div>
-          <span style="font-weight:600; font-size:15px;">Open Chatbot Page →</span>
+          <div class="feature-link-bottom">
+            <span>OPEN CHATBOT</span>
+            <span class="feature-arrow">→</span>
+          </div>
         </a>
 
-        <a href="manager-overview.html" class="feature-card">
+        <a href="manager-overview.html" class="feature-card-cell">
           <div>
-            <span class="feature-card-tag">MANAGERS · G5</span>
-            <h3 class="feature-card-title">Manager overview</h3>
-            <p class="feature-card-desc">Executive command center with throughput bar charts, agent load balancing, and SLA tracking.</p>
+            <div class="feature-cat-mono">WORKSPACE 06</div>
+            <h3 class="feature-title">Manager Overview</h3>
+            <p class="feature-desc">Executive operations command center with 5 KPI cards, daily volume chart, and agent performance table.</p>
           </div>
-          <span style="font-weight:600; font-size:15px;">Open Manager Page →</span>
+          <div class="feature-link-bottom">
+            <span>OPEN OVERVIEW</span>
+            <span class="feature-arrow">→</span>
+          </div>
         </a>
       </div>
     </section>
 
     <!-- ==========================================================================
-         PAIN & SOLUTIONS SECTION
+         SECTION: Customer Pain Points (Accordion)
          ========================================================================== -->
     <section class="section-spacing container" aria-label="Customer Pain Points">
-      <div class="section-header">
-        <span class="section-badge">Problem &amp; Solution</span>
-        <h2 class="section-title">Today's pain.</h2>
-        <p class="section-desc">Why support teams burn out and how BizAssist AI restores balance.</p>
-      </div>
+      <span class="eyebrow">ANALYSIS</span>
+      <h2 style="margin: 16px 0 24px 0;">Problems we <em>eliminate.</em></h2>
+      <p class="body-copy" style="max-width: 60ch;">
+        Support debt builds when teams rely on raw shared inboxes and disconnected spreadsheets.
+      </p>
 
-      <div>
-        <div class="pain-item">
-          <button class="pain-header-btn" onclick="togglePain(this)">
-            <span class="pain-label-title">Lost</span>
-            <span class="pain-statement">Important customer inquiries get buried in shared inboxes and dropped.</span>
-            <span style="font-size:20px; font-weight:700;">+</span>
+      <div class="accordion-wrap">
+        <div class="accordion-item">
+          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
+            <span>Lost Tickets in Shared Inboxes</span>
+            <span class="accordion-icon">+</span>
           </button>
-          <div class="pain-drawer">
-            <strong>BizAssist AI Solution:</strong> Every inquiry across web, email, or chat is unified into one queue with zero-drop guarantees and automatic backup routing.
+          <div class="accordion-content">
+            Unassigned tickets fall through inbox cracks. BizAssist AI centralizes intake into an immutable database with immediate automated customer ticket codes.
           </div>
         </div>
 
-        <div class="pain-item">
-          <button class="pain-header-btn" onclick="togglePain(this)">
-            <span class="pain-label-title">Queued</span>
-            <span class="pain-statement">Urgent system outages sit behind routine password resets.</span>
-            <span style="font-size:20px; font-weight:700;">+</span>
+        <div class="accordion-item">
+          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
+            <span>Backlog Queues Without Urgency Prioritization</span>
+            <span class="accordion-icon">+</span>
           </button>
-          <div class="pain-drawer">
-            <strong>BizAssist AI Solution:</strong> Urgency classification evaluates financial impact and moves mission-critical tickets to Position #1 in under 300ms.
+          <div class="accordion-content">
+            High-paying enterprise accounts wait behind password resets. Our regression models rank P1 Urgent tickets in under 120ms with hard SLA countdowns.
           </div>
         </div>
 
-        <div class="pain-item">
-          <button class="pain-header-btn" onclick="togglePain(this)">
-            <span class="pain-label-title">Repeated</span>
-            <span class="pain-statement">Agents waste hours typing the same boilerplate answers every shift.</span>
-            <span style="font-size:20px; font-weight:700;">+</span>
+        <div class="accordion-item">
+          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
+            <span>Repetitive Answers Burning Support Engineers</span>
+            <span class="accordion-icon">+</span>
           </button>
-          <div class="pain-drawer">
-            <strong>BizAssist AI Solution:</strong> Fact-grounded draft answers are ready for 1-click review and dispatch, cutting handle times by up to 80%.
+          <div class="accordion-content">
+            Support staff write the same 10 responses dozens of times each day. Suggested replies draft grounded answers citing verified docs with 1-click approval.
           </div>
         </div>
 
-        <div class="pain-item">
-          <button class="pain-header-btn" onclick="togglePain(this)">
-            <span class="pain-label-title">Unseen</span>
-            <span class="pain-statement">Customers are kept in the dark wondering if anyone is working on their issue.</span>
-            <span style="font-size:20px; font-weight:700;">+</span>
+        <div class="accordion-item">
+          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
+            <span>Zero Customer Visibility Into Investigation Progress</span>
+            <span class="accordion-icon">+</span>
           </button>
-          <div class="pain-drawer">
-            <strong>BizAssist AI Solution:</strong> The transparent customer portal provides live 5-stage milestone tracking with real-time agent updates.
+          <div class="accordion-content">
+            Customers send repeated "any update?" messages because queues are opaque. Our 5-stage milestone tracker provides complete transparent tracking.
           </div>
         </div>
       </div>
     </section>
 
     <!-- ==========================================================================
-         GOALS SECTION
+         SECTION 6: #goals (G1 to G5 Large Serif Numerals)
          ========================================================================== -->
     <section id="goals" class="section-spacing container" aria-label="Project Goals">
-      <div class="section-header">
-        <span class="section-badge">Quality Standards</span>
-        <h2 class="section-title">Five goals.</h2>
-        <p class="section-desc">Each goal has a concrete test verified against live product prototypes.</p>
-      </div>
+      <span class="eyebrow">06 / VERIFICATION COMMITMENTS</span>
+      <h2 style="margin: 16px 0 24px 0;">Five engineering <em>goals.</em></h2>
+      <p class="body-copy" style="max-width: 60ch;">
+        Every operational module is built to satisfy strict performance and resolution benchmarks.
+      </p>
 
       <div class="goals-list">
-        <div class="goal-entry">
-          <span class="goal-badge">G1</span>
-          <div class="goal-name">One simple place to raise and track tickets</div>
-          <div class="goal-test">A customer can submit a ticket and view live milestone status without needing assistance.</div>
+        <div class="goal-row-item">
+          <div class="goal-num-serif">01</div>
+          <h3 class="goal-heading">Automated Intake</h3>
+          <p class="goal-text">Instant customer ticket intake and tracking generation across web, email, and API channels.</p>
         </div>
-
-        <div class="goal-entry">
-          <span class="goal-badge">G2</span>
-          <div class="goal-name">One unified agent workspace</div>
-          <div class="goal-test">All tickets can be viewed, prioritised, and answered from a single 3-pane dashboard.</div>
+        <div class="goal-row-item">
+          <div class="goal-num-serif">02</div>
+          <h3 class="goal-heading">Sub-120ms Triage</h3>
+          <p class="goal-text">NLP intent extraction and SLA priority regression executing in under 120 milliseconds.</p>
         </div>
-
-        <div class="goal-entry">
-          <span class="goal-badge">G3</span>
-          <div class="goal-name">Reduce sorting and typing with AI</div>
-          <div class="goal-test">Inbound tickets arrive pre-categorised, prioritised, and summarised with ready-to-send draft replies.</div>
+        <div class="goal-row-item">
+          <div class="goal-num-serif">03</div>
+          <h3 class="goal-heading">Contextual Drafts</h3>
+          <p class="goal-text">Grounding replies in verified engineering docs with tone adaptation (Friendly, Formal, Short).</p>
         </div>
-
-        <div class="goal-entry">
-          <span class="goal-badge">G4</span>
-          <div class="goal-name">Answer common questions instantly</div>
-          <div class="goal-test">The 24/7 knowledge chatbot resolves routine questions and hands over gracefully when unsure.</div>
+        <div class="goal-row-item">
+          <div class="goal-num-serif">04</div>
+          <h3 class="goal-heading">Milestone Tracking</h3>
+          <p class="goal-text">Transparent customer timeline progression across Raised, Categorised, Assigned, Replied, and Resolved.</p>
         </div>
-
-        <div class="goal-entry">
-          <span class="goal-badge">G5</span>
-          <div class="goal-name">Deliver a working prototype in 6 days</div>
-          <div class="goal-test">The demonstration successfully runs the ticket lifecycle end-to-end with operations analytics.</div>
+        <div class="goal-row-item">
+          <div class="goal-num-serif">05</div>
+          <h3 class="goal-heading">Workforce Analytics</h3>
+          <p class="goal-text">Executive analytics identifying volume spikes, resolution times, and deflection benchmarks.</p>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ==========================================================================
-       FOOTER
+       SECTION 7: #contact / FOOTER
        ========================================================================== -->
   <footer id="contact" class="site-footer" role="contentinfo">
     <div class="container">
       <div class="footer-grid">
         <div>
           <div class="footer-brand">BIZASSIST AI</div>
-          <p class="footer-bio">
-            AI-assisted customer support where customers raise and track tickets, and AI helps teams sort, prioritise, and answer them faster.
+          <p style="max-width: 42ch; font-size: 14px; color: var(--ink-soft); line-height: 1.6;">
+            Quiet luxury in support infrastructure. Automating ticket triage, response synthesis, and milestone tracking for modern enterprises.
           </p>
         </div>
-
         <div>
-          <h3 class="footer-heading">Platform Pages</h3>
-          <ul class="footer-links">
-            <li><a href="portal.html">Customer Portal</a></li>
-            <li><a href="agent-dashboard.html">Agent Dashboard</a></li>
-            <li><a href="ai-triage.html">AI Triage</a></li>
-            <li><a href="suggested-replies.html">Suggested Replies</a></li>
-            <li><a href="chatbot.html">Knowledge Chatbot</a></li>
-            <li><a href="manager-overview.html">Manager Overview</a></li>
-          </ul>
+          <span class="eyebrow" style="margin-bottom: 16px; display: block;">PLATFORM</span>
+          <div style="display:flex; flex-direction:column; gap:8px; font-size: 14px;">
+            <a href="portal.html" style="color:var(--ink); text-decoration:none;">Customer Portal</a>
+            <a href="agent-dashboard.html" style="color:var(--ink); text-decoration:none;">Agent Dashboard</a>
+            <a href="ai-triage.html" style="color:var(--ink); text-decoration:none;">AI Triage Engine</a>
+            <a href="suggested-replies.html" style="color:var(--ink); text-decoration:none;">Suggested Replies</a>
+            <a href="manager-overview.html" style="color:var(--ink); text-decoration:none;">Manager Analytics</a>
+          </div>
         </div>
-
         <div>
-          <h3 class="footer-heading">Contact &amp; Demo</h3>
-          <ul class="footer-links">
-            <li><button onclick="openDemoModal()">Book a Live Demo</button></li>
-            <li><a href="mailto:support@bizassist.example">support@bizassist.example</a></li>
-            <li><a href="#try-it">Try Online Sandbox</a></li>
-          </ul>
+          <span class="eyebrow" style="margin-bottom: 16px; display: block;">DIRECT ACCESS</span>
+          <div style="display:flex; flex-direction:column; gap:8px; font-size: 14px;">
+            <a href="login.html" style="color:var(--ink); text-decoration:none;">Account Sign In</a>
+            <button onclick="openDemoModal()" style="background:none; border:none; padding:0; text-align:left; color:var(--ink); font-size:14px; cursor:pointer;">Book a Product Demo</button>
+            <a href="mailto:support@bizassist.ai" style="color:var(--ink); text-decoration:none;">support@bizassist.ai</a>
+          </div>
         </div>
       </div>
 
-      <div class="footer-bottom">
-        <div>© 2026 BIZASSIST AI. All rights reserved.</div>
-        <div>Built for high-performance, accessible support teams.</div>
+      <div class="footer-bottom-line">
+        <span>© 2026 BIZASSIST AI. Low-Code AI Product Prototyping.</span>
+        <span>Almost Monochrome Editorial Design System</span>
       </div>
     </div>
   </footer>
 
   <!-- ==========================================================================
-       FLOATING CHAT WIDGET
+       FLOATING REAL AI ASSISTANT WIDGET
        ========================================================================== -->
   <button class="chat-widget-btn" id="chat-toggle-btn" onclick="toggleChatPanel()" aria-label="Open support assistant chat" aria-haspopup="dialog" aria-expanded="false">
     <svg class="chat-widget-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
@@ -2241,233 +1696,294 @@
   <div class="modal-overlay" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
     <div class="modal-box" id="demo-modal-box">
       <button class="modal-close-btn" onclick="closeDemoModal()" aria-label="Close dialog">✕</button>
-      <h3 class="modal-title" id="modal-heading">Book a Product Demo</h3>
-      <p class="modal-desc">See BizAssist AI in action on your own support queues with our engineering team.</p>
+      <span class="eyebrow" style="margin-bottom: 8px; display: block;">ENTERPRISE DEMO</span>
+      <h3 id="modal-heading" style="font-size: 26px; margin-bottom: 12px;">Book a Product Demo</h3>
+      <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 24px;">
+        See BizAssist AI in action on your support queues with our engineering team.
+      </p>
 
       <form onsubmit="submitDemoForm(event)">
-        <div class="form-group">
-          <label for="demo-name" class="form-label">Full Name</label>
-          <input type="text" id="demo-name" class="form-input" required placeholder="Alex Morgan">
+        <div style="margin-bottom: 16px;">
+          <label for="demo-name" class="eyebrow" style="margin-bottom: 6px; display: block;">Full Name</label>
+          <input type="text" id="demo-name" class="input-quiet" required placeholder="Elena Rostova">
         </div>
-
-        <div class="form-group">
-          <label for="demo-email" class="form-label">Work Email</label>
-          <input type="email" id="demo-email" class="form-input" required placeholder="alex@company.com">
+        <div style="margin-bottom: 16px;">
+          <label for="demo-email" class="eyebrow" style="margin-bottom: 6px; display: block;">Work Email</label>
+          <input type="email" id="demo-email" class="input-quiet" required placeholder="name@company.com">
         </div>
-
-        <div class="form-group">
-          <label for="demo-size" class="form-label">Monthly Ticket Volume</label>
-          <input type="text" id="demo-size" class="form-input" placeholder="e.g. 5,000 tickets/month">
+        <div style="margin-bottom: 24px;">
+          <label for="demo-size" class="eyebrow" style="margin-bottom: 6px; display: block;">Team Size</label>
+          <select id="demo-size" class="input-quiet" style="height: 48px;">
+            <option value="1-10">1 – 10 agents</option>
+            <option value="11-50">11 – 50 agents</option>
+            <option value="51-200">51 – 200 agents</option>
+            <option value="201+">201+ enterprise</option>
+          </select>
         </div>
-
-        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:8px;">Schedule Demo ↗</button>
+        <button type="submit" class="btn-primary" style="width: 100%;">Schedule Demonstration</button>
       </form>
     </div>
   </div>
+
+  <!-- Toast Notification Pill -->
+  <div id="toast" class="toast-pill" role="status" aria-live="polite"></div>
 
   <!-- Supabase Client SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
 
   <!-- ==========================================================================
-       VANILLA JS SCRIPT (Self-contained, clean functions, swappable for real API)
+       VANILLA JS SCRIPT (All hooks & interactions preserved)
        ========================================================================== -->
   <script>
-    /* ==========================================================================
-       A. RULE-BASED AI ANALYSIS ENGINE (Keyword Matching)
-       Structured cleanly so it can be swapped for a real API endpoint later:
-       // async function analyzeTicketWithAI(text) {
-       //   const res = await fetch('/api/v1/triage', { method: 'POST', body: JSON.stringify({ text }) });
-       //   return await res.json();
-       // }
-       ========================================================================== */
-    function analyzeTicketWithAI(text) {
-      const lower = text.toLowerCase();
-      
-      // Scenario 1: Billing & Payments
-      if (lower.includes('payment') || lower.includes('renewal') || lower.includes('amex') || lower.includes('card') || lower.includes('refund') || lower.includes('charge')) {
-        return {
-          category: 'Billing & Payments',
-          priority: 'urgent',
-          priorityText: 'Urgent (SLA < 15m)',
-          sentiment: 'Frustrated (-0.82)',
-          sentimentClass: 'badge-urgent',
-          summary: 'Customer encountered a renewal payment error; corporate card holds placed without workspace activation confirmation.',
-          similarTickets: 2,
-          similarMsg: '⚠️ 2 similar tickets found: #BA-1039 & #BA-1041 (Checkout Stripe 502)',
-          replies: {
-            friendly: "Hi there!\n\nThank you for reaching out right away. Please don't worry — your workspace access is completely safe and active! I checked transaction ch_3Ox948aL on our payment gateway; your Amex hold is safe and I've manually confirmed the renewal. Your updated invoice is attached. Let me know if you need anything else!",
-            formal: "Dear Customer,\n\nWe have reviewed the payment anomaly associated with your annual contract. Transaction ch_3Ox948aL has been manually verified and captured. Your subscription has been renewed through November 2027 without interruption. Paid invoice #INV-2026-904 is attached for your records.",
-            short: "Your workspace is 100% active. We have captured the renewal charge manually and attached paid invoice #INV-2026-904. Zero downtime occurred."
-          }
-        };
+    'use strict';
+
+    /* Header Hide on Scroll Down, Show on Scroll Up */
+    let lastScrollY = window.scrollY;
+    const headerEl = document.getElementById('main-site-header');
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 40) {
+        headerEl.classList.add('has-scrolled');
+      } else {
+        headerEl.classList.remove('has-scrolled');
       }
 
-      // Scenario 2: Technical / API / Infrastructure
-      if (lower.includes('api') || lower.includes('500') || lower.includes('webhook') || lower.includes('error') || lower.includes('traffic') || lower.includes('latency')) {
-        return {
-          category: 'API & Infrastructure',
-          priority: 'urgent',
-          priorityText: 'Urgent (SLA < 15m)',
-          sentiment: 'Critical Concern (-0.91)',
-          sentimentClass: 'badge-urgent',
-          summary: 'Production webhook receiver encountering HTTP 500 errors during traffic peak; potential payload ingestion timeout.',
-          similarTickets: 3,
-          similarMsg: '⚠️ 3 similar tickets found: #BA-2088, #BA-2091 & #BA-2094 (Webhook Spikes)',
-          replies: {
-            friendly: "Hey team!\n\nOur on-call SREs just checked our ingestion metrics. We saw an upstream gateway socket spike, but automatic circuit breakers have recovered the pool. All queued events are now back-filling cleanly. Thank you for your patience!",
-            formal: "Hello,\n\nOur engineering team has mitigated the HTTP 500 errors on the /v1/webhooks cluster. The root cause was an edge proxy socket timeout during traffic spikes. The circuit breaker has re-routed traffic, and telemetry is now normal.",
-            short: "Incident resolved. Webhook cluster pools have recovered and all deferred payloads are currently back-filling without data loss."
-          }
-        };
+      if (currentScrollY > lastScrollY && currentScrollY > 150) {
+        headerEl.classList.add('is-hidden');
+      } else {
+        headerEl.classList.remove('is-hidden');
       }
+      lastScrollY = currentScrollY;
+    }, { passive: true });
 
-      // Scenario 3: Account / VAT / Administration
-      return {
-        category: 'Account Administration',
-        priority: 'low',
-        priorityText: 'Low (SLA < 4h)',
-        sentiment: 'Neutral / Inquiring (+0.12)',
-        sentimentClass: 'badge-low',
-        summary: 'Customer requests corporate billing address update and EU VAT ID verification for upcoming tax invoices.',
-        similarTickets: 1,
-        similarMsg: 'ℹ️ 1 similar ticket found: #BA-3105 (VAT Address Sync)',
-        replies: {
-          friendly: "Hi there!\n\nI'd be glad to help update your billing details. I've updated your company address and VAT number in our system. A revised invoice has been generated and sent to your billing email!",
-          formal: "Dear Customer,\n\nYour organization's billing address and VAT registration have been successfully updated in our master records. The revised documentation has been dispatched to your designated accounts payable contact.",
-          short: "Billing address and VAT details have been updated. Revised invoices are available in your portal."
+    /* Full-Screen Menu Overlay */
+    const menuOverlay = document.getElementById('full-menu-overlay');
+    const openMenuBtn = document.getElementById('open-menu-btn');
+    let previousActiveEl = null;
+
+    function toggleMenuOverlay(open) {
+      if (open) {
+        previousActiveEl = document.activeElement;
+        menuOverlay.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+        openMenuBtn.setAttribute('aria-expanded', 'true');
+        const firstLink = menuOverlay.querySelector('a');
+        if (firstLink) setTimeout(() => firstLink.focus(), 100);
+      } else {
+        menuOverlay.classList.remove('is-active');
+        document.body.style.overflow = '';
+        openMenuBtn.setAttribute('aria-expanded', 'false');
+        if (previousActiveEl) previousActiveEl.focus();
+      }
+    }
+
+    /* Section Counter Observer (01 / 07) */
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const display = document.getElementById('section-counter-display');
+          if (!display) return;
+          const map = {
+            'hero': '01 / 07',
+            'try-it': '01 / 07',
+            'tracker': '02 / 07',
+            'flow': '03 / 07',
+            'insights': '04 / 07',
+            'features': '05 / 07',
+            'goals': '06 / 07',
+            'contact': '07 / 07'
+          };
+          if (map[id]) display.textContent = map[id];
         }
-      };
+      });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('section, footer').forEach(s => sectionObserver.observe(s));
+
+    /* Hairline Chart Bars Animation on Scroll */
+    const chartObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.chart-hairline-bar').forEach(bar => {
+            bar.style.width = bar.getAttribute('data-width');
+          });
+          chartObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    const insightsSection = document.getElementById('insights');
+    if (insightsSection) chartObserver.observe(insightsSection);
+
+    /* Customer Pain Accordion */
+    function togglePain(btn) {
+      const content = btn.nextElementSibling;
+      const isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', !isOpen);
+      if (isOpen) {
+        content.classList.remove('is-open');
+      } else {
+        content.classList.add('is-open');
+      }
+    }
+
+    /* Toast Notification */
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('is-visible');
+      setTimeout(() => {
+        toast.classList.remove('is-visible');
+      }, 3500);
     }
 
     /* ==========================================================================
-       B. "TRY IT" LIVE DEMO CONTROLLER
+       A. LIVE TRIAGE DEMO ENGINE
        ========================================================================== */
     const demoPresets = [
-      "Payment failed during renewal checkout and our card was debited twice on American Express.",
-      "Our webhook endpoints are receiving HTTP 500 errors during traffic peak; events are dropping.",
-      "Need help updating company billing address and VAT registration on our enterprise invoice."
+      "Payment failure on renewal checkout. Credit card ending in 4092 was debited $1,200 for the enterprise tier but workspace remains locked with license error 502.",
+      "Webhook delivery failure returning HTTP 500 on endpoint /api/v2/events. High volume sync backlog accumulating across US-East cluster.",
+      "Please update our company billing details and EU VAT ID to DE982341092 for upcoming Q4 enterprise consolidated invoice."
     ];
-
-    let currentAnalysis = null;
 
     function loadDemoScenario(index) {
       document.getElementById('demo-input-text').value = demoPresets[index];
-      runAiProcessing();
     }
+
+    function analyzeTicketWithAI(text) {
+      const lower = (text || '').toLowerCase();
+      if (lower.includes('payment') || lower.includes('debit') || lower.includes('invoice') || lower.includes('vat') || lower.includes('card')) {
+        return {
+          category: 'Billing & Payments',
+          priority: 'Urgent',
+          priorityBadgeClass: 'urgent',
+          sentiment: 'Frustrated',
+          summary: 'Renewal payment transaction completed but account license failed to unlock automatically.',
+          replies: {
+            friendly: "Hi there! I can see your payment cleared successfully. I have unlocked your enterprise workspace immediately and attached your receipt. Sorry for the trouble!",
+            formal: "Dear Customer, We have verified your renewal transaction and refreshed your enterprise license status. Full platform access has been restored.",
+            short: "Payment confirmed. Workspace access restored and license error cleared."
+          }
+        };
+      } else if (lower.includes('webhook') || lower.includes('500') || lower.includes('api') || lower.includes('endpoint')) {
+        return {
+          category: 'API & Infrastructure',
+          priority: 'High',
+          priorityBadgeClass: 'high',
+          sentiment: 'Concerned',
+          summary: 'Inbound webhook delivery backlog caused by 500 error on sync endpoint.',
+          replies: {
+            friendly: "Hello! Our SRE team deployed a hotfix to our event gateway. Webhook deliveries are currently draining with zero packet loss.",
+            formal: "We have resolved the gateway failure impacting endpoint /api/v2/events. Queued payloads have resumed standard delivery cadence.",
+            short: "Webhook gateway hotfix deployed. Traffic drained successfully."
+          }
+        };
+      } else {
+        return {
+          category: 'General Technical',
+          priority: 'Normal',
+          priorityBadgeClass: 'normal',
+          sentiment: 'Neutral',
+          summary: 'General technical support request received and cataloged for engineering review.',
+          replies: {
+            friendly: "Thanks for reaching out! Our engineering team is reviewing your inquiry and will follow up shortly.",
+            formal: "Your request has been logged and assigned to specialized engineering for prompt investigation.",
+            short: "Inquiry logged. Investigation in progress."
+          }
+        };
+      }
+    }
+
+    let currentTriageAnalysis = null;
 
     function runAiProcessing() {
       const text = document.getElementById('demo-input-text').value.trim();
       if (!text) {
-        showToast("Please enter a complaint or click a sample chip.");
+        showToast("Please enter a customer inquiry or select a scenario chip above.");
         return;
       }
 
-      const runBtn = document.getElementById('btn-run-ai');
-      runBtn.textContent = "AI Processing...";
-      runBtn.disabled = true;
+      const statusBox = document.getElementById('pipeline-status-box');
+      const resultCard = document.getElementById('demo-result-card');
+      const similarBox = document.getElementById('similar-ticket-box');
+      
+      statusBox.style.display = 'block';
+      resultCard.classList.remove('is-visible');
+      similarBox.classList.remove('is-visible');
 
-      const pipeline = document.getElementById('pipeline-status-box');
-      pipeline.classList.add('is-active');
+      const steps = ['step-cat', 'step-prio', 'step-sum', 'step-reply'];
+      steps.forEach(s => document.getElementById(s).classList.remove('active'));
 
-      const s1 = document.getElementById('step-cat');
-      const s2 = document.getElementById('step-prio');
-      const s3 = document.getElementById('step-sum');
-      const s4 = document.getElementById('step-reply');
+      let stepIdx = 0;
+      const stepInterval = setInterval(() => {
+        if (stepIdx < steps.length) {
+          document.getElementById(steps[stepIdx]).classList.add('active');
+          stepIdx++;
+        } else {
+          clearInterval(stepInterval);
+          setTimeout(() => {
+            statusBox.style.display = 'none';
+            displayTriageResults(text);
+          }, 300);
+        }
+      }, 250);
+    }
 
-      // Reset step classes
-      [s1, s2, s3, s4].forEach(s => { s.className = 'pipeline-step-item'; });
+    function displayTriageResults(text) {
+      currentTriageAnalysis = analyzeTicketWithAI(text);
+      const res = currentTriageAnalysis;
 
-      // Step 1: Categorising (300ms)
-      s1.classList.add('current');
-      setTimeout(() => {
-        s1.className = 'pipeline-step-item done';
-        s2.classList.add('current');
-      }, 300);
+      document.getElementById('res-category').textContent = 'CATEGORY: ' + res.category.toUpperCase();
+      
+      const prioEl = document.getElementById('res-priority-badge');
+      prioEl.textContent = res.priority.toUpperCase();
+      prioEl.className = 'status-badge-quiet ' + (res.priority === 'Urgent' ? 'urgent' : '');
 
-      // Step 2: Prioritising (600ms)
-      setTimeout(() => {
-        s2.className = 'pipeline-step-item done';
-        s3.classList.add('current');
-      }, 600);
+      document.getElementById('res-sentiment-badge').textContent = res.sentiment.toUpperCase();
+      document.getElementById('res-summary').textContent = res.summary;
+      document.getElementById('res-reply-editor').value = res.replies.friendly;
 
-      // Step 3: Summarising (900ms)
-      setTimeout(() => {
-        s3.className = 'pipeline-step-item done';
-        s4.classList.add('current');
-      }, 900);
+      const resultCard = document.getElementById('demo-result-card');
+      resultCard.classList.add('is-visible');
 
-      // Step 4: Drafting & populate results (1200ms)
-      setTimeout(() => {
-        s4.className = 'pipeline-step-item done';
-        runBtn.textContent = "Analyze Ticket with AI ⚡";
-        runBtn.disabled = false;
+      // Similar ticket alert
+      const similarBox = document.getElementById('similar-ticket-box');
+      if (res.priority === 'Urgent') {
+        similarBox.classList.add('is-visible');
+      }
 
-        currentAnalysis = analyzeTicketWithAI(text);
-
-        // Update Result Panel
-        document.getElementById('res-category').textContent = currentAnalysis.category;
-        
-        const prioBadge = document.getElementById('res-priority-badge');
-        prioBadge.className = 'badge ' + (currentAnalysis.priority === 'urgent' ? 'badge-urgent' : 'badge-low');
-        prioBadge.textContent = currentAnalysis.priorityText;
-
-        const sentBadge = document.getElementById('res-sentiment-badge');
-        sentBadge.className = 'badge ' + currentAnalysis.sentimentClass;
-        sentBadge.textContent = currentAnalysis.sentiment;
-
-        document.getElementById('res-summary').textContent = currentAnalysis.summary;
-        document.getElementById('res-reply-editor').value = currentAnalysis.replies.friendly;
-
-        // Reset tone buttons
-        document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
-        document.querySelector('.tone-btn').classList.add('active');
-
-        // Similar ticket alert
-        document.getElementById('similar-ticket-msg').textContent = currentAnalysis.similarMsg;
-        const mergeBtn = document.getElementById('btn-merge-action');
-        mergeBtn.disabled = false;
-        mergeBtn.textContent = "Merge " + currentAnalysis.similarTickets + " Tickets";
-        mergeBtn.style.opacity = '1';
-
-        showToast("AI processing complete: " + currentAnalysis.category);
-      }, 1200);
+      showToast("Triage complete: " + res.category + " (" + res.priority + ")");
     }
 
     function setReplyTone(tone, btn) {
-      if (!currentAnalysis) {
-        currentAnalysis = analyzeTicketWithAI(document.getElementById('demo-input-text').value || demoPresets[0]);
-      }
-      document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-
-      document.getElementById('res-reply-editor').value = currentAnalysis.replies[tone];
-      showToast("Applied " + tone.toUpperCase() + " tone draft.");
+      if (!currentTriageAnalysis) return;
+      document.querySelectorAll('.btn-tone').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('res-reply-editor').value = currentTriageAnalysis.replies[tone] || '';
     }
 
     function copySuggestedReply() {
       const text = document.getElementById('res-reply-editor').value;
       navigator.clipboard.writeText(text).then(() => {
-        showToast("Suggested reply copied to clipboard!");
-      }).catch(() => {
-        showToast("Reply text copied.");
+        showToast("✓ Suggested reply copied to clipboard.");
       });
     }
 
     function sendSuggestedReply() {
-      showToast("Reply approved & dispatched to customer!");
+      showToast("✓ Reply approved & dispatched to customer!");
     }
 
     function mergeSimilarTickets() {
-      const mergeBtn = document.getElementById('btn-merge-action');
-      mergeBtn.textContent = "✓ Merged";
-      mergeBtn.disabled = true;
-      mergeBtn.style.opacity = '0.7';
-      showToast("Successfully merged duplicate tickets into main thread!");
+      const similarBox = document.getElementById('similar-ticket-box');
+      similarBox.style.display = 'none';
+      showToast("✓ Merged 2 tickets into primary thread #BA-1042.");
     }
 
     /* ==========================================================================
-       C. TICKET STATUS TRACKER
+       B. TICKET STATUS TRACKER
        ========================================================================== */
     const sampleTickets = {
       'BA-1042': {
@@ -2493,44 +2009,37 @@
     }
 
     function searchTicketStatus() {
-      const id = document.getElementById('tracker-input-id').value.trim().toUpperCase();
+      const id = document.getElementById('tracker-input-id').value.trim().toUpperCase().replace('#', '');
       const ticket = sampleTickets[id] || {
-        subject: 'Ticket #' + id + ' (General Technical Assistance)',
-        desc: 'Inquiry triaged and assigned to specialized engineering queue. Target resolution in progress.',
+        subject: 'Ticket #' + id + ' (Technical Assistance Inquiry)',
+        desc: 'Inquiry cataloged and assigned to specialized engineering queue. Investigation in progress.',
         step: 3
       };
 
       document.getElementById('tracker-detail-subject').textContent = 'Ticket #' + id + ': ' + ticket.subject;
       document.getElementById('tracker-detail-desc').textContent = ticket.desc;
 
-      const nodes = document.querySelectorAll('.timeline-node');
-      nodes.forEach((node, idx) => {
-        node.className = 'timeline-node';
-        const icon = node.querySelector('.timeline-node-icon');
-        if (idx < ticket.step - 1) {
-          node.classList.add('done');
-          icon.textContent = '✓';
-        } else if (idx === ticket.step - 1) {
-          node.classList.add('active');
-          icon.textContent = '●';
-        } else {
-          icon.textContent = '○';
+      for (let i = 1; i <= 5; i++) {
+        const stepEl = document.getElementById('time-step-' + i);
+        if (!stepEl) continue;
+        stepEl.classList.remove('done', 'current');
+        if (i < ticket.step) {
+          stepEl.classList.add('done');
+        } else if (i === ticket.step) {
+          stepEl.classList.add('current');
         }
-      });
+      }
 
-      showToast("Loaded milestone timeline for " + id);
+      showToast("Loaded milestone timeline for #" + id);
     }
 
     /* ==========================================================================
-       D. REAL AI ASSISTANT CHAT ENGINE (Production Serverless + SSE Streaming)
+       C. REAL AI ASSISTANT CHAT ENGINE
        ========================================================================== */
     let chatConversation = [];
     const CHAT_STORAGE_KEY = 'bizassist_ai_chat_session';
-
-    // Initial greeting template
     const INITIAL_BOT_GREETING = "Hello! I am the BizAssist AI Assistant. I can explain how our platform automates ticket triage, help you raise a new ticket, or look up ticket progress across our five milestone stages. What can I help you with today?";
 
-    // 4 Default quick chips (plain text buttons without emojis)
     const INITIAL_FAQ_CHIPS = [
       { label: "How does AI triage work?", query: "How does the AI triage work?" },
       { label: "How do I raise a ticket?", query: "How do I raise a ticket?" },
@@ -2553,13 +2062,11 @@
       }
     }
 
-    // ESC key listener for accessible chat window closing
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         const panel = document.getElementById('floating-chat-window');
-        if (panel && panel.classList.contains('is-open')) {
-          toggleChatPanel();
-        }
+        if (panel && panel.classList.contains('is-open')) toggleChatPanel();
+        if (menuOverlay && menuOverlay.classList.contains('is-active')) toggleMenuOverlay(false);
       }
     });
 
@@ -2602,25 +2109,17 @@
       if (!box) return;
       box.innerHTML = '';
 
-      chatConversation.forEach((msg, idx) => {
+      chatConversation.forEach((msg) => {
         const bubble = document.createElement('div');
         bubble.className = 'chat-bubble ' + (msg.role === 'user' ? 'user' : 'bot');
         bubble.innerHTML = formatChatText(msg.content);
 
-        // Render card attachments if present
-        if (msg.ticketCard) {
-          bubble.appendChild(createTicketCardElement(msg.ticketCard));
-        }
-        if (msg.proposalCard) {
-          bubble.appendChild(createProposalCardElement(msg.proposalCard));
-        }
-        if (msg.handoverCard) {
-          bubble.appendChild(createHandoverCardElement(msg.handoverCard));
-        }
+        if (msg.ticketCard) bubble.appendChild(createTicketCardElement(msg.ticketCard));
+        if (msg.proposalCard) bubble.appendChild(createProposalCardElement(msg.proposalCard));
+        if (msg.handoverCard) bubble.appendChild(createHandoverCardElement(msg.handoverCard));
 
         box.appendChild(bubble);
 
-        // Render quick chips under initial greeting only if thread has only 1 message
         if (msg.isGreeting && chatConversation.length === 1) {
           const chipsWrap = document.createElement('div');
           chipsWrap.className = 'chat-faq-chips';
@@ -2641,12 +2140,7 @@
 
     function formatChatText(raw) {
       if (!raw) return '';
-      // Escape HTML entities to prevent any injection
-      let safe = raw
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-      // Format simple newlines and bold markers
+      let safe = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
       safe = safe.replace(/\n/g, '<br>');
       safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       return safe;
@@ -2668,15 +2162,12 @@
       const val = input.value.trim();
       if (!val) return;
 
-      // Add user message
       chatConversation.push({ role: 'user', content: val });
       saveChatSession();
       renderChatMessages();
       input.value = '';
 
       const box = document.getElementById('chat-messages-box');
-
-      // Add typing indicator
       const typingEl = document.createElement('div');
       typingEl.className = 'chat-typing-indicator';
       typingEl.id = 'chat-active-indicator';
@@ -2684,7 +2175,6 @@
       box.appendChild(typingEl);
       box.scrollTop = box.scrollHeight;
 
-      // Disable send button while responding
       const sendBtn = document.getElementById('chat-send-btn');
       if (sendBtn) sendBtn.disabled = true;
 
@@ -2702,7 +2192,7 @@
           typingEl.remove();
           chatConversation.push({
             role: 'assistant',
-            content: errData.message || "You have reached the rate limit. Please wait a moment or speak to a human agent below."
+            content: errData.message || "Rate limit reached. Please pause a moment or speak to an agent."
           });
           saveChatSession();
           renderChatMessages();
@@ -2710,11 +2200,8 @@
           return;
         }
 
-        if (!response.ok || !response.body) {
-          throw new Error('API request failed with status ' + response.status);
-        }
+        if (!response.ok || !response.body) throw new Error('API failed');
 
-        // Create stream receiver bubble
         typingEl.remove();
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot';
@@ -2734,7 +2221,7 @@
 
           streamBuffer += decoder.decode(value, { stream: true });
           const lines = streamBuffer.split('\n');
-          streamBuffer = lines.pop(); // keep partial
+          streamBuffer = lines.pop();
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
@@ -2753,25 +2240,15 @@
                 } else if (parsed.type === 'ticket_proposal') {
                   detectedProposal = parsed.proposal;
                 }
-              } catch (parseErr) {
-                // Ignore incomplete SSE chunk parse
-              }
+              } catch (parseErr) {}
             }
           }
         }
 
-        // Attach structured card elements if received
-        if (detectedCard) {
-          botBubble.appendChild(createTicketCardElement(detectedCard));
-        }
-        if (detectedProposal) {
-          botBubble.appendChild(createProposalCardElement(detectedProposal));
-        }
-        if (detectedHandover) {
-          botBubble.appendChild(createHandoverCardElement(detectedHandover));
-        }
+        if (detectedCard) botBubble.appendChild(createTicketCardElement(detectedCard));
+        if (detectedProposal) botBubble.appendChild(createProposalCardElement(detectedProposal));
+        if (detectedHandover) botBubble.appendChild(createHandoverCardElement(detectedHandover));
 
-        // Record assistant turn in state
         chatConversation.push({
           role: 'assistant',
           content: fullBotReply,
@@ -2782,21 +2259,15 @@
         saveChatSession();
 
       } catch (networkErr) {
-        console.warn('[BizAssist AI Chat] Fetch error, falling back to local handler:', networkErr);
         if (typingEl && typingEl.parentNode) typingEl.remove();
-
-        // Local offline fallback simulation
-        const fallbackText = "I am currently running in offline fallback mode. BizAssist AI automates ticket classification, SLA prioritization, and draft replies in under 120ms. If you need urgent assistance, our on-call team is available.";
-        chatConversation.push({
-          role: 'assistant',
-          content: fallbackText
-        });
+        const fallbackText = "I am running in offline mode. BizAssist AI automates ticket classification and response drafts in under 120ms. You can track tickets (e.g. #BA-1042) or connect to human support.";
+        chatConversation.push({ role: 'assistant', content: fallbackText });
         saveChatSession();
         renderChatMessages();
       } finally {
         if (sendBtn) sendBtn.disabled = false;
-        const currentActive = document.getElementById('chat-active-indicator');
-        if (currentActive) currentActive.remove();
+        const cur = document.getElementById('chat-active-indicator');
+        if (cur) cur.remove();
       }
     }
 
@@ -2829,7 +2300,6 @@
         </div>
         <div class="card-row"><strong>Category:</strong> ${proposal.category}</div>
         <div class="card-row"><strong>Summary:</strong> ${proposal.summary}</div>
-        <p style="margin-top:6px; font-size:12px; color:var(--text-secondary);">Confirm raising this ticket to dispatch to our on-call engineer.</p>
         <div class="card-actions">
           <button type="button" class="btn-card-action" onclick="confirmTicketCreation('${encodeURIComponent(proposal.summary)}', '${proposal.category}', '${proposal.priority}')">Confirm Ticket</button>
           <button type="button" class="btn-card-action btn-card-secondary" onclick="editTicketProposal()">Edit</button>
@@ -2859,10 +2329,7 @@
       const summary = decodeURIComponent(encodedSummary);
       const email = 'customer.direct@bizassist.ai';
 
-      chatConversation.push({
-        role: 'user',
-        content: `Confirmed. Please raise the ticket: "${summary}"`
-      });
+      chatConversation.push({ role: 'user', content: `Confirmed. Please raise the ticket: "${summary}"` });
       saveChatSession();
       renderChatMessages();
 
@@ -2875,7 +2342,6 @@
             toolArgs: { summary, category, priority, contact_email: email }
           })
         });
-
         const data = await res.json();
         if (data.result && data.result.ticket) {
           const t = data.result.ticket;
@@ -2899,74 +2365,42 @@
       input.focus();
     }
 
-    // Auto-init on page load if existing conversation exists
     window.addEventListener('DOMContentLoaded', () => {
       const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
-      if (saved) {
-        initChatSession();
-      }
+      if (saved) initChatSession();
     });
 
     /* ==========================================================================
-       E. BOOK A DEMO MODAL & FOCUS TRAP
+       D. BOOK A DEMO MODAL
        ========================================================================== */
-    const modal = document.getElementById('demo-modal');
-    let previousActiveElement = null;
+    const demoModal = document.getElementById('demo-modal');
+    let modalPrevFocus = null;
 
     function openDemoModal() {
-      previousActiveElement = document.activeElement;
-      modal.classList.add('is-open');
+      modalPrevFocus = document.activeElement;
+      demoModal.classList.add('is-open');
       document.body.style.overflow = 'hidden';
-      
       const firstInput = document.getElementById('demo-name');
-      if (firstInput) firstInput.focus();
-
-      window.addEventListener('keydown', trapModalFocus);
+      if (firstInput) setTimeout(() => firstInput.focus(), 100);
     }
 
     function closeDemoModal() {
-      modal.classList.remove('is-open');
+      demoModal.classList.remove('is-open');
       document.body.style.overflow = '';
-      window.removeEventListener('keydown', trapModalFocus);
-      if (previousActiveElement) previousActiveElement.focus();
+      if (modalPrevFocus) modalPrevFocus.focus();
     }
-
-    function trapModalFocus(e) {
-      if (e.key === 'Escape') {
-        closeDemoModal();
-        return;
-      }
-      if (e.key === 'Tab') {
-        const focusables = modal.querySelectorAll('input, button, [tabindex="0"]');
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    }
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeDemoModal();
-    });
 
     function submitDemoForm(e) {
       e.preventDefault();
       const name = document.getElementById('demo-name').value;
       const email = document.getElementById('demo-email')?.value || '';
-      const company = document.getElementById('demo-company')?.value || '';
       const size = document.getElementById('demo-size')?.value || '';
 
       if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
         window.NexusSupabase.submitDemoRequest({
           fullName: name,
           workEmail: email,
-          companyName: company,
+          companyName: 'Enterprise Inbound',
           teamSize: size,
           notes: 'Landing page demo request'
         }).then(res => {
@@ -2975,41 +2409,8 @@
       }
 
       closeDemoModal();
-      showToast("Thank you, " + name + "! Demo invitation sent to your email.");
+      showToast("Thank you, " + name + "! Demonstration request received.");
     }
-
-    /* ==========================================================================
-       F. UTILITIES: TOAST & ACCORDION
-       ========================================================================== */
-    function showToast(msg) {
-      const t = document.getElementById('toast');
-      t.textContent = msg;
-      t.classList.add('show');
-      setTimeout(() => {
-        t.classList.remove('show');
-      }, 3200);
-    }
-
-    function toggleMobileMenu() {
-      const dropdown = document.getElementById('mobile-menu-dropdown');
-      const btn = document.getElementById('mobile-menu-btn');
-      const isOpen = dropdown.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', isOpen);
-    }
-
-    document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
-
-    function togglePain(btn) {
-      const drawer = btn.nextElementSibling;
-      const isOpen = drawer.classList.toggle('is-open');
-      const icon = btn.querySelector('span:last-child');
-      if (icon) icon.textContent = isOpen ? '−' : '+';
-    }
-
-    // Default load demo scenario 0
-    window.addEventListener('DOMContentLoaded', () => {
-      loadDemoScenario(0);
-    });
   </script>
 </body>
 </html>

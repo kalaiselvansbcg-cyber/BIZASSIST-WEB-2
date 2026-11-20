@@ -1,0 +1,269 @@
+/* ==========================================================================
+   BIZASSIST AI — QUIET LUXURY DESIGN SYSTEM (theme.css)
+   Single source of truth for tokens, typography, components, and motion rules.
+   ========================================================================== */
+
+:root {
+  --bg: #FAF8F5;           /* page (warm cream) */
+  --surface: #FFFFFF;      /* cards, forms, modals */
+  --surface-alt: #EFEBE4;  /* panels, image frames */
+  --ink: #111111;          /* text, primary buttons, lines of emphasis */
+  --ink-soft: #5E5A53;     /* body copy */
+  --muted: #6F6A61;        /* small labels (AA on --bg) */
+  --line: #E3DED6;         /* hairlines */
+  --accent: #B3402A;       /* ONLY Urgent dots and error text */
+  --radius: 0;
+  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 400ms;
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Typography */
+h1, h2, h3, h4, .font-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(44px, 6vw, 88px);
+  line-height: 1.05;
+}
+
+h2 {
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.15;
+}
+
+h3 {
+  font-size: clamp(24px, 2.5vw, 36px);
+  line-height: 1.25;
+}
+
+p, .body-copy {
+  color: var(--ink-soft);
+  font-size: clamp(16px, 1.2vw, 18px);
+  line-height: 1.65;
+}
+
+.mono-label, .eyebrow, .nav-item-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* Primary Button */
+.btn-primary, .btn-pill {
+  min-height: 48px;
+  padding: 16px 36px;
+  background: var(--ink);
+  color: #FFFFFF;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: background 250ms var(--ease), color 250ms var(--ease), border-color 250ms var(--ease);
+}
+
+.btn-primary:hover, .btn-pill:hover {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+/* Secondary Button / Text Link */
+.btn-secondary, .text-link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 4px;
+  cursor: pointer;
+}
+
+.btn-secondary::after, .text-link-arrow::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: width 250ms var(--ease);
+}
+
+.btn-secondary:hover::after, .text-link-arrow:hover::after {
+  width: 100%;
+}
+
+/* Hairline Cards */
+.card-quiet {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(24px, 4vw, 40px);
+  transition: background 250ms var(--ease), border-color 250ms var(--ease);
+}
+
+.card-quiet:hover {
+  background: var(--surface-alt);
+}
+
+/* Inputs */
+.input-quiet {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  transition: border-color 200ms ease;
+}
+
+.input-quiet:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+
+/* Status Dots */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--ink);
+}
+
+.status-dot.urgent {
+  background: var(--accent);
+}
+
+.status-badge-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--ink);
+}
+
+.status-badge-quiet.urgent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Five-Square Ticket Tracker */
+.tracker-five-squares {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px 0;
+}
+
+.tracker-five-squares::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 5px;
+  right: 5px;
+  height: 2px;
+  background: var(--line);
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.tracker-square-node {
+  width: 12px;
+  height: 12px;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  z-index: 2;
+  position: relative;
+  transition: all 300ms var(--ease);
+}
+
+.tracker-square-node.done {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.tracker-square-node.current {
+  background: var(--surface);
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px var(--bg);
+}
+
+/* Reduced motion safety */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
