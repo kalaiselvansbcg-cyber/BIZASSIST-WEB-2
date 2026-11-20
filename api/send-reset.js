@@ -133,6 +133,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('[send-reset] Exception:', error);
-    return res.status(500).json({ error: 'Internal server error while processing password reset.' });
+    return res.status(500).json({ error: 'Internal server error while processing password reset.', details: error.message });
   }
 }
