@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Knowledge-Based Chatbot — NexusAI</title>
+  <title>Knowledge Assistant — BIZASSIST AI</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .page-header {
@@ -223,38 +225,7 @@
   </style>
 </head>
 <body>
-  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
-    <div class="cursor-circle"></div>
-  </div>
-
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
-
-  <!-- Header Navigation -->
-  <header class="page-header">
-    <div style="display:flex; align-items:center; gap:20px;">
-      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
-      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
-        Knowledge Chatbot · G5
-      </span>
-      <span style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#059669; font-weight:600; background:#ECFDF5; padding:2px 8px; border-radius:12px;">
-        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> 12,840 Vectors In-Memory
-      </span>
-      <span style="display:inline-flex; align-items:center; gap:6px; font-size:11px; color:#059669; font-weight:600; background:#F0FDF4; border:1px solid #BBF7D0; padding:2px 8px; border-radius:12px;" title="Connected to https://imhfqkepsepiscyceoyk.supabase.co">
-        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Supabase: imhfqkepsepiscyceoyk
-      </span>
-    </div>
-    <nav>
-      <ul class="header-nav-links">
-        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
-        <li><a href="portal.html" class="header-nav-link" data-hover>Portal</a></li>
-        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
-        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
-        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
-        <li><a href="chatbot.html" class="header-nav-link active" data-hover>Chatbot</a></li>
-        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
-      </ul>
-    </nav>
-  </header>
 
   <!-- 2-Pane Chatbot Layout -->
   <div class="chatbot-app-layout">
@@ -348,9 +319,10 @@
     </main>
   </div>
 
-  <script src="js/main.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js"></script>
+  <script src="js/guard.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/flow.js"></script>
   <script>
     const currentSessionId = 'session-' + Date.now();
     const knowledgeBase = {
@@ -381,6 +353,45 @@
 
       appendUserMsg(val);
       input.value = '';
+
+      // Check for Ticket Lookup
+      const ticketMatch = val.match(/#?(BA-\d{4})/i);
+      if (ticketMatch && window.BizAssistStore) {
+        const t = window.BizAssistStore.getTicket(ticketMatch[1]);
+        if (t) {
+          appendBotMsg(
+            `Found Ticket #${t.code}:\n\n` +
+            `• Subject: ${t.subject}\n` +
+            `• Stage: ${t.stage}\n` +
+            `• Priority: ${t.priority}\n` +
+            `• Category: ${t.category}\n` +
+            `• Assigned to: ${t.assignedTo} (${t.assignedTeam})\n` +
+            `• Last update: ${new Date(t.updatedAt).toLocaleTimeString()}\n\n` +
+            `Summary: ${t.aiSummary}`,
+            [`/portal#${t.code}`, '/docs/tickets']
+          );
+          return;
+        }
+      }
+
+      // Check for Ticket Creation
+      if (val.toLowerCase().includes('raise ticket') || val.toLowerCase().includes('create ticket')) {
+        if (window.BizAssistStore) {
+          const newTicket = window.BizAssistStore.createTicket({
+            subject: val,
+            category: 'General',
+            priority: 'Normal',
+            description: 'Raised via Knowledge Chatbot interface.'
+          });
+          appendBotMsg(
+            `Ticket #${newTicket.code} has been raised and sent to AI Triage.\n\n` +
+            `Assigned Queue: ${newTicket.assignedTeam}\n` +
+            `You can track its status live in the Customer Portal.`,
+            [`/portal#${newTicket.code}`]
+          );
+          return;
+        }
+      }
 
       // Bot thinking state
       const thread = document.getElementById('chat-thread');
@@ -441,7 +452,7 @@
 
       const citationsHtml = citations.map(c => `
         <a href="javascript:void(0)" class="citation-tag" onclick="window.NexusShowToast('Viewing documentation: ${c}')">
-          📖 ${c}
+          [Doc] ${c}
         </a>
       `).join('');
 
@@ -457,8 +468,8 @@
             <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
               <span style="font-size:11px; color:#71717A;">Was this helpful?</span>
               <div>
-                <button class="feedback-btn" onclick="window.NexusShowToast('Thank you for your feedback! 👍')">👍 Helpful</button>
-                <button class="feedback-btn" onclick="window.NexusShowToast('Feedback recorded. Improving answer model. 👎')">👎 Incomplete</button>
+                <button class="feedback-btn" onclick="window.NexusShowToast('Thank you for your feedback.')">[+] Helpful</button>
+                <button class="feedback-btn" onclick="window.NexusShowToast('Feedback recorded. Improving answer model.')">[-] Incomplete</button>
               </div>
             </div>
           </div>
@@ -492,12 +503,12 @@
       const row = document.createElement('div');
       row.className = 'bot-msg-row';
       row.innerHTML = `
-        <div class="avatar-bot" style="background:#DC2626;">!</div>
+        <div class="avatar-bot" style="background:#B3402A; color:#FFFFFF;">!</div>
         <div class="msg-content-bot" style="border-color:#FCA5A5; background:#FEF2F2;">
-          <strong style="color:#991B1B; display:block; margin-bottom:4px;">🚨 Handover Triggered: Human Agent Requested</strong>
+          <strong style="color:#991B1B; display:block; margin-bottom:4px;">Handover Triggered: Human Agent Requested</strong>
           Your conversation context, diagnostics, and session history have been dispatched to the on-call Tier-2 Agent queue.
           <div style="margin-top:12px;">
-            <a href="agent-dashboard.html" class="interactive-btn-primary" style="display:inline-block; font-size:12px; padding:6px 14px; text-decoration:none;" data-hover>
+            <a href="/agent-dashboard" class="interactive-btn-primary" style="display:inline-block; font-size:12px; padding:6px 14px; text-decoration:none;" data-hover>
               View Ticket in Agent Dashboard →
             </a>
           </div>

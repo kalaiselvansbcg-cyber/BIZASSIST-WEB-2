@@ -34,6 +34,48 @@ Then visit: `http://localhost:8000` (or `http://localhost:3000`).
 
 ---
 
+## 🌐 Connected Application & Route Map
+
+BizAssist AI is structured as a **single connected application** with a single entry point at `/` (Login / Sign In) and clean routing across all workspaces.
+
+| Route | View | Accessible To | Description |
+|---|---|---|---|
+| `/` | **Login / Sign In** | Public | Single entry portal with 1-click demo access & account creation |
+| `/about` | **Product Overview** | Public | Marketing landing page with feature deep dives & demo booking |
+| `/app` | **Home Hub** | All roles | Role-specific quick actions, live KPI counters, and guided tour launcher |
+| `/portal` | **Customer Ticket Portal** | Customer (Default) | Raise tickets, search knowledge, and follow real-time 5-stage progress |
+| `/agent-dashboard` | **Agent Dashboard** | Agent (Default), Manager | Multi-pane workspace with live ticket queue, customer 360, & reply drafting |
+| `/ai-triage` | **AI Triage Studio** | Agent, Manager | Autonomous NLP categorization, intent classification, & queue routing |
+| `/suggested-replies` | **Suggested Replies Studio** | Agent, Manager | Tone selector, RAG citation verification, & 1-click dispatch |
+| `/chatbot` | **Knowledge Assistant** | All roles | Full conversation UI with live ticket lookup (`#BA-1042`) & ticket creation |
+| `/manager-overview` | **Manager Overview** | Manager (Default) | Live throughput analytics, team roster capacity, & SLA health |
+
+---
+
+## 👥 One-Click Demo Credentials
+
+Fast-track testing buttons are provided on the login page (`/`):
+
+1. **Customer**: `customer@bizassist.ai` / `password123` (Elena Rostova · CloudCore Systems) → Lands on `/portal`
+2. **Support Agent**: `agent@bizassist.ai` / `password123` (Sarah Jenkins · Tier-2 Support) → Lands on `/agent-dashboard`
+3. **Operations Manager**: `manager@bizassist.ai` / `password123` (Marcus Vance · Support Operations) → Lands on `/manager-overview`
+
+> **Demo Security Notice**: Client-side demo authentication uses browser Web Crypto API (SHA-256 with per-user salt) for password handling without plaintext storage. This is for presentation and prototyping purposes only.
+
+---
+
+## 🧭 6-Step Guided Walkthrough
+
+Click **"Start Guided Tour"** on `/app` or from the top navigation menu to experience the full customer-to-manager lifecycle:
+1. **Step 1 (`/portal`)**: Customer raises or searches a ticket (e.g. `#BA-1042` or `#BA-1041`).
+2. **Step 2 (`/ai-triage`)**: AI classifies category, priority, sentiment, and assigns queue.
+3. **Step 3 (`/agent-dashboard`)**: Support lead inspects the triaged queue and customer context.
+4. **Step 4 (`/suggested-replies`)**: Review grounded citations, select voice tone, and click "Approve & Dispatch".
+5. **Step 5 (`/portal`)**: Customer portal immediately updates to stage "Replied" via shared reactive store.
+6. **Step 6 (`/manager-overview`)**: Operations manager inspects team roster capacity and SLA adherence.
+
+---
+
 ## 📁 Repository Structure
 
 The project code is separated into clean, modular files for easy maintenance and version control:

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Page Not Found — BIZASSIST AI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+
+  <style>
+    :root {
+      --bg: #FAF8F5;
+      --ink: #111111;
+      --secondary: #5E5A53;
+      --muted: #6F6A61;
+      --line: #E3DED6;
+      --accent: #B3402A;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 32px 24px;
+    }
+
+    .top-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 0;
+    }
+
+    .card {
+      max-width: 520px;
+      width: 100%;
+      background: #FFFFFF;
+      border: 1px solid var(--line);
+      padding: 48px;
+      text-align: center;
+    }
+
+    .code-label {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .card h1 {
+      font-family: var(--font-serif);
+      font-size: 36px;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .card p {
+      font-size: 15px;
+      color: var(--secondary);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .btn-return {
+      display: inline-block;
+      padding: 12px 24px;
+      background: var(--ink);
+      color: #FAF8F5;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: background 150ms ease;
+    }
+
+    .btn-return:hover {
+      background: #2A2A2A;
+    }
+
+    .footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header class="top-bar">
+    <a href="/" class="brand">BIZASSIST AI</a>
+    <a href="/" style="font-size:13px; color:var(--secondary); text-decoration:none;">Sign In →</a>
+  </header>
+
+  <main class="main-wrap">
+    <div class="card">
+      <span class="code-label">404 Error</span>
+      <h1>Page Not Found</h1>
+      <p>
+        The page you requested does not exist or has moved under our unified application routing.
+      </p>
+      <a href="/" class="btn-return">Return to BizAssist AI →</a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 BIZASSIST AI</span>
+    <span>Single Entry Link: /</span>
+  </footer>
+</body>
+</html>

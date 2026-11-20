@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .page-header {
@@ -150,35 +152,7 @@
   </style>
 </head>
 <body>
-  <div id="custom-cursor" class="custom-cursor" aria-hidden="true">
-    <div class="cursor-circle"></div>
-  </div>
-
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
-
-  <!-- Portal Header Navigation -->
-  <header class="page-header">
-    <div style="display:flex; align-items:center; gap:24px;">
-      <a href="index.html" class="site-logo" style="color:#000000;" data-hover>nx</a>
-      <span style="font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:0.1em; color:#71717A;">
-        Customer Portal · G1
-      </span>
-      <span class="badge-status" style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-size:10px; display:inline-flex; align-items:center; gap:4px;" id="supabase-status-pill" title="Connected to https://imhfqkepsepiscyceoyk.supabase.co">
-        <span style="width:6px; height:6px; border-radius:50%; background:#10B981;"></span> Supabase: imhfqkepsepiscyceoyk
-      </span>
-    </div>
-    <nav>
-      <ul class="header-nav-links">
-        <li><a href="index.html" class="header-nav-link" data-hover>← Home</a></li>
-        <li><a href="portal.html" class="header-nav-link active" data-hover>Portal</a></li>
-        <li><a href="agent-dashboard.html" class="header-nav-link" data-hover>Agent Dashboard</a></li>
-        <li><a href="ai-triage.html" class="header-nav-link" data-hover>AI Triage</a></li>
-        <li><a href="suggested-replies.html" class="header-nav-link" data-hover>Suggested Replies</a></li>
-        <li><a href="chatbot.html" class="header-nav-link" data-hover>Chatbot</a></li>
-        <li><a href="manager-overview.html" class="header-nav-link" data-hover>Manager Overview</a></li>
-      </ul>
-    </nav>
-  </header>
 
   <main class="container">
     <!-- Portal Hero Introduction -->
@@ -383,100 +357,166 @@
 
   <footer class="site-footer" style="padding:60px 0 32px 0;">
     <div class="container" style="display:flex; justify-content:space-between; align-items:center; font-size:13px; color:#71717A; flex-wrap:wrap; gap:16px;">
-      <div>© 2026 NexusAI Support Platform · Goal G1 Prototype</div>
-      <div><a href="index.html" style="color:#ffffff; text-decoration:none;">← Return to Main Homepage</a></div>
+      <div>© 2026 BIZASSIST AI · Customer Portal</div>
+      <div><a href="/app" style="color:var(--text); text-decoration:none;">← Return to Home Hub</a></div>
     </div>
   </footer>
 
-  <script src="js/main.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js"></script>
+  <script src="js/guard.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/flow.js"></script>
   <script>
-    async function loadSupabaseTickets() {
-      if (!window.NexusSupabase || !window.NexusSupabase.isConnected()) return;
-      try {
-        const { data, error } = await window.NexusSupabase.fetchTickets();
-        if (error || !data || data.length === 0) return;
+    'use strict';
 
-        const tbody = document.getElementById('portal-history-body');
-        tbody.innerHTML = '';
-        let activeCount = 0;
+    function showToast(msg) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const t = document.createElement('div');
+      t.className = 'toast-card is-visible';
+      t.innerHTML = '<span>●</span><span>' + msg + '</span>';
+      container.appendChild(t);
+      setTimeout(() => {
+        t.classList.remove('is-visible');
+        setTimeout(() => t.remove(), 400);
+      }, 3500);
+    }
+    window.NexusShowToast = showToast;
 
-        data.forEach(t => {
-          if (t.status !== 'Resolved') activeCount++;
-          const tr = document.createElement('tr');
-          const isResolved = (t.status || '').toLowerCase() === 'resolved';
-          const badgeClass = isResolved ? 'resolved' : (t.priority === 'P1' ? 'urgent' : 'investigating');
-          
-          tr.innerHTML = `
-            <td><strong>#${t.ticket_code}</strong></td>
-            <td>${t.subject}</td>
-            <td>${t.category}</td>
-            <td>${isResolved ? 'Resolved' : (t.sla_minutes ? t.sla_minutes + 'm SLA' : 'In Progress')}</td>
-            <td><span class="badge-status ${badgeClass}">${t.status}</span></td>
-          `;
-          tbody.appendChild(tr);
-        });
+    let activeTicketId = 'BA-1042';
 
-        const activeEl = document.getElementById('stat-active-count');
-        if (activeEl && activeCount > 0) activeEl.textContent = activeCount;
-      } catch (err) {
-        console.warn('Failed to load tickets from Supabase:', err);
+    function renderPortal() {
+      if (!window.BizAssistStore) return;
+      const tickets = window.BizAssistStore.getTickets();
+      const metrics = window.BizAssistStore.getMetrics();
+
+      // Update counters
+      const activeEl = document.getElementById('stat-active-count');
+      if (activeEl) activeEl.textContent = metrics.open;
+
+      // Update Stepper Card with active ticket
+      const activeTicket = window.BizAssistStore.getTicket(activeTicketId) || tickets[0];
+      if (activeTicket) {
+        activeTicketId = activeTicket.id;
+        const badgeEl = document.querySelector('.card-panel .badge-status');
+        if (badgeEl) {
+          badgeEl.textContent = `ACTIVE TICKET #${activeTicket.code}`;
+          badgeEl.className = `badge-status ${activeTicket.stage.toLowerCase() === 'resolved' ? 'resolved' : 'investigating'}`;
+        }
+        const titleEl = document.querySelector('.card-panel h2');
+        if (titleEl) titleEl.textContent = activeTicket.subject;
+
+        const subEl = document.querySelector('.card-panel span[style*="color:#71717A"]');
+        if (subEl) {
+          subEl.textContent = `Submitted ${new Date(activeTicket.createdAt).toLocaleTimeString()} by ${activeTicket.contactEmail} · Stage: ${activeTicket.stage}`;
+        }
+
+        // Update stepper stages: Raised (1), Categorised (2), Assigned (3), Replied (4), Resolved (5)
+        const stages = ['Raised', 'Categorised', 'Assigned', 'Replied', 'Resolved'];
+        const currentStageIdx = stages.indexOf(activeTicket.stage);
+        const stepperContainer = document.querySelector('.card-panel [style*="grid-template-columns"]');
+        if (stepperContainer) {
+          stepperContainer.innerHTML = stages.map((stg, idx) => {
+            const isDone = idx <= currentStageIdx;
+            const isCurrent = idx === currentStageIdx;
+            const circleBg = isDone ? (stg === 'Resolved' ? '#10B981' : '#000000') : '#E5E7EB';
+            const circleColor = isDone ? '#FFFFFF' : '#6B7280';
+            return `
+              <div>
+                <div style="width:28px; height:28px; border-radius:50%; background:${circleBg}; color:${circleColor}; display:flex; align-items:center; justify-content:center; margin:0 auto 8px auto; font-size:12px; font-weight:700;">
+                  ${isDone ? '✓' : (idx + 1)}
+                </div>
+                <strong style="font-size:13px; display:block; color:${isCurrent ? '#B3402A' : '#111111'};">${idx + 1}. ${stg}</strong>
+                <span style="font-size:11px; color:#71717A;">${isDone ? (stg === activeTicket.stage ? 'Current' : 'Completed') : 'Pending'}</span>
+              </div>
+            `;
+          }).join('');
+        }
       }
+
+      // Render table
+      renderTableRows(tickets);
     }
 
-    window.addEventListener('DOMContentLoaded', loadSupabaseTickets);
-
-    async function handlePortalSubmit(e) {
-      e.preventDefault();
-      const subject = document.getElementById('p-subject').value;
-      const cat = document.getElementById('p-category').value;
-      const prioVal = document.getElementById('p-priority').value;
-      const body = document.getElementById('p-body').value;
-      
-      const priorityCode = prioVal.startsWith('P1') ? 'P1' : (prioVal.startsWith('P2') ? 'P2' : 'P3');
-      const newCode = 'NX-' + Math.floor(4100 + Math.random() * 900);
-      const newId = '#' + newCode;
-
+    function renderTableRows(ticketList) {
       const tbody = document.getElementById('portal-history-body');
-      const row = document.createElement('tr');
-      row.innerHTML = '<td><strong>' + newId + '</strong></td>' +
-        '<td>' + subject + '</td>' +
-        '<td>' + cat + '</td>' +
-        '<td>Just now (Triaged)</td>' +
-        '<td><span class="badge-status investigating">Investigating</span></td>';
-      tbody.insertBefore(row, tbody.firstChild);
+      if (!tbody) return;
 
-      const activeNum = document.getElementById('stat-active-count');
-      if (activeNum) activeNum.textContent = parseInt(activeNum.textContent, 10) + 1;
+      tbody.innerHTML = ticketList.map(t => {
+        const isResolved = t.stage === 'Resolved';
+        const badgeClass = isResolved ? 'resolved' : (t.priority === 'Urgent' ? 'urgent' : 'investigating');
+        return `
+          <tr style="cursor:pointer;" onclick="selectActiveTicket('${t.id}')">
+            <td><strong>#${t.code}</strong></td>
+            <td><strong>${t.subject}</strong></td>
+            <td>${t.category}</td>
+            <td>${isResolved ? 'Resolved (' + t.slaMinutes + 'm SLA)' : t.slaMinutes + 'm Target'}</td>
+            <td><span class="badge-status ${badgeClass}">${t.stage}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
 
-      document.getElementById('portal-new-ticket-form').reset();
-      window.NexusShowToast('✓ Ticket ' + newId + ' created & triaged to ' + cat + ' queue!');
+    function selectActiveTicket(id) {
+      activeTicketId = id;
+      renderPortal();
+      showToast('Switched view to ticket #' + id);
+    }
+    window.selectActiveTicket = selectActiveTicket;
 
-      // Persist in Supabase
-      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-        const { data, error } = await window.NexusSupabase.createTicket({
-          ticket_code: newCode,
-          subject: subject,
-          category: cat,
-          priority: priorityCode,
-          status: 'Investigating',
-          description: body,
-          customer_name: 'Customer (Portal)',
-          customer_email: 'portal.user@example.com',
-          sla_minutes: priorityCode === 'P1' ? 15 : 60
+    function handlePortalSubmit(e) {
+      e.preventDefault();
+      const subject = document.getElementById('p-subject').value.trim();
+      const category = document.getElementById('p-category').value;
+      const urgency = document.getElementById('p-priority').value;
+      const details = document.getElementById('p-body').value.trim();
+
+      const priority = urgency.includes('P1') ? 'Urgent' : (urgency.includes('P2') ? 'High' : 'Normal');
+
+      const session = window.BizAssistAuth ? window.BizAssistAuth.getSession() : null;
+      const contactEmail = session ? session.email : 'customer@bizassist.ai';
+      const contactName = session ? session.name : 'Customer';
+
+      if (window.BizAssistStore) {
+        const newTicket = window.BizAssistStore.createTicket({
+          subject,
+          category,
+          priority,
+          description: details,
+          contactEmail,
+          contactName
         });
-        if (!error) {
-          window.NexusShowToast('☁ Ticket #' + newCode + ' synced to Supabase database!');
-        }
+        activeTicketId = newTicket.id;
+        document.getElementById('portal-new-ticket-form').reset();
+        showToast('✓ Ticket #' + newTicket.code + ' created and sent to AI Triage!');
+        renderPortal();
       }
     }
 
     function filterArticles(val) {
-      if (val.length > 2) {
-        window.NexusShowToast('Searching knowledge base for: "' + val + '"');
+      const term = (val || '').toLowerCase().trim();
+      if (!window.BizAssistStore) return;
+      const all = window.BizAssistStore.getTickets();
+      if (!term) {
+        renderTableRows(all);
+        return;
       }
+      const filtered = all.filter(t => 
+        t.code.toLowerCase().includes(term) ||
+        t.subject.toLowerCase().includes(term) ||
+        t.category.toLowerCase().includes(term)
+      );
+      renderTableRows(filtered);
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPortal();
+      if (window.BizAssistStore) {
+        window.BizAssistStore.subscribe(() => {
+          renderPortal();
+        });
+      }
+    });
   </script>
 </body>
 </html>

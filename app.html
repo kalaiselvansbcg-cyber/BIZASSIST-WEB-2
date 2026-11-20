@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Home Hub — BIZASSIST AI</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/shell.css">
+
+  <style>
+    .hub-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 24px 80px 24px;
+    }
+
+    .welcome-card {
+      border: 1px solid var(--shell-line);
+      background: #FFFFFF;
+      padding: clamp(24px, 4vw, 40px);
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .welcome-title {
+      font-family: var(--shell-font-serif);
+      font-size: clamp(32px, 4vw, 44px);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--shell-ink);
+      line-height: 1.15;
+    }
+
+    .welcome-subtitle {
+      font-size: 15px;
+      color: var(--shell-secondary);
+      margin-top: 8px;
+      max-width: 58ch;
+      line-height: 1.5;
+    }
+
+    .tour-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 24px;
+      background: var(--shell-ink);
+      color: #FAF8F5;
+      text-decoration: none;
+      font-family: var(--shell-font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid var(--shell-ink);
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .tour-cta-btn:hover {
+      background: #2A2A2A;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    @media (max-width: 900px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .kpi-card {
+      background: #FFFFFF;
+      border: 1px solid var(--shell-line);
+      padding: 20px 24px;
+    }
+
+    .kpi-label {
+      font-family: var(--shell-font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--shell-muted);
+      margin-bottom: 8px;
+    }
+
+    .kpi-num {
+      font-family: var(--shell-font-serif);
+      font-size: 38px;
+      font-weight: 500;
+      color: var(--shell-ink);
+      line-height: 1;
+    }
+
+    .kpi-meta {
+      font-size: 12px;
+      color: var(--shell-secondary);
+      margin-top: 6px;
+    }
+
+    /* Actions Grid */
+    .section-title {
+      font-family: var(--shell-font-serif);
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 16px;
+      color: var(--shell-ink);
+    }
+
+    .actions-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 860px) {
+      .actions-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .action-card {
+      background: #FFFFFF;
+      border: 1px solid var(--shell-line);
+      padding: 28px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 180px;
+      transition: all 180ms ease;
+    }
+
+    .action-card:hover {
+      border-color: var(--shell-ink);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    .action-card-role {
+      font-family: var(--shell-font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--shell-accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .action-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--shell-ink);
+      margin-bottom: 8px;
+    }
+
+    .action-card-desc {
+      font-size: 13px;
+      color: var(--shell-secondary);
+      line-height: 1.5;
+    }
+
+    .action-card-link {
+      margin-top: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--shell-ink);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Activity Feed Table */
+    .table-card {
+      background: #FFFFFF;
+      border: 1px solid var(--shell-line);
+      padding: 24px;
+    }
+
+    .ticket-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .ticket-table th {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--shell-line);
+      font-family: var(--shell-font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--shell-muted);
+      background: #FAF8F5;
+    }
+
+    .ticket-table td {
+      padding: 14px;
+      border-bottom: 1px solid #F0ECE4;
+      font-size: 13px;
+    }
+
+    .badge-stage {
+      display: inline-block;
+      padding: 3px 8px;
+      font-family: var(--shell-font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border: 1px solid transparent;
+    }
+
+    .badge-stage.Raised { background: #FEF3C7; color: #92400E; border-color: #FDE68A; }
+    .badge-stage.Categorised { background: #EFF6FF; color: #1E40AF; border-color: #BFDBFE; }
+    .badge-stage.Assigned { background: #F3E8FF; color: #6B21A8; border-color: #E9D5FF; }
+    .badge-stage.Replied { background: #E0E7FF; color: #3730A3; border-color: #C7D2FE; }
+    .badge-stage.Resolved { background: #ECFDF5; color: #065F46; border-color: #A7F3D0; }
+  </style>
+</head>
+<body>
+
+  <main class="hub-container">
+    
+    <!-- Welcome Header -->
+    <div class="welcome-card">
+      <div>
+        <h1 class="welcome-title" id="hub-welcome-title">Welcome to BizAssist AI</h1>
+        <p class="welcome-subtitle" id="hub-welcome-subtitle">
+          Your workspace is synchronized across customer intake, AI triage, agent queue handling, and manager analytics.
+        </p>
+      </div>
+      <div>
+        <button type="button" class="tour-cta-btn" onclick="BizAssistFlow.startTour()">
+          <span>Start Guided Tour</span>
+          <span>→</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Live Reactive Metrics -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Tickets</div>
+        <div class="kpi-num" id="kpi-total">5</div>
+        <div class="kpi-meta">Live in shared store</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Open / In Progress</div>
+        <div class="kpi-num" id="kpi-open">4</div>
+        <div class="kpi-meta">Awaiting team action</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">AI Deflection Rate</div>
+        <div class="kpi-num" id="kpi-deflect">68.4%</div>
+        <div class="kpi-meta">Automated resolution</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Median SLA</div>
+        <div class="kpi-num" id="kpi-sla">2m 45s</div>
+        <div class="kpi-meta">Target: &lt; 15m</div>
+      </div>
+    </div>
+
+    <!-- Quick Navigation Actions -->
+    <h2 class="section-title">Application Workspace Directory</h2>
+    <div class="actions-grid" id="hub-actions-grid">
+      <!-- Populated dynamically based on user role -->
+    </div>
+
+    <!-- Recent Shared Ticket Feed -->
+    <div class="table-card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div>
+          <h2 style="font-size:16px; font-weight:700;">Active Tickets in Queue</h2>
+          <span style="font-size:12px; color:var(--shell-secondary);">Reactive live data shared across all views</span>
+        </div>
+        <button type="button" class="tour-cta-btn" style="padding:6px 14px; font-size:11px;" onclick="window.BizAssistShell.handleResetData()">
+          Reset Seed Data
+        </button>
+      </div>
+
+      <table class="ticket-table">
+        <thead>
+          <tr>
+            <th>Ticket</th>
+            <th>Subject</th>
+            <th>Category</th>
+            <th>Priority</th>
+            <th>Assigned</th>
+            <th>Stage</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="hub-ticket-body">
+          <!-- Populated from store.js -->
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <script src="js/guard.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/flow.js"></script>
+
+  <script>
+    'use strict';
+
+    function initHub() {
+      const session = window.BizAssistAuth ? window.BizAssistAuth.getSession() : null;
+      if (!session) return;
+
+      const titleEl = document.getElementById('hub-welcome-title');
+      const subEl = document.getElementById('hub-welcome-subtitle');
+      const actionsGrid = document.getElementById('hub-actions-grid');
+
+      titleEl.textContent = `Welcome, ${session.name}`;
+      subEl.textContent = `Signed in as ${session.role} at ${session.company}. Every ticket action taken here updates all other views in real time.`;
+
+      // Render action cards based on role
+      let cards = [];
+      if (session.role === 'Customer') {
+        cards = [
+          {
+            role: 'Intake',
+            title: 'Customer Ticket Portal',
+            desc: 'Raise new inquiries, track progress through 5 workflow stages, and search knowledge.',
+            href: '/portal'
+          },
+          {
+            role: 'Assistant',
+            title: 'Knowledge Chatbot',
+            desc: 'Ask questions about pricing, API limits, and check status for tickets #BA-1042 or #BA-2089.',
+            href: '/chatbot'
+          },
+          {
+            role: 'Walkthrough',
+            title: '6-Step Guided Tour',
+            desc: 'Follow the guided path from customer intake to AI triage, agent response, and manager review.',
+            href: 'javascript:BizAssistFlow.startTour()'
+          }
+        ];
+      } else if (session.role === 'Agent') {
+        cards = [
+          {
+            role: 'Queue',
+            title: 'Agent Dashboard',
+            desc: 'Review assigned tickets, customer 360 intelligence, SLA timers, and AI summaries.',
+            href: '/agent-dashboard'
+          },
+          {
+            role: 'Intelligence',
+            title: 'AI Triage Studio',
+            desc: 'Inspect NLP intent classification, confidence scores, and automated queue routing.',
+            href: '/ai-triage'
+          },
+          {
+            role: 'Drafting',
+            title: 'Suggested Replies',
+            desc: 'Review RAG-grounded draft responses, switch tone, and approve & dispatch replies.',
+            href: '/suggested-replies'
+          }
+        ];
+      } else {
+        // Manager or Admin
+        cards = [
+          {
+            role: 'Analytics',
+            title: 'Manager Overview',
+            desc: 'Track team roster capacity, SLA compliance, volume deflection, and CSAT breakdown.',
+            href: '/manager-overview'
+          },
+          {
+            role: 'Operations',
+            title: 'Agent Dashboard',
+            desc: 'Supervise queue distribution, urgent P1 tickets, and agent response drafting.',
+            href: '/agent-dashboard'
+          },
+          {
+            role: 'Engine',
+            title: 'AI Triage Studio',
+            desc: 'Evaluate model accuracy, latency benchmarks, and multi-intent confidence.',
+            href: '/ai-triage'
+          }
+        ];
+      }
+
+      actionsGrid.innerHTML = cards.map(c => `
+        <a href="${c.href}" class="action-card">
+          <div>
+            <div class="action-card-role">${c.role}</div>
+            <div class="action-card-title">${c.title}</div>
+            <p class="action-card-desc">${c.desc}</p>
+          </div>
+          <div class="action-card-link">
+            <span>Open Workspace</span>
+            <span>→</span>
+          </div>
+        </a>
+      `).join('');
+
+      renderTicketsAndKPIs();
+
+      // Subscribe to reactive store changes
+      if (window.BizAssistStore) {
+        window.BizAssistStore.subscribe(() => {
+          renderTicketsAndKPIs();
+        });
+      }
+    }
+
+    function renderTicketsAndKPIs() {
+      if (!window.BizAssistStore) return;
+      const metrics = window.BizAssistStore.getMetrics();
+      const tickets = window.BizAssistStore.getTickets();
+
+      document.getElementById('kpi-total').textContent = metrics.total;
+      document.getElementById('kpi-open').textContent = metrics.open;
+      document.getElementById('kpi-deflect').textContent = metrics.deflectionRate;
+      document.getElementById('kpi-sla').textContent = metrics.avgHandleTime;
+
+      const tbody = document.getElementById('hub-ticket-body');
+      tbody.innerHTML = tickets.map(t => `
+        <tr>
+          <td><strong>#${t.code}</strong></td>
+          <td><span style="font-weight:600;">${t.subject}</span></td>
+          <td>${t.category}</td>
+          <td><span style="font-family:var(--shell-font-mono); font-size:11px; font-weight:700;">${t.priority}</span></td>
+          <td>${t.assignedTo}</td>
+          <td><span class="badge-stage ${t.stage}">${t.stage}</span></td>
+          <td>
+            <a href="/portal" style="color:var(--shell-ink); font-weight:600; text-decoration:underline;">View →</a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    window.addEventListener('DOMContentLoaded', initHub);
+  </script>
+</body>
+</html>

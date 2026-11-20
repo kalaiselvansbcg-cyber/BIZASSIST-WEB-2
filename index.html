@@ -1,2415 +1,724 @@
 <!DOCTYPE html>
-<html lang="en" class="js">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>BIZASSIST AI — AI-Assisted Customer Support Platform</title>
+  <title>Sign in — BIZASSIST AI</title>
   
-  <!-- Preload & Google Fonts: Cormorant Garamond & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" as="style">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  
-  <!-- Quiet Luxury Design System Tokens -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/theme.css">
-
+  
   <style>
-    /* ==========================================================================
-       QUIET LUXURY STYLESHEET (index.html)
-       Editorial restraint, warm cream background, serif headlines, hairline borders.
-       ========================================================================== */
-
     :root {
-      --bg: #FAF8F5;           /* warm cream */
-      --surface: #FFFFFF;      /* pure white cards */
-      --surface-alt: #EFEBE4;  /* panels, frames */
-      --ink: #111111;          /* text, primary buttons */
-      --ink-soft: #5E5A53;     /* body copy */
-      --muted: #6F6A61;        /* labels */
-      --line: #E3DED6;         /* hairlines */
-      --accent: #B3402A;       /* Urgent red dot & error only */
-      --radius: 0;
-      --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-      --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
-      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --duration: 450ms;
+      --bg: #FAF8F5;
+      --ink: #111111;
+      --secondary: #5E5A53;
+      --muted: #6F6A61;
+      --line: #E3DED6;
+      --accent: #B3402A;
+      --surface: #FFFFFF;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
     }
 
-    body {
-      background-color: var(--bg);
-      color: var(--ink);
-      font-family: var(--font-sans);
-      font-size: 16px;
-      line-height: 1.6;
-      letter-spacing: -0.01em;
+    *, *::before, *::after {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      overflow-x: hidden;
     }
 
-    .container {
-      width: 100%;
-      max-width: 1380px;
-      margin: 0 auto;
-      padding-left: clamp(20px, 5vw, 110px);
-      padding-right: clamp(20px, 5vw, 110px);
-    }
-
-    .section-spacing {
-      padding-top: clamp(96px, 12vw, 180px);
-      padding-bottom: clamp(96px, 12vw, 180px);
-      position: relative;
-    }
-
-    /* Accessibility Skip Link */
-    .skip-link {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      padding: 12px 20px;
-      background: var(--ink);
-      color: #FFFFFF;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      text-decoration: none;
-      z-index: 10000;
-      transform: translateY(-200%);
-      transition: transform 250ms var(--ease);
-    }
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    /* Fixed Section Counter (Bottom Left) */
-    .fixed-section-counter {
-      position: fixed;
-      bottom: 24px;
-      left: clamp(20px, 5vw, 110px);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.2em;
-      z-index: 900;
-      pointer-events: none;
-    }
-
-    /* ==========================================================================
-       HEADER (3-Zone: Left MENU, Center Logo, Right SIGN IN & BOOK A DEMO)
-       ========================================================================== */
-    .site-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 950;
-      background: var(--bg);
-      transition: transform 300ms var(--ease), border-color 300ms var(--ease), background 300ms var(--ease);
-    }
-    .site-header.has-scrolled {
-      border-bottom: 1px solid var(--line);
-      background: rgba(250, 248, 245, 0.94);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    .site-header.is-hidden {
-      transform: translateY(-100%);
-    }
-
-    .header-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      height: 84px;
-      position: relative;
-    }
-
-    .header-zone-left {
-      flex: 1;
-      display: flex;
-      align-items: center;
-    }
-
-    .header-menu-btn {
-      background: none;
-      border: none;
-      padding: 8px 0;
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--ink);
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-height: 44px;
-    }
-    .header-menu-btn:hover {
-      opacity: 0.7;
-    }
-    .menu-line-icon {
-      width: 18px;
-      height: 12px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .menu-line-icon span {
-      display: block;
-      width: 100%;
-      height: 1.5px;
-      background: var(--ink);
-    }
-
-    .header-zone-center {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .header-logo {
-      font-family: var(--font-serif);
-      font-size: 22px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.4em;
-      color: var(--ink);
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .header-zone-right {
-      flex: 1;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 24px;
-    }
-
-    .header-link-signin {
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--ink);
-      text-decoration: none;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-    .header-link-signin:hover {
-      opacity: 0.7;
-    }
-
-    .header-btn-demo {
-      min-height: 44px;
-      padding: 12px 24px;
-      background: var(--ink);
-      color: #FFFFFF;
-      border: 1px solid var(--ink);
-      border-radius: 0;
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 250ms var(--ease), color 250ms var(--ease);
-    }
-    .header-btn-demo:hover {
-      background: var(--bg);
-      color: var(--ink);
-    }
-
-    @media (max-width: 860px) {
-      .header-zone-left {
-        order: 2;
-        flex: 0;
-      }
-      .header-zone-center {
-        order: 1;
-        justify-content: flex-start;
-      }
-      .header-zone-right {
-        display: none;
-      }
-      .header-inner {
-        height: 72px;
-      }
-    }
-
-    /* ==========================================================================
-       FULL-SCREEN MENU OVERLAY (Accessible with Focus Trap & Large Serif Links)
-       ========================================================================== */
-    .menu-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: clamp(24px, 5vw, 64px) clamp(20px, 5vw, 110px);
-      overflow-y: auto;
-    }
-    .menu-overlay.is-active {
-      display: flex;
-    }
-    .menu-overlay-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--line);
-    }
-    .menu-close-btn {
-      background: none;
-      border: none;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--ink);
-      cursor: pointer;
-      min-height: 44px;
-      padding: 8px 16px;
-    }
-
-    .menu-links-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: clamp(16px, 3vh, 32px);
-      margin: 40px 0;
-      padding: 0;
-    }
-    .menu-link-item a {
-      font-family: var(--font-serif);
-      font-size: clamp(36px, 5vw, 64px);
-      font-weight: 400;
-      line-height: 1.1;
-      color: var(--ink);
-      text-decoration: none;
-      transition: padding-left 250ms var(--ease), opacity 200ms ease;
-    }
-    .menu-link-item a:hover {
-      opacity: 0.6;
-      padding-left: 16px;
-    }
-
-    .menu-overlay-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    /* ==========================================================================
-       HERO SECTION
-       ========================================================================== */
-    .hero-wrap {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding-top: 120px;
-      padding-bottom: 80px;
-    }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: clamp(40px, 6vw, 100px);
-      align-items: center;
-      width: 100%;
-    }
-
-    @media (max-width: 860px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-    }
-
-    .hero-eyebrow {
-      display: block;
-      margin-bottom: 20px;
-    }
-    .hero-title {
-      margin-bottom: 24px;
-    }
-    .hero-title em {
-      font-style: italic;
-    }
-    .hero-subcopy {
-      max-width: 44ch;
-      margin-bottom: 40px;
-    }
-    .hero-actions {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin-bottom: 48px;
-    }
-
-    .hero-scroll-hint {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--font-sans);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-decoration: none;
-    }
-
-    /* Pure HTML/CSS Ticket Card in Surface-Alt Frame */
-    .hero-frame-container {
-      background: var(--surface-alt);
-      padding: clamp(24px, 4vw, 44px);
-      border: 1px solid var(--line);
-    }
-    .hero-ticket-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: clamp(24px, 4vw, 36px);
-    }
-    .ticket-meta-tag {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--line);
-    }
-    .ticket-id-label {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-    .ticket-urgent-dot {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-    }
-    .ticket-urgent-dot::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-    .hero-ticket-title {
-      font-family: var(--font-serif);
-      font-size: 22px;
-      font-weight: 400;
-      line-height: 1.25;
-      margin-bottom: 20px;
-    }
-    .hero-ticket-details {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--ink-soft);
-      margin-bottom: 24px;
-    }
-    .hero-ticket-details div strong {
-      color: var(--ink);
-    }
-
-    /* ==========================================================================
-       SECTION: #try-it (Live Triage Demo)
-       ========================================================================== */
-    .triage-demo-box {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: clamp(24px, 5vw, 48px);
-    }
-    .demo-chips-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .demo-chip {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: 10px 16px;
-      font-size: 13px;
-      font-family: var(--font-sans);
-      color: var(--ink);
-      cursor: pointer;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      transition: border-color 200ms ease, background 200ms ease;
-    }
-    .demo-chip:hover {
-      border-color: var(--ink);
-      background: var(--surface-alt);
-    }
-
-    .triage-textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 16px;
-      background: var(--surface);
-      border: 1px solid var(--line);
+    html, body {
+      background-color: var(--bg);
       color: var(--ink);
       font-family: var(--font-sans);
       font-size: 15px;
       line-height: 1.5;
-      resize: vertical;
-      margin-bottom: 20px;
-      border-radius: 0;
-    }
-    .triage-textarea:focus {
-      outline: none;
-      border-color: var(--ink);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* 4-Step Pipeline Sequence with Thin Progress Line */
-    .pipeline-status-container {
-      display: none;
-      margin: 24px 0;
-      padding: 20px;
-      background: var(--surface-alt);
-      border: 1px solid var(--line);
-    }
-    .pipeline-steps-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      position: relative;
-    }
-    .pipeline-steps-grid::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      right: 10px;
-      height: 1px;
-      background: var(--line);
-      z-index: 1;
-    }
-    .pipe-step-node {
-      position: relative;
-      z-index: 2;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: 10px;
-      text-align: center;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      transition: all 300ms var(--ease);
-    }
-    .pipe-step-node.active {
-      border-color: var(--ink);
-      color: var(--ink);
-      font-weight: 600;
-      background: #FFFFFF;
-    }
-
-    @media (max-width: 680px) {
-      .pipeline-steps-grid {
-        grid-template-columns: 1fr;
-      }
-      .pipeline-steps-grid::before {
-        display: none;
-      }
-    }
-
-    /* Result Card */
-    .triage-result-card {
-      display: none;
-      background: var(--surface);
-      border: 1px solid var(--ink);
-      padding: clamp(24px, 4vw, 36px);
-      margin-top: 24px;
-    }
-    .triage-result-card.is-visible {
-      display: block;
-    }
-
-    .tone-buttons-row {
-      display: flex;
-      gap: 8px;
-      margin: 16px 0;
-    }
-    .btn-tone {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: 8px 16px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      cursor: pointer;
-      min-height: 44px;
-      transition: all 200ms ease;
-    }
-    .btn-tone.active {
-      background: var(--ink);
-      color: #FFFFFF;
-      border-color: var(--ink);
-    }
-
-    .reply-editor-textarea {
-      width: 100%;
-      min-height: 90px;
-      padding: 14px;
-      background: var(--surface-alt);
-      border: 1px solid var(--line);
-      font-family: var(--font-sans);
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-
-    /* Similar Ticket Alert */
-    .similar-ticket-alert {
-      display: none;
-      background: var(--surface-alt);
-      border: 1px solid var(--line);
-      padding: 16px 20px;
-      margin-top: 20px;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-    .similar-ticket-alert.is-visible {
-      display: flex;
-    }
-
-    /* ==========================================================================
-       SECTION: #tracker (Ticket Status Tracker)
-       ========================================================================== */
-    .tracker-box {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: clamp(24px, 5vw, 48px);
-    }
-    .tracker-input-row {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .tracker-input {
-      flex: 1;
-      min-height: 48px;
-      padding: 12px 16px;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      font-family: var(--font-mono);
-      font-size: 15px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-    .tracker-input:focus {
-      outline: none;
-      border-color: var(--ink);
-    }
-
-    /* 5-Step Timeline Line with Animated Squares */
-    .tracker-timeline-wrap {
-      margin: 40px 0;
-      position: relative;
-    }
-    .tracker-stages-track {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      position: relative;
-      gap: 12px;
-    }
-    .tracker-stages-track::before {
-      content: '';
-      position: absolute;
-      top: 14px;
-      left: 10px;
-      right: 10px;
-      height: 2px;
-      background: var(--line);
-      z-index: 1;
-    }
-    .tracker-stage-item {
-      position: relative;
-      z-index: 2;
+    body {
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+      padding: max(20px, env(safe-area-inset-top)) 
+               max(28px, env(safe-area-inset-right)) 
+               max(20px, env(safe-area-inset-bottom)) 
+               max(28px, env(safe-area-inset-left));
+    }
+
+    /* Accessibility Focus Rings */
+    :focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+    }
+
+    .top-bar {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      text-align: center;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
     }
-    .stage-square-icon {
-      width: 14px;
-      height: 14px;
-      background: var(--surface);
-      border: 1.5px solid var(--line);
-      margin-bottom: 12px;
-      transition: all 300ms var(--ease);
-    }
-    .tracker-stage-item.done .stage-square-icon {
-      background: var(--ink);
-      border-color: var(--ink);
-    }
-    .tracker-stage-item.current .stage-square-icon {
-      background: var(--surface);
-      border: 2px solid var(--ink);
-      box-shadow: 0 0 0 3px var(--bg);
-    }
-    .stage-name {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-    }
-    .tracker-stage-item.done .stage-name,
-    .tracker-stage-item.current .stage-name {
-      color: var(--ink);
+
+    .wordmark {
+      font-family: var(--font-serif);
+      font-size: 24px;
       font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      text-decoration: none;
     }
 
-    @media (max-width: 680px) {
-      .tracker-stages-track {
+    .public-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color 150ms ease;
+    }
+
+    .public-link:hover {
+      color: var(--ink);
+    }
+
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: clamp(32px, 4vh, 60px) 0;
+    }
+
+    .login-grid {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: clamp(32px, 5vw, 80px);
+    }
+
+    @media (max-width: 860px) {
+      .login-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
-      }
-      .tracker-stages-track::before {
-        display: none;
-      }
-      .tracker-stage-item {
-        flex-direction: row;
-        gap: 14px;
-        text-align: left;
+        gap: 32px;
       }
     }
 
-    .tracker-details-card {
-      background: var(--surface-alt);
+    /* Left Column */
+    .hero-heading {
+      font-family: var(--font-serif);
+      font-size: clamp(48px, 6vw, 76px);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    .sub-line {
+      font-size: 16px;
+      color: var(--secondary);
+      max-width: 44ch;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    /* One-Click Demo Access Box */
+    .demo-access-box {
       border: 1px solid var(--line);
+      background: var(--surface);
       padding: 24px;
       margin-top: 24px;
     }
 
-    /* ==========================================================================
-       SECTION: #flow (6-Stage Numbered Editorial List)
-       ========================================================================== */
-    .flow-list {
-      list-style: none;
-      padding: 0;
-      margin: 40px 0 0 0;
-      border-top: 1px solid var(--line);
-    }
-    .flow-row {
-      display: grid;
-      grid-template-columns: 80px 1.2fr 2fr;
-      padding: 32px 0;
-      border-bottom: 1px solid var(--line);
-      align-items: baseline;
-      gap: 24px;
-      transition: background 250ms var(--ease);
-    }
-    .flow-row:hover {
-      background: var(--surface-alt);
-      padding-left: 16px;
-      padding-right: 16px;
-    }
-    .flow-num {
-      font-family: var(--font-mono);
-      font-size: 14px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-    }
-    .flow-title {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      font-weight: 400;
-      color: var(--ink);
-    }
-    .flow-desc {
-      font-size: 15px;
-      color: var(--ink-soft);
-      line-height: 1.6;
-    }
-
-    @media (max-width: 768px) {
-      .flow-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-    }
-
-    /* ==========================================================================
-       SECTION: #insights (Manager Insights with Large Serif Numerals)
-       ========================================================================== */
-    .insights-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(32px, 5vw, 64px);
-      margin-top: 48px;
-    }
-    @media (max-width: 860px) {
-      .insights-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .stat-comparison-card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      padding: clamp(32px, 5vw, 48px);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .stat-huge-num {
-      font-family: var(--font-serif);
-      font-size: clamp(48px, 6vw, 76px);
-      font-weight: 400;
-      line-height: 1;
-      color: var(--ink);
-      margin: 16px 0;
-    }
-
-    .chart-track-row {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-    .chart-track-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-    }
-    .chart-hairline-track {
-      width: 100%;
-      height: 4px;
-      background: var(--line);
-      position: relative;
-    }
-    .chart-hairline-bar {
-      height: 100%;
-      background: var(--ink);
-      width: 0;
-      transition: width 900ms var(--ease);
-    }
-
-    /* ==========================================================================
-       SECTION: #features (3x2 Hairline Grid)
-       ========================================================================== */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-top: 1px solid var(--line);
-      border-left: 1px solid var(--line);
-      margin-top: 48px;
-    }
-    @media (max-width: 980px) {
-      .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    @media (max-width: 640px) {
-      .features-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .feature-card-cell {
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: clamp(28px, 4vw, 40px);
-      background: var(--surface);
-      text-decoration: none;
-      color: var(--ink);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      min-height: 240px;
-      transition: background 250ms var(--ease);
-    }
-    .feature-card-cell:hover {
-      background: var(--surface-alt);
-    }
-    .feature-card-cell:hover .feature-arrow {
-      transform: translateX(6px);
-    }
-    .feature-cat-mono {
+    .demo-access-title {
       font-family: var(--font-mono);
       font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      margin-bottom: 12px;
-    }
-    .feature-title {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      font-weight: 400;
-      line-height: 1.25;
-      margin-bottom: 12px;
-      color: var(--ink);
-    }
-    .feature-desc {
-      font-size: 14px;
-      color: var(--ink-soft);
-      line-height: 1.55;
-      margin-bottom: 24px;
-    }
-    .feature-link-bottom {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: var(--ink);
-    }
-    .feature-arrow {
-      transition: transform 250ms var(--ease);
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
 
-    /* ==========================================================================
-       SECTION: Customer Pain Points (Accordion)
-       ========================================================================== */
-    .accordion-wrap {
-      border-top: 1px solid var(--line);
-      margin-top: 40px;
+    .demo-access-desc {
+      font-size: 13px;
+      color: var(--secondary);
+      margin-bottom: 16px;
+      line-height: 1.45;
     }
-    .accordion-item {
-      border-bottom: 1px solid var(--line);
-    }
-    .accordion-btn {
-      width: 100%;
-      min-height: 72px;
-      padding: 20px 0;
-      background: none;
-      border: none;
+
+    .demo-btn-group {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      text-align: left;
-      cursor: pointer;
-      font-family: var(--font-serif);
-      font-size: clamp(20px, 2.5vw, 28px);
-      color: var(--ink);
+      flex-direction: column;
+      gap: 10px;
     }
-    .accordion-btn:hover {
+
+    .demo-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 150ms ease;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: #FAF8F5;
+    }
+
+    .demo-btn-role {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
       opacity: 0.7;
     }
-    .accordion-icon {
+
+    /* Right Column: Card */
+    .card-wrap {
+      width: 100%;
+      max-width: 460px;
+      justify-self: end;
+    }
+
+    @media (max-width: 860px) {
+      .card-wrap {
+        justify-self: start;
+        max-width: 100%;
+      }
+    }
+
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: clamp(24px, 4vw, 36px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Tabs */
+    .tab-header {
+      display: flex;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 0;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
       font-family: var(--font-sans);
-      font-size: 20px;
-      font-weight: 300;
-      transition: transform 300ms var(--ease);
-      min-width: 44px;
-      min-height: 44px;
-      display: inline-flex;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: center;
+      transition: all 150ms ease;
+    }
+
+    .tab-btn.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    /* Form Fields */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
       align-items: center;
-      justify-content: flex-end;
     }
-    .accordion-btn[aria-expanded="true"] .accordion-icon {
-      transform: rotate(45deg);
+
+    .text-input, .select-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      background: #FFFFFF;
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      border-radius: 0;
+      transition: border-color 150ms ease;
     }
-    .accordion-content {
+
+    .text-input:focus, .select-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      right: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 6px 10px;
+      background: transparent;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--secondary);
+      cursor: pointer;
+    }
+
+    .field-error {
       display: none;
-      padding-bottom: 24px;
-      font-size: 15px;
-      color: var(--ink-soft);
-      line-height: 1.65;
-      max-width: 65ch;
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
     }
-    .accordion-content.is-open {
+
+    .field-error.is-visible {
       display: block;
     }
 
-    /* ==========================================================================
-       SECTION: #goals (G1 to G5 Large Serif Numerals)
-       ========================================================================== */
-    .goals-list {
-      border-top: 1px solid var(--line);
-      margin-top: 48px;
-    }
-    .goal-row-item {
-      display: grid;
-      grid-template-columns: 120px 1.5fr 2fr;
-      padding: 32px 0;
-      border-bottom: 1px solid var(--line);
-      align-items: baseline;
-      gap: 24px;
-    }
-    .goal-num-serif {
-      font-family: var(--font-serif);
-      font-size: clamp(36px, 4vw, 54px);
-      color: var(--ink);
-      line-height: 1;
-    }
-    .goal-heading {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      color: var(--ink);
-    }
-    .goal-text {
-      font-size: 15px;
-      color: var(--ink-soft);
-    }
-
-    @media (max-width: 768px) {
-      .goal-row-item {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-    }
-
-    /* ==========================================================================
-       FOOTER & BOOK DEMO MODAL
-       ========================================================================== */
-    .site-footer {
-      border-top: 1px solid var(--line);
-      padding: clamp(64px, 8vw, 120px) 0 48px 0;
-      background: var(--bg);
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr;
-      gap: 48px;
-      margin-bottom: 64px;
-    }
-    @media (max-width: 860px) {
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-    .footer-brand {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .footer-bottom-line {
+    .controls-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 24px;
-      border-top: 1px solid var(--line);
+      margin: 16px 0 20px 0;
       font-size: 13px;
-      color: var(--muted);
-      flex-wrap: wrap;
-      gap: 16px;
     }
 
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(17, 17, 17, 0.4);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      z-index: 2000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-overlay.is-open {
-      display: flex;
-    }
-    .modal-box {
-      background: var(--surface);
-      border: 1px solid var(--ink);
-      width: 100%;
-      max-width: 520px;
-      padding: clamp(28px, 5vw, 48px);
-      position: relative;
-    }
-    .modal-close-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      min-width: 44px;
-      min-height: 44px;
+    .checkbox-label {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 8px;
+      color: var(--secondary);
+      cursor: pointer;
     }
 
-    /* Toast */
-    .toast-pill {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--ink);
-      color: #FFFFFF;
-      padding: 12px 24px;
+    .forgot-btn {
+      background: none;
+      border: none;
+      font-family: var(--font-sans);
       font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      z-index: 3000;
-      opacity: 0;
-      transition: all 300ms var(--ease);
-      pointer-events: none;
-      border: 1px solid var(--ink);
+      color: var(--secondary);
+      text-decoration: underline;
+      cursor: pointer;
     }
-    .toast-pill.is-visible {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
+
+    .forgot-btn:hover {
+      color: var(--ink);
+    }
+
+    .notice-box {
+      display: none;
+      background: #F4EFEB;
+      border: 1px solid #D8CFC4;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    .notice-box.is-visible {
+      display: block;
+    }
+
+    .btn-submit {
+      width: 100%;
+      min-height: 46px;
+      padding: 12px 20px;
+      background: var(--ink);
+      color: #FAF8F5;
+      border: 1px solid var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 0;
+      transition: background 150ms ease;
+    }
+
+    .btn-submit:hover {
+      background: #2A2A2A;
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .disclaimer-text {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 16px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .footer-line {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-line a {
+      color: var(--secondary);
+      text-decoration: none;
+    }
+
+    .footer-line a:hover {
+      color: var(--ink);
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <!-- Fixed Section Counter -->
-  <div class="fixed-section-counter" id="section-counter-display" aria-hidden="true">01 / 07</div>
-
-  <!-- Header -->
-  <header class="site-header" id="main-site-header" role="banner">
-    <div class="container header-inner">
-      <!-- Zone 1: Left Menu Button -->
-      <div class="header-zone-left">
-        <button class="header-menu-btn" id="open-menu-btn" onclick="toggleMenuOverlay(true)" aria-label="Open navigation menu" aria-haspopup="dialog" aria-expanded="false">
-          <div class="menu-line-icon" aria-hidden="true">
-            <span></span>
-            <span></span>
-          </div>
-          <span>Menu</span>
-        </button>
-      </div>
-
-      <!-- Zone 2: Center Logo -->
-      <div class="header-zone-center">
-        <a href="index.html" class="header-logo" aria-label="BIZASSIST AI homepage">BIZASSIST AI</a>
-      </div>
-
-      <!-- Zone 3: Right Actions -->
-      <div class="header-zone-right">
-        <a href="login.html" class="header-link-signin">Sign in</a>
-        <button class="header-btn-demo" onclick="openDemoModal()" aria-haspopup="dialog">Book a demo</button>
-      </div>
-    </div>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <a href="/about" class="wordmark">BIZASSIST AI</a>
+    <a href="/about" class="public-link">About Product Overview →</a>
   </header>
 
-  <!-- Full-Screen Menu Overlay -->
-  <div class="menu-overlay" id="full-menu-overlay" role="dialog" aria-modal="true" aria-label="Main Navigation Menu">
-    <div class="menu-overlay-header">
-      <span class="header-logo" style="font-size: 18px;">BIZASSIST AI</span>
-      <button class="menu-close-btn" id="close-menu-btn" onclick="toggleMenuOverlay(false)" aria-label="Close navigation menu">Close [ESC]</button>
-    </div>
+  <!-- Main Content -->
+  <main class="main-wrap">
+    <div class="login-grid">
+      
+      <!-- Left Column -->
+      <section>
+        <h1 class="hero-heading">Intelligent support operations.</h1>
+        <p class="sub-line">
+          Sign in to raise and track customer tickets, run AI-assisted triage, review suggested replies, and inspect manager metrics in one connected platform.
+        </p>
 
-    <ul class="menu-links-list">
-      <li class="menu-link-item"><a href="#try-it" onclick="toggleMenuOverlay(false)">01. Try Live Triage</a></li>
-      <li class="menu-link-item"><a href="#tracker" onclick="toggleMenuOverlay(false)">02. Ticket Tracker</a></li>
-      <li class="menu-link-item"><a href="#flow" onclick="toggleMenuOverlay(false)">03. Ticket Lifecycle</a></li>
-      <li class="menu-link-item"><a href="#insights" onclick="toggleMenuOverlay(false)">04. Manager Insights</a></li>
-      <li class="menu-link-item"><a href="#features" onclick="toggleMenuOverlay(false)">05. Platform Workspaces</a></li>
-      <li class="menu-link-item"><a href="#goals" onclick="toggleMenuOverlay(false)">06. System Goals</a></li>
-      <li class="menu-link-item"><a href="#contact" onclick="toggleMenuOverlay(false)">07. Contact & Enterprise</a></li>
-    </ul>
-
-    <div class="menu-overlay-footer">
-      <div>
-        <a href="login.html" style="color:var(--ink); text-decoration:underline; margin-right: 24px;">Sign In to Account →</a>
-        <button onclick="toggleMenuOverlay(false); openDemoModal();" class="btn-primary" style="padding: 10px 20px; font-size: 11px;">Book a Demo</button>
-      </div>
-      <span>Editorial Customer Support Infrastructure</span>
-    </div>
-  </div>
-
-  <main id="main-content">
-    <!-- ==========================================================================
-         HERO SECTION
-         ========================================================================== -->
-    <section class="hero-wrap container" id="hero" aria-label="Introduction">
-      <div class="hero-grid">
-        <div class="hero-text-col">
-          <span class="eyebrow hero-eyebrow">AI-ASSISTED SUPPORT</span>
-          <h1 class="hero-title">Support, <em>reimagined.</em></h1>
-          <p class="body-copy hero-subcopy">
-            Inquiries are automatically classified, prioritized, summarized, and resolved in minutes with AI assistance and human oversight.
+        <!-- One-Click Demo Access -->
+        <div class="demo-access-box">
+          <div class="demo-access-title">Fast-Track Demo Access</div>
+          <p class="demo-access-desc">
+            Explore with pre-seeded data without typing credentials:
           </p>
-          <div class="hero-actions">
-            <a href="#try-it" class="btn-primary">RAISE A TICKET</a>
-            <a href="#tracker" class="text-link-arrow">TRACK A TICKET →</a>
-          </div>
-          <div>
-            <a href="#try-it" class="hero-scroll-hint">SCROLL TO EXPLORE ↓</a>
-          </div>
-        </div>
-
-        <!-- Pure HTML/CSS Ticket Card Frame -->
-        <div class="hero-frame-container">
-          <div class="hero-ticket-card">
-            <div class="ticket-meta-tag">
-              <span class="ticket-id-label">TICKET #BA-1042</span>
-              <span class="ticket-urgent-dot">URGENT</span>
-            </div>
-            <h2 class="hero-ticket-title">Payment failed on renewal checkout</h2>
-            <div class="hero-ticket-details">
-              <div><strong>Category:</strong> Billing & Payments</div>
-              <div><strong>Priority:</strong> Urgent P1 (15m SLA)</div>
-              <div><strong>Assigned to:</strong> Sarah Jenkins (Tier-2 SRE)</div>
-            </div>
-
-            <!-- Five-Square Ticket Tracker -->
-            <div class="tracker-five-squares" aria-label="Five stage milestone progress">
-              <div class="tracker-square-node done" title="Stage 1: Raised"></div>
-              <div class="tracker-square-node done" title="Stage 2: Categorised"></div>
-              <div class="tracker-square-node done" title="Stage 3: Assigned"></div>
-              <div class="tracker-square-node current" title="Stage 4: Replied"></div>
-              <div class="tracker-square-node" title="Stage 5: Resolved"></div>
-            </div>
-            <div style="font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em;">
-              Current Stage: Replied (Step 04 / 05)
-            </div>
+          <div class="demo-btn-group">
+            <button type="button" class="demo-btn" onclick="handleDemoLogin('Customer')">
+              <span>Continue as Elena Rostova</span>
+              <span class="demo-btn-role">Customer Portal →</span>
+            </button>
+            <button type="button" class="demo-btn" onclick="handleDemoLogin('Agent')">
+              <span>Continue as Sarah Jenkins</span>
+              <span class="demo-btn-role">Agent Dashboard →</span>
+            </button>
+            <button type="button" class="demo-btn" onclick="handleDemoLogin('Manager')">
+              <span>Continue as Marcus Vance</span>
+              <span class="demo-btn-role">Manager Overview →</span>
+            </button>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ==========================================================================
-         SECTION 1: #try-it (Live Triage Demo)
-         ========================================================================== -->
-    <section id="try-it" class="section-spacing container" aria-label="Live Demo Section">
-      <span class="eyebrow">01 / LIVE INTERACTION</span>
-      <h2 style="margin: 16px 0 32px 0;">Experience zero-touch <em>triage.</em></h2>
-      <p class="body-copy" style="max-width: 60ch; margin-bottom: 32px;">
-        Submit a customer issue or select an enterprise complaint scenario. Watch the NLP model categorize, prioritize, summarize, and draft a response.
-      </p>
-
-      <div class="triage-demo-box">
-        <div class="demo-chips-row">
-          <button type="button" class="demo-chip" onclick="loadDemoScenario(0)">Payment gateway renewal failure</button>
-          <button type="button" class="demo-chip" onclick="loadDemoScenario(1)">Webhook HTTP 500 error on sync</button>
-          <button type="button" class="demo-chip" onclick="loadDemoScenario(2)">Update company VAT and billing address</button>
-        </div>
-
-        <label for="demo-input-text" class="eyebrow" style="margin-bottom: 8px; display: block;">Customer Complaint Inbound</label>
-        <textarea id="demo-input-text" class="triage-textarea" placeholder="Paste or type a customer support inquiry..."></textarea>
-
-        <button type="button" id="btn-run-ai" class="btn-primary" onclick="runAiProcessing()">Analyze Ticket with AI</button>
-
-        <!-- 4-Step Pipeline Sequence -->
-        <div id="pipeline-status-box" class="pipeline-status-container" aria-live="polite">
-          <div class="pipeline-steps-grid">
-            <div class="pipe-step-node" id="step-cat">1. Categorising</div>
-            <div class="pipe-step-node" id="step-prio">2. Prioritising</div>
-            <div class="pipe-step-node" id="step-sum">3. Summarising</div>
-            <div class="pipe-step-node" id="step-reply">4. Drafting Reply</div>
-          </div>
-        </div>
-
-        <!-- Result Card -->
-        <div id="demo-result-card" class="triage-result-card">
-          <div class="ticket-meta-tag">
-            <span class="ticket-id-label" id="res-category">CATEGORY: BILLING & PAYMENTS</span>
-            <div style="display:flex; gap:12px;">
-              <span id="res-priority-badge" class="status-badge-quiet urgent">URGENT</span>
-              <span id="res-sentiment-badge" class="status-badge-quiet">FRUSTRATED</span>
-            </div>
-          </div>
-
-          <div style="margin-bottom: 20px;">
-            <span class="eyebrow" style="margin-bottom: 6px; display: block;">Executive 2-Line Summary</span>
-            <p id="res-summary" style="font-size: 15px; color: var(--ink); line-height: 1.5; font-weight: 500;">
-              Customer encountered checkout 500 gateway error on renewal invoice. Card charged without workspace license extension.
-            </p>
-          </div>
-
-          <div>
-            <span class="eyebrow" style="display: block;">Editable Suggested Response</span>
-            <div class="tone-buttons-row">
-              <button type="button" class="btn-tone active" onclick="setReplyTone('friendly', this)">Friendly</button>
-              <button type="button" class="btn-tone" onclick="setReplyTone('formal', this)">Formal</button>
-              <button type="button" class="btn-tone" onclick="setReplyTone('short', this)">Short</button>
-            </div>
-            <textarea id="res-reply-editor" class="reply-editor-textarea"></textarea>
-
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-              <button type="button" class="btn-primary" onclick="sendSuggestedReply()">Approve and Dispatch</button>
-              <button type="button" class="btn-tone" onclick="copySuggestedReply()">Copy Reply</button>
-            </div>
-          </div>
-
-          <!-- Similar Ticket Alert -->
-          <div id="similar-ticket-box" class="similar-ticket-alert">
-            <span id="similar-ticket-msg" style="font-size: 13px; font-weight: 500;">2 similar tickets found in queue (#BA-1042, #BA-1039)</span>
-            <button type="button" id="btn-merge-action" class="btn-primary" style="padding: 10px 18px; font-size: 11px;" onclick="mergeSimilarTickets()">Merge 2 Tickets</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         SECTION 2: #tracker (Ticket Status Tracker)
-         ========================================================================== -->
-    <section id="tracker" class="section-spacing container" aria-label="Ticket Tracker">
-      <span class="eyebrow">02 / REAL-TIME TRANSPARENCY</span>
-      <h2 style="margin: 16px 0 32px 0;">Five-stage <em>milestones.</em></h2>
-      <p class="body-copy" style="max-width: 60ch; margin-bottom: 32px;">
-        Look up active tickets to track live milestone progression from intake to triage, engineering assignment, and final resolution.
-      </p>
-
-      <div class="tracker-box">
-        <div class="demo-chips-row">
-          <button type="button" class="demo-chip" onclick="loadSampleTicket('BA-1042')">#BA-1042 (Renewal Checkout)</button>
-          <button type="button" class="demo-chip" onclick="loadSampleTicket('BA-2089')">#BA-2089 (API HTTP 500)</button>
-          <button type="button" class="demo-chip" onclick="loadSampleTicket('BA-3310')">#BA-3310 (VAT & Invoicing)</button>
-        </div>
-
-        <div class="tracker-input-row">
-          <input type="text" id="tracker-input-id" class="tracker-input" placeholder="ENTER TICKET ID (E.G. BA-1042)" value="BA-1042">
-          <button type="button" class="btn-primary" onclick="searchTicketStatus()">Lookup Ticket</button>
-        </div>
-
-        <!-- 5-Step Timeline -->
-        <div id="ticket-timeline-container" class="tracker-timeline-wrap">
-          <div class="tracker-stages-track">
-            <div class="tracker-stage-item done" id="time-step-1">
-              <div class="stage-square-icon"></div>
-              <span class="stage-name">1. Raised</span>
-            </div>
-            <div class="tracker-stage-item done" id="time-step-2">
-              <div class="stage-square-icon"></div>
-              <span class="stage-name">2. Categorised</span>
-            </div>
-            <div class="tracker-stage-item done" id="time-step-3">
-              <div class="stage-square-icon"></div>
-              <span class="stage-name">3. Assigned</span>
-            </div>
-            <div class="tracker-stage-item current" id="time-step-4">
-              <div class="stage-square-icon"></div>
-              <span class="stage-name">4. Replied</span>
-            </div>
-            <div class="tracker-stage-item" id="time-step-5">
-              <div class="stage-square-icon" id="node-step-5"></div>
-              <span class="stage-name">5. Resolved</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Details Card -->
-        <div id="tracker-status-details" class="tracker-details-card">
-          <h3 id="tracker-detail-subject" style="font-size: 20px; margin-bottom: 8px;">Ticket #BA-1042: Payment failure during enterprise renewal checkout</h3>
-          <p id="tracker-detail-desc" style="font-size: 14px; color: var(--ink-soft); line-height: 1.6;">
-            Assigned Agent Sarah captured transaction ch_3Ox948aL on Stripe. Invoice #INV-2026-904 attached. Workspace access uninterrupted.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         SECTION 3: #flow (6-Stage Numbered Editorial List)
-         ========================================================================== -->
-    <section id="flow" class="section-spacing container" aria-label="The life of a ticket">
-      <span class="eyebrow">03 / LIFECYCLE</span>
-      <h2 style="margin: 16px 0 24px 0;">The life of a <em>ticket.</em></h2>
-      <p class="body-copy" style="max-width: 60ch;">
-        Every customer inquiry journeys through six rigorously automated stages, eliminating handoffs and manual backlog delays.
-      </p>
-
-      <ul class="flow-list">
-        <li class="flow-row">
-          <span class="flow-num">01</span>
-          <h3 class="flow-title">Intake</h3>
-          <p class="flow-desc">Inquiries arrive via customer portal, webhooks, or support email and receive a unique immutable ticket reference code immediately.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">02</span>
-          <h3 class="flow-title">Entity Triage</h3>
-          <p class="flow-desc">Natural language models extract order numbers, error codes, and billing IDs in under 120ms to assign the exact technical queue.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">03</span>
-          <h3 class="flow-title">Priority Regression</h3>
-          <p class="flow-desc">SLA timers regress urgency into Normal (P3), High (P2), or Urgent (P1), locking in guaranteed response commitments.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">04</span>
-          <h3 class="flow-title">Executive Summary</h3>
-          <p class="flow-desc">A succinct technical brief is generated so the arriving support engineer understands root causes without reading 20-message threads.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">05</span>
-          <h3 class="flow-title">Suggested Reply</h3>
-          <p class="flow-desc">Grounded response drafts cite verified product documentation and offer tone customization before human agent dispatch.</p>
-        </li>
-        <li class="flow-row">
-          <span class="flow-num">06</span>
-          <h3 class="flow-title">Status Tracked</h3>
-          <p class="flow-desc">Customers inspect real-time progress across 5 milestone nodes, preventing repetitive "any updates?" inbound tickets.</p>
-        </li>
-      </ul>
-    </section>
-
-    <!-- ==========================================================================
-         SECTION 4: #insights (Manager Insights with Large Serif Numerals)
-         ========================================================================== -->
-    <section id="insights" class="section-spacing container" aria-label="Manager Insights">
-      <span class="eyebrow">04 / OPERATIONS ANALYTICS</span>
-      <h2 style="margin: 16px 0 24px 0;">Executive <em>throughput.</em></h2>
-      <p class="body-copy" style="max-width: 60ch;">
-        Automated classification and response synthesis reduce mean resolution time by 93% across customer tiers.
-      </p>
-
-      <div class="insights-grid">
-        <!-- Stat Card 1 -->
-        <div class="stat-comparison-card">
-          <div>
-            <span class="eyebrow">AVERAGE RESOLUTION TIME</span>
-            <div class="stat-huge-num" id="stat-aht-val">3m 12s</div>
-            <p style="font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em;">
-              Industry Standard: <strong>48 minutes</strong>
-            </p>
-          </div>
-          <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.6; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);">
-            "Billing tickets rose 30% this week. Zero SLA breaches recorded with automated triage."
-          </p>
-        </div>
-
-        <!-- Stat Card 2: Thin Black Bars on Line Track -->
-        <div class="stat-comparison-card">
-          <span class="eyebrow" style="margin-bottom: 24px; display: block;">INBOUND VOLUME BY CATEGORY</span>
+      <!-- Right Column: Card -->
+      <section class="card-wrap">
+        <div class="auth-card">
           
-          <div class="chart-track-row">
-            <div class="chart-track-label">
-              <span>Billing & Invoicing</span>
-              <span>42%</span>
+          <div class="tab-header" role="tablist">
+            <button type="button" id="tab-signin-btn" class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('signin')">
+              Sign in
+            </button>
+            <button type="button" id="tab-signup-btn" class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('signup')">
+              Create account
+            </button>
+          </div>
+
+          <div id="status-live" class="field-error" style="margin-bottom:12px;" aria-live="polite"></div>
+          <div id="forgot-notice" class="notice-box" role="status">
+            Password reset is not connected in this prototype. Please use demo credentials (e.g. <code>password123</code>) or click one of the demo buttons on the left.
+          </div>
+
+          <!-- SIGN IN FORM -->
+          <form id="form-signin" onsubmit="handleSignIn(event)" novalidate>
+            <div class="field-group">
+              <label for="signin-email" class="field-label">Email address</label>
+              <div class="input-wrapper">
+                <input type="email" id="signin-email" class="text-input" placeholder="e.g. agent@bizassist.ai" autocomplete="username" required>
+              </div>
+              <div id="signin-email-error" class="field-error">Please enter a valid email.</div>
             </div>
-            <div class="chart-hairline-track">
-              <div class="chart-hairline-bar" data-width="42%"></div>
+
+            <div class="field-group">
+              <label for="signin-password" class="field-label">Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="signin-password" class="text-input" placeholder="At least 8 characters" autocomplete="current-password" required style="padding-right: 70px;">
+                <button type="button" class="toggle-password-btn" onclick="togglePassword('signin-password', this)">Show</button>
+              </div>
+              <div id="signin-password-error" class="field-error">Password must be at least 8 characters.</div>
             </div>
-          </div>
 
-          <div class="chart-track-row">
-            <div class="chart-track-label">
-              <span>API & Webhook Gateway</span>
-              <span>28%</span>
+            <div class="controls-row">
+              <label class="checkbox-label" for="keep-signed-in">
+                <input type="checkbox" id="keep-signed-in" checked>
+                <span>Keep me signed in</span>
+              </label>
+              <button type="button" class="forgot-btn" onclick="showForgotNotice()">Forgot password?</button>
             </div>
-            <div class="chart-hairline-track">
-              <div class="chart-hairline-bar" data-width="28%"></div>
+
+            <button type="submit" id="btn-signin-submit" class="btn-submit">
+              Sign in
+            </button>
+          </form>
+
+          <!-- SIGN UP FORM -->
+          <form id="form-signup" onsubmit="handleSignUp(event)" style="display: none;" novalidate>
+            <div class="field-group">
+              <label for="signup-name" class="field-label">Full name</label>
+              <div class="input-wrapper">
+                <input type="text" id="signup-name" class="text-input" placeholder="e.g. Maya Patel" autocomplete="name" required>
+              </div>
+              <div id="signup-name-error" class="field-error">Please enter your name.</div>
             </div>
-          </div>
 
-          <div class="chart-track-row">
-            <div class="chart-track-label">
-              <span>Account & Security</span>
-              <span>18%</span>
+            <div class="field-group">
+              <label for="signup-email" class="field-label">Work email</label>
+              <div class="input-wrapper">
+                <input type="email" id="signup-email" class="text-input" placeholder="e.g. maya@orbitio.dev" autocomplete="email" required>
+              </div>
+              <div id="signup-email-error" class="field-error">Please enter a valid email address.</div>
             </div>
-            <div class="chart-hairline-track">
-              <div class="chart-hairline-bar" data-width="18%"></div>
+
+            <div class="field-group">
+              <label for="signup-role" class="field-label">Workspace role</label>
+              <div class="input-wrapper">
+                <select id="signup-role" class="select-input">
+                  <option value="Customer">Customer (Raise & Track Tickets)</option>
+                  <option value="Agent">Support Agent (Queue & Triage)</option>
+                  <option value="Manager">Operations Manager (Analytics & SLAs)</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div class="chart-track-row">
-            <div class="chart-track-label">
-              <span>General Technical</span>
-              <span>12%</span>
+            <div class="field-group">
+              <label for="signup-password" class="field-label">Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="signup-password" class="text-input" placeholder="At least 8 characters" autocomplete="new-password" required style="padding-right: 70px;">
+                <button type="button" class="toggle-password-btn" onclick="togglePassword('signup-password', this)">Show</button>
+              </div>
+              <div id="signup-password-error" class="field-error">Password must be at least 8 characters.</div>
             </div>
-            <div class="chart-hairline-track">
-              <div class="chart-hairline-bar" data-width="12%"></div>
-            </div>
-          </div>
+
+            <button type="submit" id="btn-signup-submit" class="btn-submit" style="margin-top:8px;">
+              Create demo account
+            </button>
+          </form>
+
+          <p class="disclaimer-text">
+            Demo Authentication. Passwords are encrypted with browser SHA-256 Web Crypto hashing for demonstration security.
+          </p>
+
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ==========================================================================
-         SECTION 5: #features (3x2 Hairline Grid Linking to Dedicated Pages)
-         ========================================================================== -->
-    <section id="features" class="section-spacing container" aria-label="Platform Features">
-      <span class="eyebrow">05 / PLATFORM WORKSPACES</span>
-      <h2 style="margin: 16px 0 24px 0;">Six specialized <em>interfaces.</em></h2>
-      <p class="body-copy" style="max-width: 60ch;">
-        Every role in the support organization operates in a dedicated, distraction-free environment.
-      </p>
-
-      <div class="features-grid">
-        <a href="portal.html" class="feature-card-cell">
-          <div>
-            <div class="feature-cat-mono">WORKSPACE 01</div>
-            <h3 class="feature-title">Customer Portal</h3>
-            <p class="feature-desc">Self-service ticket intake, documentation search bar, and live milestone progression tracking.</p>
-          </div>
-          <div class="feature-link-bottom">
-            <span>OPEN PORTAL</span>
-            <span class="feature-arrow">→</span>
-          </div>
-        </a>
-
-        <a href="agent-dashboard.html" class="feature-card-cell">
-          <div>
-            <div class="feature-cat-mono">WORKSPACE 02</div>
-            <h3 class="feature-title">Agent Dashboard</h3>
-            <p class="feature-desc">3-pane support workspace, filterable priority inbox, Customer 360 card, and SLA timers.</p>
-          </div>
-          <div class="feature-link-bottom">
-            <span>OPEN DASHBOARD</span>
-            <span class="feature-arrow">→</span>
-          </div>
-        </a>
-
-        <a href="ai-triage.html" class="feature-card-cell">
-          <div>
-            <div class="feature-cat-mono">WORKSPACE 03</div>
-            <h3 class="feature-title">AI Triage Engine</h3>
-            <p class="feature-desc">Interactive NLP classifier, entity tagger, confidence meters, and live streaming triage event logs.</p>
-          </div>
-          <div class="feature-link-bottom">
-            <span>OPEN TRIAGE</span>
-            <span class="feature-arrow">→</span>
-          </div>
-        </a>
-
-        <a href="suggested-replies.html" class="feature-card-cell">
-          <div>
-            <div class="feature-cat-mono">WORKSPACE 04</div>
-            <h3 class="feature-title">Replies Studio</h3>
-            <p class="feature-desc">Human-in-the-loop response composer with 4 tone switchers, dynamic tokens, and RAG citations.</p>
-          </div>
-          <div class="feature-link-bottom">
-            <span>OPEN STUDIO</span>
-            <span class="feature-arrow">→</span>
-          </div>
-        </a>
-
-        <a href="chatbot.html" class="feature-card-cell">
-          <div>
-            <div class="feature-cat-mono">WORKSPACE 05</div>
-            <h3 class="feature-title">Knowledge Bot</h3>
-            <p class="feature-desc">Vector-grounded conversational assistant with quick chips and 1-click human agent handover.</p>
-          </div>
-          <div class="feature-link-bottom">
-            <span>OPEN CHATBOT</span>
-            <span class="feature-arrow">→</span>
-          </div>
-        </a>
-
-        <a href="manager-overview.html" class="feature-card-cell">
-          <div>
-            <div class="feature-cat-mono">WORKSPACE 06</div>
-            <h3 class="feature-title">Manager Overview</h3>
-            <p class="feature-desc">Executive operations command center with 5 KPI cards, daily volume chart, and agent performance table.</p>
-          </div>
-          <div class="feature-link-bottom">
-            <span>OPEN OVERVIEW</span>
-            <span class="feature-arrow">→</span>
-          </div>
-        </a>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         SECTION: Customer Pain Points (Accordion)
-         ========================================================================== -->
-    <section class="section-spacing container" aria-label="Customer Pain Points">
-      <span class="eyebrow">ANALYSIS</span>
-      <h2 style="margin: 16px 0 24px 0;">Problems we <em>eliminate.</em></h2>
-      <p class="body-copy" style="max-width: 60ch;">
-        Support debt builds when teams rely on raw shared inboxes and disconnected spreadsheets.
-      </p>
-
-      <div class="accordion-wrap">
-        <div class="accordion-item">
-          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
-            <span>Lost Tickets in Shared Inboxes</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            Unassigned tickets fall through inbox cracks. BizAssist AI centralizes intake into an immutable database with immediate automated customer ticket codes.
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
-            <span>Backlog Queues Without Urgency Prioritization</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            High-paying enterprise accounts wait behind password resets. Our regression models rank P1 Urgent tickets in under 120ms with hard SLA countdowns.
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
-            <span>Repetitive Answers Burning Support Engineers</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            Support staff write the same 10 responses dozens of times each day. Suggested replies draft grounded answers citing verified docs with 1-click approval.
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <button type="button" class="accordion-btn" onclick="togglePain(this)" aria-expanded="false">
-            <span>Zero Customer Visibility Into Investigation Progress</span>
-            <span class="accordion-icon">+</span>
-          </button>
-          <div class="accordion-content">
-            Customers send repeated "any update?" messages because queues are opaque. Our 5-stage milestone tracker provides complete transparent tracking.
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==========================================================================
-         SECTION 6: #goals (G1 to G5 Large Serif Numerals)
-         ========================================================================== -->
-    <section id="goals" class="section-spacing container" aria-label="Project Goals">
-      <span class="eyebrow">06 / VERIFICATION COMMITMENTS</span>
-      <h2 style="margin: 16px 0 24px 0;">Five engineering <em>goals.</em></h2>
-      <p class="body-copy" style="max-width: 60ch;">
-        Every operational module is built to satisfy strict performance and resolution benchmarks.
-      </p>
-
-      <div class="goals-list">
-        <div class="goal-row-item">
-          <div class="goal-num-serif">01</div>
-          <h3 class="goal-heading">Automated Intake</h3>
-          <p class="goal-text">Instant customer ticket intake and tracking generation across web, email, and API channels.</p>
-        </div>
-        <div class="goal-row-item">
-          <div class="goal-num-serif">02</div>
-          <h3 class="goal-heading">Sub-120ms Triage</h3>
-          <p class="goal-text">NLP intent extraction and SLA priority regression executing in under 120 milliseconds.</p>
-        </div>
-        <div class="goal-row-item">
-          <div class="goal-num-serif">03</div>
-          <h3 class="goal-heading">Contextual Drafts</h3>
-          <p class="goal-text">Grounding replies in verified engineering docs with tone adaptation (Friendly, Formal, Short).</p>
-        </div>
-        <div class="goal-row-item">
-          <div class="goal-num-serif">04</div>
-          <h3 class="goal-heading">Milestone Tracking</h3>
-          <p class="goal-text">Transparent customer timeline progression across Raised, Categorised, Assigned, Replied, and Resolved.</p>
-        </div>
-        <div class="goal-row-item">
-          <div class="goal-num-serif">05</div>
-          <h3 class="goal-heading">Workforce Analytics</h3>
-          <p class="goal-text">Executive analytics identifying volume spikes, resolution times, and deflection benchmarks.</p>
-        </div>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- ==========================================================================
-       SECTION 7: #contact / FOOTER
-       ========================================================================== -->
-  <footer id="contact" class="site-footer" role="contentinfo">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="footer-brand">BIZASSIST AI</div>
-          <p style="max-width: 42ch; font-size: 14px; color: var(--ink-soft); line-height: 1.6;">
-            Quiet luxury in support infrastructure. Automating ticket triage, response synthesis, and milestone tracking for modern enterprises.
-          </p>
-        </div>
-        <div>
-          <span class="eyebrow" style="margin-bottom: 16px; display: block;">PLATFORM</span>
-          <div style="display:flex; flex-direction:column; gap:8px; font-size: 14px;">
-            <a href="portal.html" style="color:var(--ink); text-decoration:none;">Customer Portal</a>
-            <a href="agent-dashboard.html" style="color:var(--ink); text-decoration:none;">Agent Dashboard</a>
-            <a href="ai-triage.html" style="color:var(--ink); text-decoration:none;">AI Triage Engine</a>
-            <a href="suggested-replies.html" style="color:var(--ink); text-decoration:none;">Suggested Replies</a>
-            <a href="manager-overview.html" style="color:var(--ink); text-decoration:none;">Manager Analytics</a>
-          </div>
-        </div>
-        <div>
-          <span class="eyebrow" style="margin-bottom: 16px; display: block;">DIRECT ACCESS</span>
-          <div style="display:flex; flex-direction:column; gap:8px; font-size: 14px;">
-            <a href="login.html" style="color:var(--ink); text-decoration:none;">Account Sign In</a>
-            <button onclick="openDemoModal()" style="background:none; border:none; padding:0; text-align:left; color:var(--ink); font-size:14px; cursor:pointer;">Book a Product Demo</button>
-            <a href="mailto:support@bizassist.ai" style="color:var(--ink); text-decoration:none;">support@bizassist.ai</a>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom-line">
-        <span>© 2026 BIZASSIST AI. Low-Code AI Product Prototyping.</span>
-        <span>Almost Monochrome Editorial Design System</span>
-      </div>
+  <!-- Footer Line -->
+  <footer class="footer-line">
+    <span>© 2026 BIZASSIST AI · Connected Prototype Architecture</span>
+    <div>
+      <a href="/about" style="margin-right: 16px;">Product Overview</a>
+      <span>Single Entry: /</span>
     </div>
   </footer>
 
-  <!-- ==========================================================================
-       FLOATING REAL AI ASSISTANT WIDGET
-       ========================================================================== -->
-  <button class="chat-widget-btn" id="chat-toggle-btn" onclick="toggleChatPanel()" aria-label="Open support assistant chat" aria-haspopup="dialog" aria-expanded="false">
-    <svg class="chat-widget-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-    <span>Ask AI Assistant</span>
-  </button>
+  <script src="js/guard.js"></script>
+  <script src="js/store.js"></script>
 
-  <div class="chat-panel" id="floating-chat-window" role="dialog" aria-labelledby="chat-panel-title-text" aria-modal="false">
-    <div class="chat-panel-header">
-      <div class="chat-panel-header-left">
-        <span class="chat-status-dot" aria-hidden="true"></span>
-        <span class="chat-panel-title" id="chat-panel-title-text">BizAssist AI Assistant</span>
-      </div>
-      <div class="chat-panel-header-actions">
-        <button class="chat-header-btn" onclick="resetChatSession()" aria-label="Start a new conversation">New Chat</button>
-        <button class="chat-panel-close" onclick="toggleChatPanel()" aria-label="Close chat window">✕</button>
-      </div>
-    </div>
-
-    <div class="chat-body" id="chat-messages-box" role="log" aria-live="polite">
-      <!-- Chat thread dynamically populated and persisted in sessionStorage -->
-    </div>
-
-    <form class="chat-input-row" onsubmit="handleChatSubmit(event)">
-      <input type="text" id="chat-input-text" class="chat-input" placeholder="Ask a question or enter ticket ID..." autocomplete="off" aria-label="Chat message input">
-      <button type="submit" id="chat-send-btn" class="chat-send-btn">Send</button>
-    </form>
-
-    <div class="chat-panel-footer">
-      <button type="button" class="chat-handover-link" onclick="triggerHumanHandover()">Talk to a human agent</button>
-      <span class="chat-brand-meta">AI-Assisted Support</span>
-    </div>
-  </div>
-
-  <!-- ==========================================================================
-       BOOK A DEMO MODAL (With Focus Trap)
-       ========================================================================== -->
-  <div class="modal-overlay" id="demo-modal" role="dialog" aria-modal="true" aria-labelledby="modal-heading">
-    <div class="modal-box" id="demo-modal-box">
-      <button class="modal-close-btn" onclick="closeDemoModal()" aria-label="Close dialog">✕</button>
-      <span class="eyebrow" style="margin-bottom: 8px; display: block;">ENTERPRISE DEMO</span>
-      <h3 id="modal-heading" style="font-size: 26px; margin-bottom: 12px;">Book a Product Demo</h3>
-      <p style="font-size: 14px; color: var(--ink-soft); line-height: 1.5; margin-bottom: 24px;">
-        See BizAssist AI in action on your support queues with our engineering team.
-      </p>
-
-      <form onsubmit="submitDemoForm(event)">
-        <div style="margin-bottom: 16px;">
-          <label for="demo-name" class="eyebrow" style="margin-bottom: 6px; display: block;">Full Name</label>
-          <input type="text" id="demo-name" class="input-quiet" required placeholder="Elena Rostova">
-        </div>
-        <div style="margin-bottom: 16px;">
-          <label for="demo-email" class="eyebrow" style="margin-bottom: 6px; display: block;">Work Email</label>
-          <input type="email" id="demo-email" class="input-quiet" required placeholder="name@company.com">
-        </div>
-        <div style="margin-bottom: 24px;">
-          <label for="demo-size" class="eyebrow" style="margin-bottom: 6px; display: block;">Team Size</label>
-          <select id="demo-size" class="input-quiet" style="height: 48px;">
-            <option value="1-10">1 – 10 agents</option>
-            <option value="11-50">11 – 50 agents</option>
-            <option value="51-200">51 – 200 agents</option>
-            <option value="201+">201+ enterprise</option>
-          </select>
-        </div>
-        <button type="submit" class="btn-primary" style="width: 100%;">Schedule Demonstration</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Toast Notification Pill -->
-  <div id="toast" class="toast-pill" role="status" aria-live="polite"></div>
-
-  <!-- Supabase Client SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase-client.js"></script>
-
-  <!-- ==========================================================================
-       VANILLA JS SCRIPT (All hooks & interactions preserved)
-       ========================================================================== -->
   <script>
     'use strict';
 
-    /* Header Hide on Scroll Down, Show on Scroll Up */
-    let lastScrollY = window.scrollY;
-    const headerEl = document.getElementById('main-site-header');
+    function switchTab(tab) {
+      const signinBtn = document.getElementById('tab-signin-btn');
+      const signupBtn = document.getElementById('tab-signup-btn');
+      const signinForm = document.getElementById('form-signin');
+      const signupForm = document.getElementById('form-signup');
+      const live = document.getElementById('status-live');
+      const forgot = document.getElementById('forgot-notice');
 
-    window.addEventListener('scroll', () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > 40) {
-        headerEl.classList.add('has-scrolled');
+      live.textContent = '';
+      forgot.classList.remove('is-visible');
+
+      if (tab === 'signin') {
+        signinBtn.classList.add('active');
+        signinBtn.setAttribute('aria-selected', 'true');
+        signupBtn.classList.remove('active');
+        signupBtn.setAttribute('aria-selected', 'false');
+        signinForm.style.display = 'block';
+        signupForm.style.display = 'none';
       } else {
-        headerEl.classList.remove('has-scrolled');
-      }
-
-      if (currentScrollY > lastScrollY && currentScrollY > 150) {
-        headerEl.classList.add('is-hidden');
-      } else {
-        headerEl.classList.remove('is-hidden');
-      }
-      lastScrollY = currentScrollY;
-    }, { passive: true });
-
-    /* Full-Screen Menu Overlay */
-    const menuOverlay = document.getElementById('full-menu-overlay');
-    const openMenuBtn = document.getElementById('open-menu-btn');
-    let previousActiveEl = null;
-
-    function toggleMenuOverlay(open) {
-      if (open) {
-        previousActiveEl = document.activeElement;
-        menuOverlay.classList.add('is-active');
-        document.body.style.overflow = 'hidden';
-        openMenuBtn.setAttribute('aria-expanded', 'true');
-        const firstLink = menuOverlay.querySelector('a');
-        if (firstLink) setTimeout(() => firstLink.focus(), 100);
-      } else {
-        menuOverlay.classList.remove('is-active');
-        document.body.style.overflow = '';
-        openMenuBtn.setAttribute('aria-expanded', 'false');
-        if (previousActiveEl) previousActiveEl.focus();
+        signupBtn.classList.add('active');
+        signupBtn.setAttribute('aria-selected', 'true');
+        signinBtn.classList.remove('active');
+        signinBtn.setAttribute('aria-selected', 'false');
+        signinForm.style.display = 'none';
+        signupForm.style.display = 'block';
       }
     }
 
-    /* Section Counter Observer (01 / 07) */
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          const display = document.getElementById('section-counter-display');
-          if (!display) return;
-          const map = {
-            'hero': '01 / 07',
-            'try-it': '01 / 07',
-            'tracker': '02 / 07',
-            'flow': '03 / 07',
-            'insights': '04 / 07',
-            'features': '05 / 07',
-            'goals': '06 / 07',
-            'contact': '07 / 07'
-          };
-          if (map[id]) display.textContent = map[id];
-        }
-      });
-    }, { threshold: 0.3 });
-
-    document.querySelectorAll('section, footer').forEach(s => sectionObserver.observe(s));
-
-    /* Hairline Chart Bars Animation on Scroll */
-    const chartObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          document.querySelectorAll('.chart-hairline-bar').forEach(bar => {
-            bar.style.width = bar.getAttribute('data-width');
-          });
-          chartObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-
-    const insightsSection = document.getElementById('insights');
-    if (insightsSection) chartObserver.observe(insightsSection);
-
-    /* Customer Pain Accordion */
-    function togglePain(btn) {
-      const content = btn.nextElementSibling;
-      const isOpen = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', !isOpen);
-      if (isOpen) {
-        content.classList.remove('is-open');
-      } else {
-        content.classList.add('is-open');
-      }
+    function togglePassword(inputId, btn) {
+      const el = document.getElementById(inputId);
+      if (!el) return;
+      const isPwd = el.type === 'password';
+      el.type = isPwd ? 'text' : 'password';
+      btn.textContent = isPwd ? 'Hide' : 'Show';
     }
 
-    /* Toast Notification */
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      toast.textContent = msg;
-      toast.classList.add('is-visible');
-      setTimeout(() => {
-        toast.classList.remove('is-visible');
-      }, 3500);
+    function showForgotNotice() {
+      const notice = document.getElementById('forgot-notice');
+      notice.classList.add('is-visible');
     }
 
-    /* ==========================================================================
-       A. LIVE TRIAGE DEMO ENGINE
-       ========================================================================== */
-    const demoPresets = [
-      "Payment failure on renewal checkout. Credit card ending in 4092 was debited $1,200 for the enterprise tier but workspace remains locked with license error 502.",
-      "Webhook delivery failure returning HTTP 500 on endpoint /api/v2/events. High volume sync backlog accumulating across US-East cluster.",
-      "Please update our company billing details and EU VAT ID to DE982341092 for upcoming Q4 enterprise consolidated invoice."
-    ];
-
-    function loadDemoScenario(index) {
-      document.getElementById('demo-input-text').value = demoPresets[index];
-    }
-
-    function analyzeTicketWithAI(text) {
-      const lower = (text || '').toLowerCase();
-      if (lower.includes('payment') || lower.includes('debit') || lower.includes('invoice') || lower.includes('vat') || lower.includes('card')) {
-        return {
-          category: 'Billing & Payments',
-          priority: 'Urgent',
-          priorityBadgeClass: 'urgent',
-          sentiment: 'Frustrated',
-          summary: 'Renewal payment transaction completed but account license failed to unlock automatically.',
-          replies: {
-            friendly: "Hi there! I can see your payment cleared successfully. I have unlocked your enterprise workspace immediately and attached your receipt. Sorry for the trouble!",
-            formal: "Dear Customer, We have verified your renewal transaction and refreshed your enterprise license status. Full platform access has been restored.",
-            short: "Payment confirmed. Workspace access restored and license error cleared."
-          }
-        };
-      } else if (lower.includes('webhook') || lower.includes('500') || lower.includes('api') || lower.includes('endpoint')) {
-        return {
-          category: 'API & Infrastructure',
-          priority: 'High',
-          priorityBadgeClass: 'high',
-          sentiment: 'Concerned',
-          summary: 'Inbound webhook delivery backlog caused by 500 error on sync endpoint.',
-          replies: {
-            friendly: "Hello! Our SRE team deployed a hotfix to our event gateway. Webhook deliveries are currently draining with zero packet loss.",
-            formal: "We have resolved the gateway failure impacting endpoint /api/v2/events. Queued payloads have resumed standard delivery cadence.",
-            short: "Webhook gateway hotfix deployed. Traffic drained successfully."
-          }
-        };
-      } else {
-        return {
-          category: 'General Technical',
-          priority: 'Normal',
-          priorityBadgeClass: 'normal',
-          sentiment: 'Neutral',
-          summary: 'General technical support request received and cataloged for engineering review.',
-          replies: {
-            friendly: "Thanks for reaching out! Our engineering team is reviewing your inquiry and will follow up shortly.",
-            formal: "Your request has been logged and assigned to specialized engineering for prompt investigation.",
-            short: "Inquiry logged. Investigation in progress."
-          }
-        };
-      }
-    }
-
-    let currentTriageAnalysis = null;
-
-    function runAiProcessing() {
-      const text = document.getElementById('demo-input-text').value.trim();
-      if (!text) {
-        showToast("Please enter a customer inquiry or select a scenario chip above.");
-        return;
-      }
-
-      const statusBox = document.getElementById('pipeline-status-box');
-      const resultCard = document.getElementById('demo-result-card');
-      const similarBox = document.getElementById('similar-ticket-box');
-      
-      statusBox.style.display = 'block';
-      resultCard.classList.remove('is-visible');
-      similarBox.classList.remove('is-visible');
-
-      const steps = ['step-cat', 'step-prio', 'step-sum', 'step-reply'];
-      steps.forEach(s => document.getElementById(s).classList.remove('active'));
-
-      let stepIdx = 0;
-      const stepInterval = setInterval(() => {
-        if (stepIdx < steps.length) {
-          document.getElementById(steps[stepIdx]).classList.add('active');
-          stepIdx++;
+    async function handleDemoLogin(role) {
+      const live = document.getElementById('status-live');
+      live.textContent = `Signing in as demo ${role}...`;
+      try {
+        const res = await window.BizAssistAuth.signInAsDemo(role);
+        if (res.success) {
+          const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
+          window.location.href = dest;
         } else {
-          clearInterval(stepInterval);
-          setTimeout(() => {
-            statusBox.style.display = 'none';
-            displayTriageResults(text);
-          }, 300);
-        }
-      }, 250);
-    }
-
-    function displayTriageResults(text) {
-      currentTriageAnalysis = analyzeTicketWithAI(text);
-      const res = currentTriageAnalysis;
-
-      document.getElementById('res-category').textContent = 'CATEGORY: ' + res.category.toUpperCase();
-      
-      const prioEl = document.getElementById('res-priority-badge');
-      prioEl.textContent = res.priority.toUpperCase();
-      prioEl.className = 'status-badge-quiet ' + (res.priority === 'Urgent' ? 'urgent' : '');
-
-      document.getElementById('res-sentiment-badge').textContent = res.sentiment.toUpperCase();
-      document.getElementById('res-summary').textContent = res.summary;
-      document.getElementById('res-reply-editor').value = res.replies.friendly;
-
-      const resultCard = document.getElementById('demo-result-card');
-      resultCard.classList.add('is-visible');
-
-      // Similar ticket alert
-      const similarBox = document.getElementById('similar-ticket-box');
-      if (res.priority === 'Urgent') {
-        similarBox.classList.add('is-visible');
-      }
-
-      showToast("Triage complete: " + res.category + " (" + res.priority + ")");
-    }
-
-    function setReplyTone(tone, btn) {
-      if (!currentTriageAnalysis) return;
-      document.querySelectorAll('.btn-tone').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('res-reply-editor').value = currentTriageAnalysis.replies[tone] || '';
-    }
-
-    function copySuggestedReply() {
-      const text = document.getElementById('res-reply-editor').value;
-      navigator.clipboard.writeText(text).then(() => {
-        showToast("✓ Suggested reply copied to clipboard.");
-      });
-    }
-
-    function sendSuggestedReply() {
-      showToast("✓ Reply approved & dispatched to customer!");
-    }
-
-    function mergeSimilarTickets() {
-      const similarBox = document.getElementById('similar-ticket-box');
-      similarBox.style.display = 'none';
-      showToast("✓ Merged 2 tickets into primary thread #BA-1042.");
-    }
-
-    /* ==========================================================================
-       B. TICKET STATUS TRACKER
-       ========================================================================== */
-    const sampleTickets = {
-      'BA-1042': {
-        subject: 'Payment failure during enterprise renewal checkout',
-        desc: 'Assigned Agent Sarah captured transaction ch_3Ox948aL on Stripe. Invoice #INV-2026-904 attached. Workspace access uninterrupted.',
-        step: 4
-      },
-      'BA-2089': {
-        subject: 'API Gateway HTTP 500 error on webhook endpoint',
-        desc: 'SRE cluster back-fill completed. Automated circuit breaker restored traffic routing with zero packet loss.',
-        step: 5
-      },
-      'BA-3310': {
-        subject: 'Update invoice billing address & EU VAT number',
-        desc: 'Tax registration updated and synchronized with invoicing database. Verified against VIES directory.',
-        step: 5
-      }
-    };
-
-    function loadSampleTicket(id) {
-      document.getElementById('tracker-input-id').value = id;
-      searchTicketStatus();
-    }
-
-    function searchTicketStatus() {
-      const id = document.getElementById('tracker-input-id').value.trim().toUpperCase().replace('#', '');
-      const ticket = sampleTickets[id] || {
-        subject: 'Ticket #' + id + ' (Technical Assistance Inquiry)',
-        desc: 'Inquiry cataloged and assigned to specialized engineering queue. Investigation in progress.',
-        step: 3
-      };
-
-      document.getElementById('tracker-detail-subject').textContent = 'Ticket #' + id + ': ' + ticket.subject;
-      document.getElementById('tracker-detail-desc').textContent = ticket.desc;
-
-      for (let i = 1; i <= 5; i++) {
-        const stepEl = document.getElementById('time-step-' + i);
-        if (!stepEl) continue;
-        stepEl.classList.remove('done', 'current');
-        if (i < ticket.step) {
-          stepEl.classList.add('done');
-        } else if (i === ticket.step) {
-          stepEl.classList.add('current');
-        }
-      }
-
-      showToast("Loaded milestone timeline for #" + id);
-    }
-
-    /* ==========================================================================
-       C. REAL AI ASSISTANT CHAT ENGINE
-       ========================================================================== */
-    let chatConversation = [];
-    const CHAT_STORAGE_KEY = 'bizassist_ai_chat_session';
-    const INITIAL_BOT_GREETING = "Hello! I am the BizAssist AI Assistant. I can explain how our platform automates ticket triage, help you raise a new ticket, or look up ticket progress across our five milestone stages. What can I help you with today?";
-
-    const INITIAL_FAQ_CHIPS = [
-      { label: "How does AI triage work?", query: "How does the AI triage work?" },
-      { label: "How do I raise a ticket?", query: "How do I raise a ticket?" },
-      { label: "Track my ticket", query: "Status of #BA-1042" },
-      { label: "Talk to a person", query: "I want to speak to a human support agent" }
-    ];
-
-    function toggleChatPanel() {
-      const panel = document.getElementById('floating-chat-window');
-      const btn = document.getElementById('chat-toggle-btn');
-      const isOpen = panel.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-
-      if (isOpen) {
-        initChatSession();
-        const input = document.getElementById('chat-input-text');
-        if (input) setTimeout(() => input.focus(), 150);
-      } else {
-        btn.focus();
-      }
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const panel = document.getElementById('floating-chat-window');
-        if (panel && panel.classList.contains('is-open')) toggleChatPanel();
-        if (menuOverlay && menuOverlay.classList.contains('is-active')) toggleMenuOverlay(false);
-      }
-    });
-
-    function resetChatSession() {
-      sessionStorage.removeItem(CHAT_STORAGE_KEY);
-      chatConversation = [];
-      initChatSession(true);
-      showToast("Started a new chat session.");
-    }
-
-    function initChatSession(forceReset = false) {
-      const box = document.getElementById('chat-messages-box');
-      if (!box) return;
-
-      const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
-      if (saved && !forceReset) {
-        try {
-          chatConversation = JSON.parse(saved);
-        } catch (e) {
-          chatConversation = [];
-        }
-      }
-
-      if (!chatConversation || chatConversation.length === 0) {
-        chatConversation = [
-          { role: 'assistant', content: INITIAL_BOT_GREETING, isGreeting: true }
-        ];
-        saveChatSession();
-      }
-
-      renderChatMessages();
-    }
-
-    function saveChatSession() {
-      sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatConversation));
-    }
-
-    function renderChatMessages() {
-      const box = document.getElementById('chat-messages-box');
-      if (!box) return;
-      box.innerHTML = '';
-
-      chatConversation.forEach((msg) => {
-        const bubble = document.createElement('div');
-        bubble.className = 'chat-bubble ' + (msg.role === 'user' ? 'user' : 'bot');
-        bubble.innerHTML = formatChatText(msg.content);
-
-        if (msg.ticketCard) bubble.appendChild(createTicketCardElement(msg.ticketCard));
-        if (msg.proposalCard) bubble.appendChild(createProposalCardElement(msg.proposalCard));
-        if (msg.handoverCard) bubble.appendChild(createHandoverCardElement(msg.handoverCard));
-
-        box.appendChild(bubble);
-
-        if (msg.isGreeting && chatConversation.length === 1) {
-          const chipsWrap = document.createElement('div');
-          chipsWrap.className = 'chat-faq-chips';
-          INITIAL_FAQ_CHIPS.forEach(chip => {
-            const chipBtn = document.createElement('button');
-            chipBtn.type = 'button';
-            chipBtn.className = 'chat-faq-chip';
-            chipBtn.innerHTML = `<span>${chip.label}</span><span style="opacity:0.6;">→</span>`;
-            chipBtn.onclick = () => askFaqQuestion(chip.query);
-            chipsWrap.appendChild(chipBtn);
-          });
-          box.appendChild(chipsWrap);
-        }
-      });
-
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function formatChatText(raw) {
-      if (!raw) return '';
-      let safe = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      safe = safe.replace(/\n/g, '<br>');
-      safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-      return safe;
-    }
-
-    function askFaqQuestion(q) {
-      const input = document.getElementById('chat-input-text');
-      input.value = q;
-      handleChatSubmit(new Event('submit'));
-    }
-
-    function triggerHumanHandover() {
-      askFaqQuestion("I want to speak with a human support agent.");
-    }
-
-    async function handleChatSubmit(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('chat-input-text');
-      const val = input.value.trim();
-      if (!val) return;
-
-      chatConversation.push({ role: 'user', content: val });
-      saveChatSession();
-      renderChatMessages();
-      input.value = '';
-
-      const box = document.getElementById('chat-messages-box');
-      const typingEl = document.createElement('div');
-      typingEl.className = 'chat-typing-indicator';
-      typingEl.id = 'chat-active-indicator';
-      typingEl.textContent = 'Assistant typing...';
-      box.appendChild(typingEl);
-      box.scrollTop = box.scrollHeight;
-
-      const sendBtn = document.getElementById('chat-send-btn');
-      if (sendBtn) sendBtn.disabled = true;
-
-      try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: chatConversation.map(m => ({ role: m.role, content: m.content }))
-          })
-        });
-
-        if (!response.ok && response.status === 429) {
-          const errData = await response.json();
-          typingEl.remove();
-          chatConversation.push({
-            role: 'assistant',
-            content: errData.message || "Rate limit reached. Please pause a moment or speak to an agent."
-          });
-          saveChatSession();
-          renderChatMessages();
-          if (sendBtn) sendBtn.disabled = false;
-          return;
-        }
-
-        if (!response.ok || !response.body) throw new Error('API failed');
-
-        typingEl.remove();
-        const botBubble = document.createElement('div');
-        botBubble.className = 'chat-bubble bot';
-        box.appendChild(botBubble);
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let fullBotReply = '';
-        let streamBuffer = '';
-        let detectedCard = null;
-        let detectedProposal = null;
-        let detectedHandover = null;
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          streamBuffer += decoder.decode(value, { stream: true });
-          const lines = streamBuffer.split('\n');
-          streamBuffer = lines.pop();
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const dataStr = line.slice(6).trim();
-              if (!dataStr) continue;
-              try {
-                const parsed = JSON.parse(dataStr);
-                if (parsed.type === 'chunk' && parsed.text) {
-                  fullBotReply += parsed.text;
-                  botBubble.innerHTML = formatChatText(fullBotReply);
-                  box.scrollTop = box.scrollHeight;
-                } else if (parsed.type === 'tool_result' && parsed.tool === 'lookup_ticket') {
-                  detectedCard = parsed.data;
-                } else if (parsed.type === 'tool_result' && parsed.tool === 'handover_to_human') {
-                  detectedHandover = parsed.data;
-                } else if (parsed.type === 'ticket_proposal') {
-                  detectedProposal = parsed.proposal;
-                }
-              } catch (parseErr) {}
-            }
-          }
-        }
-
-        if (detectedCard) botBubble.appendChild(createTicketCardElement(detectedCard));
-        if (detectedProposal) botBubble.appendChild(createProposalCardElement(detectedProposal));
-        if (detectedHandover) botBubble.appendChild(createHandoverCardElement(detectedHandover));
-
-        chatConversation.push({
-          role: 'assistant',
-          content: fullBotReply,
-          ticketCard: detectedCard,
-          proposalCard: detectedProposal,
-          handoverCard: detectedHandover
-        });
-        saveChatSession();
-
-      } catch (networkErr) {
-        if (typingEl && typingEl.parentNode) typingEl.remove();
-        const fallbackText = "I am running in offline mode. BizAssist AI automates ticket classification and response drafts in under 120ms. You can track tickets (e.g. #BA-1042) or connect to human support.";
-        chatConversation.push({ role: 'assistant', content: fallbackText });
-        saveChatSession();
-        renderChatMessages();
-      } finally {
-        if (sendBtn) sendBtn.disabled = false;
-        const cur = document.getElementById('chat-active-indicator');
-        if (cur) cur.remove();
-      }
-    }
-
-    function createTicketCardElement(ticket) {
-      const card = document.createElement('div');
-      card.className = 'chat-ticket-card';
-      card.innerHTML = `
-        <div class="card-meta-header">
-          <span class="card-code">#${ticket.id}</span>
-          <span class="card-badge">${ticket.stage || 'In Progress'}</span>
-        </div>
-        <div class="card-row"><strong>Category:</strong> ${ticket.category || 'General'}</div>
-        <div class="card-row"><strong>Priority:</strong> ${ticket.priority || 'Normal'}</div>
-        <div class="card-row"><strong>Assigned Team:</strong> ${ticket.assignedTeam || 'Tier-2 Operations'}</div>
-        <div class="card-row"><strong>Latest Note:</strong> ${ticket.lastUpdate || 'Investigating issue'}</div>
-        <div class="card-actions">
-          <button type="button" class="btn-card-action" onclick="loadSampleTicket('${ticket.id}')">View in Tracker</button>
-        </div>
-      `;
-      return card;
-    }
-
-    function createProposalCardElement(proposal) {
-      const card = document.createElement('div');
-      card.className = 'chat-proposal-card';
-      card.innerHTML = `
-        <div class="card-meta-header">
-          <span class="card-code">PROPOSED TICKET</span>
-          <span class="card-badge">${proposal.priority || 'Urgent'}</span>
-        </div>
-        <div class="card-row"><strong>Category:</strong> ${proposal.category}</div>
-        <div class="card-row"><strong>Summary:</strong> ${proposal.summary}</div>
-        <div class="card-actions">
-          <button type="button" class="btn-card-action" onclick="confirmTicketCreation('${encodeURIComponent(proposal.summary)}', '${proposal.category}', '${proposal.priority}')">Confirm Ticket</button>
-          <button type="button" class="btn-card-action btn-card-secondary" onclick="editTicketProposal()">Edit</button>
-        </div>
-      `;
-      return card;
-    }
-
-    function createHandoverCardElement(handover) {
-      const card = document.createElement('div');
-      card.className = 'chat-handover-card';
-      card.innerHTML = `
-        <div class="card-meta-header">
-          <span class="card-code">HUMAN AGENT HANDOVER</span>
-          <span class="card-badge">${handover.reference_code || 'ESC-LIVE'}</span>
-        </div>
-        <div class="card-row"><strong>Estimated Wait:</strong> ${handover.estimated_wait || 'Under 2 minutes'}</div>
-        <div class="card-row"><strong>Reason:</strong> ${handover.reason || 'Customer inquiry'}</div>
-        <div class="card-actions">
-          <a href="agent-dashboard.html" class="btn-card-action" style="text-decoration:none;">Open Agent Workspace →</a>
-        </div>
-      `;
-      return card;
-    }
-
-    async function confirmTicketCreation(encodedSummary, category, priority) {
-      const summary = decodeURIComponent(encodedSummary);
-      const email = 'customer.direct@bizassist.ai';
-
-      chatConversation.push({ role: 'user', content: `Confirmed. Please raise the ticket: "${summary}"` });
-      saveChatSession();
-      renderChatMessages();
-
-      try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'create_ticket',
-            toolArgs: { summary, category, priority, contact_email: email }
-          })
-        });
-        const data = await res.json();
-        if (data.result && data.result.ticket) {
-          const t = data.result.ticket;
-          chatConversation.push({
-            role: 'assistant',
-            content: `Ticket #${t.id} has been created and assigned to ${t.assignedTeam}. You can track its live milestone progress at any time using ID #${t.id}.`,
-            ticketCard: t
-          });
-          saveChatSession();
-          renderChatMessages();
-          showToast(`✓ Ticket #${t.id} created successfully!`);
+          live.textContent = res.error || 'Demo sign in failed.';
         }
       } catch (err) {
-        showToast("Error creating ticket. Please try again.");
+        live.textContent = 'Error during demo authentication.';
       }
     }
 
-    function editTicketProposal() {
-      const input = document.getElementById('chat-input-text');
-      input.value = "Please update category to General and priority to Normal";
-      input.focus();
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
-      if (saved) initChatSession();
-    });
-
-    /* ==========================================================================
-       D. BOOK A DEMO MODAL
-       ========================================================================== */
-    const demoModal = document.getElementById('demo-modal');
-    let modalPrevFocus = null;
-
-    function openDemoModal() {
-      modalPrevFocus = document.activeElement;
-      demoModal.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-      const firstInput = document.getElementById('demo-name');
-      if (firstInput) setTimeout(() => firstInput.focus(), 100);
-    }
-
-    function closeDemoModal() {
-      demoModal.classList.remove('is-open');
-      document.body.style.overflow = '';
-      if (modalPrevFocus) modalPrevFocus.focus();
-    }
-
-    function submitDemoForm(e) {
+    async function handleSignIn(e) {
       e.preventDefault();
-      const name = document.getElementById('demo-name').value;
-      const email = document.getElementById('demo-email')?.value || '';
-      const size = document.getElementById('demo-size')?.value || '';
+      const emailEl = document.getElementById('signin-email');
+      const pwdEl = document.getElementById('signin-password');
+      const emailErr = document.getElementById('signin-email-error');
+      const pwdErr = document.getElementById('signin-password-error');
+      const live = document.getElementById('status-live');
+      const btn = document.getElementById('btn-signin-submit');
 
-      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-        window.NexusSupabase.submitDemoRequest({
-          fullName: name,
-          workEmail: email,
-          companyName: 'Enterprise Inbound',
-          teamSize: size,
-          notes: 'Landing page demo request'
-        }).then(res => {
-          if (res.error) console.warn('[Supabase demo save error]', res.error);
-        });
+      emailErr.classList.remove('is-visible');
+      pwdErr.classList.remove('is-visible');
+      live.textContent = '';
+
+      const email = emailEl.value.trim();
+      const pwd = pwdEl.value;
+
+      let valid = true;
+      if (!email || !email.includes('@')) {
+        emailErr.classList.add('is-visible');
+        valid = false;
       }
+      if (!pwd || pwd.length < 8) {
+        pwdErr.classList.add('is-visible');
+        valid = false;
+      }
+      if (!valid) return;
 
-      closeDemoModal();
-      showToast("Thank you, " + name + "! Demonstration request received.");
+      btn.disabled = true;
+      btn.textContent = 'Signing in...';
+
+      const res = await window.BizAssistAuth.signIn(email, pwd);
+      if (res.success) {
+        const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
+        window.location.href = dest;
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Sign in';
+        live.textContent = res.error || 'Authentication failed.';
+      }
+    }
+
+    async function handleSignUp(e) {
+      e.preventDefault();
+      const nameEl = document.getElementById('signup-name');
+      const emailEl = document.getElementById('signup-email');
+      const roleEl = document.getElementById('signup-role');
+      const pwdEl = document.getElementById('signup-password');
+      const nameErr = document.getElementById('signup-name-error');
+      const emailErr = document.getElementById('signup-email-error');
+      const pwdErr = document.getElementById('signup-password-error');
+      const live = document.getElementById('status-live');
+      const btn = document.getElementById('btn-signup-submit');
+
+      nameErr.classList.remove('is-visible');
+      emailErr.classList.remove('is-visible');
+      pwdErr.classList.remove('is-visible');
+      live.textContent = '';
+
+      const name = nameEl.value.trim();
+      const email = emailEl.value.trim();
+      const role = roleEl.value;
+      const pwd = pwdEl.value;
+
+      let valid = true;
+      if (!name) {
+        nameErr.classList.add('is-visible');
+        valid = false;
+      }
+      if (!email || !email.includes('@')) {
+        emailErr.classList.add('is-visible');
+        valid = false;
+      }
+      if (!pwd || pwd.length < 8) {
+        pwdErr.classList.add('is-visible');
+        valid = false;
+      }
+      if (!valid) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Creating account...';
+
+      const res = await window.BizAssistAuth.createAccount({ name, email, role, password: pwd });
+      if (res.success) {
+        const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
+        window.location.href = dest;
+      } else {
+        btn.disabled = false;
+        btn.textContent = 'Create demo account';
+        live.textContent = res.error || 'Registration failed.';
+      }
     }
   </script>
 </body>

@@ -1,5 +1,18 @@
 {
   "version": 2,
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/login", "destination": "/", "permanent": true },
+    { "source": "/login.html", "destination": "/", "permanent": true },
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/portal.html", "destination": "/portal", "permanent": true },
+    { "source": "/agent-dashboard.html", "destination": "/agent-dashboard", "permanent": true },
+    { "source": "/ai-triage.html", "destination": "/ai-triage", "permanent": true },
+    { "source": "/suggested-replies.html", "destination": "/suggested-replies", "permanent": true },
+    { "source": "/chatbot.html", "destination": "/chatbot", "permanent": true },
+    { "source": "/manager-overview.html", "destination": "/manager-overview", "permanent": true },
+    { "source": "/app.html", "destination": "/app", "permanent": true },
+    { "source": "/about.html", "destination": "/about", "permanent": true }
+  ]
 }

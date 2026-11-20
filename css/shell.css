@@ -1,0 +1,568 @@
+/* ==========================================================================
+   BizAssist AI — Shared App Shell Stylesheet (css/shell.css)
+   Quiet Luxury Theme: #FAF8F5 bg, #111111 ink, #E3DED6 line, 0 radius
+   ========================================================================== */
+
+:root {
+  --shell-bg: #FAF8F5;
+  --shell-ink: #111111;
+  --shell-secondary: #5E5A53;
+  --shell-muted: #6F6A61;
+  --shell-line: #E3DED6;
+  --shell-accent: #B3402A;
+  --shell-surface: #FFFFFF;
+  --shell-font-serif: 'Cormorant Garamond', Georgia, serif;
+  --shell-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --shell-font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+}
+
+/* App Shell Global Header */
+.biz-shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(250, 248, 245, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--shell-line);
+  font-family: var(--shell-font-sans);
+  color: var(--shell-ink);
+}
+
+.biz-shell-header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.biz-shell-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.biz-shell-logo {
+  font-family: var(--shell-font-serif);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--shell-ink);
+  text-decoration: none;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.biz-shell-logo-badge {
+  font-family: var(--shell-font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 2px 6px;
+  background: var(--shell-ink);
+  color: #FAF8F5;
+  font-weight: 600;
+}
+
+.biz-shell-separator {
+  width: 1px;
+  height: 20px;
+  background: var(--shell-line);
+}
+
+/* Breadcrumbs */
+.biz-shell-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--shell-muted);
+}
+
+.biz-shell-breadcrumbs a {
+  color: var(--shell-secondary);
+  text-decoration: none;
+  transition: color 150ms ease;
+}
+
+.biz-shell-breadcrumbs a:hover {
+  color: var(--shell-ink);
+}
+
+.biz-shell-breadcrumbs-current {
+  color: var(--shell-ink);
+  font-weight: 600;
+}
+
+/* Navigation Links */
+.biz-shell-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.biz-shell-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.biz-shell-nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--shell-secondary);
+  text-decoration: none;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  transition: all 180ms ease;
+  white-space: nowrap;
+}
+
+.biz-shell-nav-link:hover {
+  color: var(--shell-ink);
+  border-color: var(--shell-line);
+  background: var(--shell-surface);
+}
+
+.biz-shell-nav-link.active {
+  color: var(--shell-ink);
+  font-weight: 600;
+  border-color: var(--shell-ink);
+  background: var(--shell-surface);
+}
+
+/* Header Right Actions */
+.biz-shell-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.biz-shell-ask-ai-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--shell-line);
+  background: var(--shell-surface);
+  color: var(--shell-ink);
+  font-family: var(--shell-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 180ms ease;
+}
+
+.biz-shell-ask-ai-btn:hover {
+  border-color: var(--shell-ink);
+  background: var(--shell-ink);
+  color: #FAF8F5;
+}
+
+/* User Menu Dropdown */
+.biz-shell-user-wrapper {
+  position: relative;
+}
+
+.biz-shell-user-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--shell-line);
+  background: var(--shell-surface);
+  color: var(--shell-ink);
+  cursor: pointer;
+  font-family: var(--shell-font-sans);
+  transition: border-color 150ms ease;
+}
+
+.biz-shell-user-btn:hover {
+  border-color: var(--shell-ink);
+}
+
+.biz-shell-user-role-badge {
+  font-family: var(--shell-font-mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  background: #EBE7DF;
+  color: var(--shell-ink);
+}
+
+.biz-shell-user-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  background: var(--shell-surface);
+  border: 1px solid var(--shell-ink);
+  padding: 16px;
+  display: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  z-index: 1010;
+}
+
+.biz-shell-user-menu.is-open {
+  display: block;
+}
+
+.biz-shell-user-menu-header {
+  border-bottom: 1px solid var(--shell-line);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.biz-shell-user-menu-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--shell-ink);
+}
+
+.biz-shell-user-menu-email {
+  font-size: 12px;
+  color: var(--shell-muted);
+  word-break: break-all;
+}
+
+.biz-shell-user-menu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #F2EEE8;
+  font-family: var(--shell-font-sans);
+  font-size: 13px;
+  color: var(--shell-ink);
+  cursor: pointer;
+  text-align: left;
+  transition: color 150ms ease;
+}
+
+.biz-shell-user-menu-item:hover {
+  color: var(--shell-accent);
+}
+
+.biz-shell-user-menu-item:last-child {
+  border-bottom: none;
+  padding-top: 10px;
+  color: var(--shell-accent);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Persistent Floating Chat Widget Trigger & Drawer
+   ========================================================================== */
+.biz-floating-chat-trigger {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 900;
+  background: var(--shell-ink);
+  color: #FAF8F5;
+  border: 1px solid var(--shell-ink);
+  padding: 12px 18px;
+  font-family: var(--shell-font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.biz-floating-chat-trigger:hover {
+  transform: translateY(-2px);
+  background: #2A2A2A;
+}
+
+.biz-floating-chat-drawer {
+  position: fixed;
+  bottom: 84px;
+  right: 24px;
+  width: 380px;
+  height: 540px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 120px);
+  background: var(--shell-surface);
+  border: 1px solid var(--shell-ink);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
+  z-index: 910;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.biz-floating-chat-drawer.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.biz-chat-drawer-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--shell-line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FAF8F5;
+}
+
+.biz-chat-drawer-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--shell-ink);
+  letter-spacing: -0.01em;
+}
+
+.biz-chat-drawer-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--shell-muted);
+  line-height: 1;
+  padding: 4px;
+}
+
+.biz-chat-drawer-close:hover {
+  color: var(--shell-ink);
+}
+
+.biz-chat-drawer-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #FAF8F5;
+}
+
+.biz-chat-bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.biz-chat-bubble.assistant {
+  align-self: flex-start;
+  background: #FFFFFF;
+  border: 1px solid var(--shell-line);
+  color: var(--shell-ink);
+}
+
+.biz-chat-bubble.user {
+  align-self: flex-end;
+  background: var(--shell-ink);
+  color: #FAF8F5;
+}
+
+.biz-chat-bubble.system-note {
+  align-self: center;
+  background: #F4EFEB;
+  border: 1px solid #D8CFC4;
+  color: var(--shell-ink);
+  font-size: 11px;
+  font-family: var(--shell-font-mono);
+}
+
+.biz-chat-drawer-input-row {
+  padding: 12px;
+  border-top: 1px solid var(--shell-line);
+  background: #FFFFFF;
+  display: flex;
+  gap: 8px;
+}
+
+.biz-chat-drawer-input {
+  flex: 1;
+  border: 1px solid var(--shell-line);
+  padding: 8px 12px;
+  font-family: var(--shell-font-sans);
+  font-size: 13px;
+  outline: none;
+  border-radius: 0;
+  background: #FAF8F5;
+}
+
+.biz-chat-drawer-input:focus {
+  border-color: var(--shell-ink);
+  background: #FFFFFF;
+}
+
+.biz-chat-drawer-send {
+  padding: 8px 14px;
+  background: var(--shell-ink);
+  color: #FAF8F5;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Guided Tour Banner (Fixed Bottom Bar)
+   ========================================================================== */
+.biz-tour-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050;
+  background: #111111;
+  color: #FAF8F5;
+  padding: 14px 24px;
+  border-top: 2px solid var(--shell-accent);
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
+.biz-tour-banner.is-active {
+  display: block;
+}
+
+.biz-tour-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.biz-tour-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.biz-tour-step-badge {
+  font-family: var(--shell-font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--shell-accent);
+  color: #FFFFFF;
+  padding: 4px 8px;
+}
+
+.biz-tour-text {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.biz-tour-text strong {
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.biz-tour-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.biz-tour-btn {
+  padding: 8px 16px;
+  font-family: var(--shell-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  border: 1px solid #FAF8F5;
+  background: transparent;
+  color: #FAF8F5;
+  transition: all 150ms ease;
+}
+
+.biz-tour-btn:hover {
+  background: #FAF8F5;
+  color: #111111;
+}
+
+.biz-tour-btn-primary {
+  background: #FAF8F5;
+  color: #111111;
+  border-color: #FAF8F5;
+}
+
+.biz-tour-btn-primary:hover {
+  background: #E3DED6;
+}
+
+.biz-tour-btn-exit {
+  border-color: #444444;
+  color: #888888;
+}
+
+.biz-tour-btn-exit:hover {
+  border-color: #FAF8F5;
+  color: #FAF8F5;
+  background: transparent;
+}
+
+/* Modal Overlay for Tour Completion */
+.biz-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 250ms ease;
+}
+
+.biz-modal-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.biz-modal-card {
+  max-width: 560px;
+  width: 100%;
+  background: #FAF8F5;
+  border: 1px solid #111111;
+  padding: 36px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 900px) {
+  .biz-shell-header-inner {
+    padding: 0 16px;
+  }
+  .biz-shell-nav {
+    display: none; /* Mobile menu can toggle */
+  }
+}
