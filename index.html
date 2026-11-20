@@ -979,44 +979,58 @@
     }
 
     /* ==========================================================================
-       12. FLOATING CHAT WIDGET (Bottom Right)
+       12. FLOATING CHAT WIDGET (Quiet Luxury & Accessible)
        ========================================================================== */
     .chat-widget-btn {
       position: fixed;
       bottom: 24px;
       right: 24px;
       min-height: 48px;
-      padding: 12px 20px;
-      background: #000000;
+      padding: 12px 22px;
+      background: #111111;
       color: #FFFFFF;
-      border: 1px solid #000000;
-      border-radius: 30px;
+      border: 1px solid #111111;
+      border-radius: 0;
       font-family: var(--font-body);
-      font-size: 15px;
-      font-weight: 600;
-      display: flex;
+      font-size: 13px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       cursor: pointer;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
       z-index: 999;
-      transition: transform var(--duration) var(--ease), background var(--duration) var(--ease);
+      transition: background 250ms var(--ease), color 250ms var(--ease), border-color 250ms var(--ease);
     }
     .chat-widget-btn:hover {
-      background: #262626;
-      transform: translateY(-2px);
+      background: #FAF8F5;
+      color: #111111;
+      border-color: #111111;
+    }
+    .chat-widget-btn:focus-visible {
+      outline: 2px solid #111111;
+      outline-offset: 3px;
+    }
+    .chat-widget-icon {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
     }
 
     .chat-panel {
       position: fixed;
       bottom: 84px;
       right: 24px;
-      width: clamp(320px, 90vw, 380px);
-      height: 480px;
+      width: clamp(320px, 92vw, 410px);
+      height: 540px;
+      max-height: calc(100vh - 100px);
       background: #FFFFFF;
       border: 1px solid var(--border-dark);
-      border-radius: 12px;
-      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+      border-radius: 0;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
       z-index: 1000;
       display: none;
       flex-direction: column;
@@ -1027,74 +1041,219 @@
     }
     .chat-panel-header {
       padding: 14px 18px;
-      background: #000000;
+      background: #111111;
       color: #FFFFFF;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid #111111;
+    }
+    .chat-panel-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #FFFFFF;
+      display: inline-block;
     }
     .chat-panel-title {
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .chat-panel-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chat-header-btn {
+      background: none;
+      border: none;
+      color: #FFFFFF;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      padding: 6px 10px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.85;
+      transition: opacity 200ms ease;
+    }
+    .chat-header-btn:hover {
+      opacity: 1;
+      text-decoration: underline;
     }
     .chat-panel-close {
       background: none;
       border: none;
       color: #FFFFFF;
-      font-size: 20px;
+      font-size: 18px;
       cursor: pointer;
-      padding: 4px;
+      padding: 6px 10px;
       min-width: 44px;
       min-height: 44px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
     }
+    .chat-panel-close:hover {
+      opacity: 0.7;
+    }
+
     .chat-body {
       flex: 1;
       padding: 16px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: #FAFAFA;
+      gap: 14px;
+      background: #FAF8F5;
+      scroll-behavior: smooth;
     }
     .chat-bubble {
-      max-width: 85%;
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 15px;
-      line-height: 1.45;
+      max-width: 88%;
+      padding: 12px 16px;
+      font-size: 14px;
+      line-height: 1.55;
+      word-break: break-word;
     }
     .chat-bubble.bot {
       background: #FFFFFF;
       border: 1px solid var(--border);
-      color: #000000;
+      color: #111111;
       align-self: flex-start;
     }
     .chat-bubble.user {
-      background: #000000;
+      background: #111111;
       color: #FFFFFF;
       align-self: flex-end;
     }
+
+    /* Structured interactive cards in chat */
+    .chat-ticket-card, .chat-proposal-card, .chat-handover-card {
+      background: #FFFFFF;
+      border: 1px solid var(--border-dark);
+      padding: 14px 16px;
+      margin-top: 8px;
+      width: 100%;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .card-meta-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .card-code {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #111111;
+      letter-spacing: 0.05em;
+    }
+    .card-badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 2px 8px;
+      border: 1px solid #111111;
+      background: #FAF8F5;
+    }
+    .card-row {
+      margin-bottom: 4px;
+      color: var(--text-secondary);
+    }
+    .card-row strong {
+      color: #111111;
+    }
+    .card-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn-card-action {
+      flex: 1;
+      min-height: 44px;
+      padding: 0 12px;
+      background: #111111;
+      color: #FFFFFF;
+      border: 1px solid #111111;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 200ms ease;
+    }
+    .btn-card-action:hover {
+      background: #FAF8F5;
+      color: #111111;
+    }
+    .btn-card-secondary {
+      background: #FFFFFF;
+      color: #111111;
+      border: 1px solid var(--border-dark);
+    }
+    .btn-card-secondary:hover {
+      border-color: #111111;
+      background: #FAF8F5;
+    }
+
+    .chat-typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      align-self: flex-start;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
     .chat-faq-chips {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      margin-top: 8px;
+      gap: 8px;
+      margin-top: 6px;
     }
     .chat-faq-chip {
       background: #FFFFFF;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 12px;
-      font-size: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
       text-align: left;
       cursor: pointer;
       min-height: 44px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      color: #111111;
+      transition: border-color 200ms ease, background 200ms ease;
     }
+    .chat-faq-chip:hover {
+      border-color: #111111;
+      background: #FAF8F5;
+    }
+
     .chat-input-row {
       padding: 12px;
       background: #FFFFFF;
@@ -1105,21 +1264,81 @@
     .chat-input {
       flex: 1;
       min-height: 44px;
-      padding: 8px 12px;
-      font-size: 15px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1px solid var(--border-dark);
+      border-radius: 0;
+      background: #FAF8F5;
+      color: #111111;
       font-family: var(--font-body);
+    }
+    .chat-input:focus {
+      outline: none;
+      border-color: #111111;
+      background: #FFFFFF;
     }
     .chat-send-btn {
       min-height: 44px;
-      padding: 8px 16px;
-      background: #000000;
+      padding: 0 18px;
+      background: #111111;
       color: #FFFFFF;
-      border: none;
-      border-radius: 6px;
+      border: 1px solid #111111;
+      border-radius: 0;
+      font-size: 12px;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
       cursor: pointer;
+      transition: background 200ms ease, color 200ms ease;
+    }
+    .chat-send-btn:hover {
+      background: #FAF8F5;
+      color: #111111;
+    }
+
+    .chat-panel-footer {
+      padding: 8px 16px;
+      background: #FAF8F5;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+    }
+    .chat-handover-link {
+      color: var(--text-secondary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    .chat-handover-link:hover {
+      color: #111111;
+    }
+    .chat-brand-meta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-meta);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 480px) {
+      .chat-panel {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border: none;
+      }
+      .chat-widget-btn {
+        bottom: 16px;
+        right: 16px;
+      }
     }
 
     /* ==========================================================================
@@ -1984,37 +2203,36 @@
   <!-- ==========================================================================
        FLOATING CHAT WIDGET
        ========================================================================== -->
-  <button class="chat-widget-btn" id="chat-toggle-btn" onclick="toggleChatPanel()" aria-label="Open support assistant chat">
-    <span>💬 Need help? Ask AI</span>
+  <button class="chat-widget-btn" id="chat-toggle-btn" onclick="toggleChatPanel()" aria-label="Open support assistant chat" aria-haspopup="dialog" aria-expanded="false">
+    <svg class="chat-widget-icon" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+    <span>Ask AI Assistant</span>
   </button>
 
-  <div class="chat-panel" id="floating-chat-window" role="dialog" aria-label="Support Assistant Chat">
+  <div class="chat-panel" id="floating-chat-window" role="dialog" aria-labelledby="chat-panel-title-text" aria-modal="false">
     <div class="chat-panel-header">
-      <div class="chat-panel-title">BizAssist AI Assistant</div>
-      <button class="chat-panel-close" onclick="toggleChatPanel()" aria-label="Close chat window">✕</button>
+      <div class="chat-panel-header-left">
+        <span class="chat-status-dot" aria-hidden="true"></span>
+        <span class="chat-panel-title" id="chat-panel-title-text">BizAssist AI Assistant</span>
+      </div>
+      <div class="chat-panel-header-actions">
+        <button class="chat-header-btn" onclick="resetChatSession()" aria-label="Start a new conversation">New Chat</button>
+        <button class="chat-panel-close" onclick="toggleChatPanel()" aria-label="Close chat window">✕</button>
+      </div>
     </div>
 
-    <div class="chat-body" id="chat-messages-box">
-      <div class="chat-bubble bot">
-        Hi there! I can answer common questions about BizAssist AI triage, pricing, integrations, or setup. What would you like to know?
-      </div>
-      <div class="chat-faq-chips">
-        <button class="chat-faq-chip" onclick="askFaqQuestion('How does the AI triage work?')">
-          🤖 How does AI triage work?
-        </button>
-        <button class="chat-faq-chip" onclick="askFaqQuestion('Can it integrate with Zendesk or Slack?')">
-          🔗 Does it integrate with Zendesk or Slack?
-        </button>
-        <button class="chat-faq-chip" onclick="askFaqQuestion('What is the setup time?')">
-          ⏱️ What is the setup time?
-        </button>
-      </div>
+    <div class="chat-body" id="chat-messages-box" role="log" aria-live="polite">
+      <!-- Chat thread dynamically populated and persisted in sessionStorage -->
     </div>
 
     <form class="chat-input-row" onsubmit="handleChatSubmit(event)">
-      <input type="text" id="chat-input-text" class="chat-input" placeholder="Type a question..." autocomplete="off">
-      <button type="submit" class="chat-send-btn">Send</button>
+      <input type="text" id="chat-input-text" class="chat-input" placeholder="Ask a question or enter ticket ID..." autocomplete="off" aria-label="Chat message input">
+      <button type="submit" id="chat-send-btn" class="chat-send-btn">Send</button>
     </form>
+
+    <div class="chat-panel-footer">
+      <button type="button" class="chat-handover-link" onclick="triggerHumanHandover()">Talk to a human agent</button>
+      <span class="chat-brand-meta">AI-Assisted Support</span>
+    </div>
   </div>
 
   <!-- ==========================================================================
@@ -2304,78 +2522,390 @@
     }
 
     /* ==========================================================================
-       D. FLOATING CHAT WIDGET
+       D. REAL AI ASSISTANT CHAT ENGINE (Production Serverless + SSE Streaming)
        ========================================================================== */
-    const faqAnswers = {
-      'how does the ai triage work': "BizAssist AI uses lightweight, low-latency NLP to extract customer entities, determine intent (Billing, Tech, SAML), regress SLA priority (P1–P3), and route inquiries to the correct team in under 120ms.",
-      'triage': "BizAssist AI uses lightweight, low-latency NLP to extract customer entities, determine intent (Billing, Tech, SAML), regress SLA priority (P1–P3), and route inquiries to the correct team in under 120ms.",
-      'zendesk': "Yes! BizAssist AI integrates seamlessly with Zendesk, Freshdesk, Slack, and Salesforce Service Cloud through native webhooks and two-way sync APIs.",
-      'slack': "Yes! BizAssist AI integrates seamlessly with Zendesk, Freshdesk, Slack, and Salesforce Service Cloud through native webhooks and two-way sync APIs.",
-      'setup': "Most teams deploy BizAssist AI within 48 hours using our pre-built CRM connectors and documentation vector sync.",
-      'time': "Most teams deploy BizAssist AI within 48 hours using our pre-built CRM connectors and documentation vector sync.",
-      'pricing': "We offer simple tier-based pricing based on monthly ticket volume. Contact our team or book a demo for custom enterprise volume pricing."
-    };
+    let chatConversation = [];
+    const CHAT_STORAGE_KEY = 'bizassist_ai_chat_session';
+
+    // Initial greeting template
+    const INITIAL_BOT_GREETING = "Hello! I am the BizAssist AI Assistant. I can explain how our platform automates ticket triage, help you raise a new ticket, or look up ticket progress across our five milestone stages. What can I help you with today?";
+
+    // 4 Default quick chips (plain text buttons without emojis)
+    const INITIAL_FAQ_CHIPS = [
+      { label: "How does AI triage work?", query: "How does the AI triage work?" },
+      { label: "How do I raise a ticket?", query: "How do I raise a ticket?" },
+      { label: "Track my ticket", query: "Status of #BA-1042" },
+      { label: "Talk to a person", query: "I want to speak to a human support agent" }
+    ];
 
     function toggleChatPanel() {
       const panel = document.getElementById('floating-chat-window');
-      panel.classList.toggle('is-open');
+      const btn = document.getElementById('chat-toggle-btn');
+      const isOpen = panel.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+      if (isOpen) {
+        initChatSession();
+        const input = document.getElementById('chat-input-text');
+        if (input) setTimeout(() => input.focus(), 150);
+      } else {
+        btn.focus();
+      }
+    }
+
+    // ESC key listener for accessible chat window closing
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const panel = document.getElementById('floating-chat-window');
+        if (panel && panel.classList.contains('is-open')) {
+          toggleChatPanel();
+        }
+      }
+    });
+
+    function resetChatSession() {
+      sessionStorage.removeItem(CHAT_STORAGE_KEY);
+      chatConversation = [];
+      initChatSession(true);
+      showToast("Started a new chat session.");
+    }
+
+    function initChatSession(forceReset = false) {
+      const box = document.getElementById('chat-messages-box');
+      if (!box) return;
+
+      const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
+      if (saved && !forceReset) {
+        try {
+          chatConversation = JSON.parse(saved);
+        } catch (e) {
+          chatConversation = [];
+        }
+      }
+
+      if (!chatConversation || chatConversation.length === 0) {
+        chatConversation = [
+          { role: 'assistant', content: INITIAL_BOT_GREETING, isGreeting: true }
+        ];
+        saveChatSession();
+      }
+
+      renderChatMessages();
+    }
+
+    function saveChatSession() {
+      sessionStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(chatConversation));
+    }
+
+    function renderChatMessages() {
+      const box = document.getElementById('chat-messages-box');
+      if (!box) return;
+      box.innerHTML = '';
+
+      chatConversation.forEach((msg, idx) => {
+        const bubble = document.createElement('div');
+        bubble.className = 'chat-bubble ' + (msg.role === 'user' ? 'user' : 'bot');
+        bubble.innerHTML = formatChatText(msg.content);
+
+        // Render card attachments if present
+        if (msg.ticketCard) {
+          bubble.appendChild(createTicketCardElement(msg.ticketCard));
+        }
+        if (msg.proposalCard) {
+          bubble.appendChild(createProposalCardElement(msg.proposalCard));
+        }
+        if (msg.handoverCard) {
+          bubble.appendChild(createHandoverCardElement(msg.handoverCard));
+        }
+
+        box.appendChild(bubble);
+
+        // Render quick chips under initial greeting only if thread has only 1 message
+        if (msg.isGreeting && chatConversation.length === 1) {
+          const chipsWrap = document.createElement('div');
+          chipsWrap.className = 'chat-faq-chips';
+          INITIAL_FAQ_CHIPS.forEach(chip => {
+            const chipBtn = document.createElement('button');
+            chipBtn.type = 'button';
+            chipBtn.className = 'chat-faq-chip';
+            chipBtn.innerHTML = `<span>${chip.label}</span><span style="opacity:0.6;">→</span>`;
+            chipBtn.onclick = () => askFaqQuestion(chip.query);
+            chipsWrap.appendChild(chipBtn);
+          });
+          box.appendChild(chipsWrap);
+        }
+      });
+
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function formatChatText(raw) {
+      if (!raw) return '';
+      // Escape HTML entities to prevent any injection
+      let safe = raw
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      // Format simple newlines and bold markers
+      safe = safe.replace(/\n/g, '<br>');
+      safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      return safe;
     }
 
     function askFaqQuestion(q) {
-      document.getElementById('chat-input-text').value = q;
+      const input = document.getElementById('chat-input-text');
+      input.value = q;
       handleChatSubmit(new Event('submit'));
     }
 
-    function handleChatSubmit(e) {
+    function triggerHumanHandover() {
+      askFaqQuestion("I want to speak with a human support agent.");
+    }
+
+    async function handleChatSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('chat-input-text');
       const val = input.value.trim();
       if (!val) return;
 
-      appendChatMessage(val, 'user');
+      // Add user message
+      chatConversation.push({ role: 'user', content: val });
+      saveChatSession();
+      renderChatMessages();
       input.value = '';
 
-      setTimeout(() => {
-        const lower = val.toLowerCase();
-        let matched = null;
-        for (const [key, ans] of Object.entries(faqAnswers)) {
-          if (lower.includes(key)) {
-            matched = ans;
-            break;
+      const box = document.getElementById('chat-messages-box');
+
+      // Add typing indicator
+      const typingEl = document.createElement('div');
+      typingEl.className = 'chat-typing-indicator';
+      typingEl.id = 'chat-active-indicator';
+      typingEl.textContent = 'Assistant typing...';
+      box.appendChild(typingEl);
+      box.scrollTop = box.scrollHeight;
+
+      // Disable send button while responding
+      const sendBtn = document.getElementById('chat-send-btn');
+      if (sendBtn) sendBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: chatConversation.map(m => ({ role: m.role, content: m.content }))
+          })
+        });
+
+        if (!response.ok && response.status === 429) {
+          const errData = await response.json();
+          typingEl.remove();
+          chatConversation.push({
+            role: 'assistant',
+            content: errData.message || "You have reached the rate limit. Please wait a moment or speak to a human agent below."
+          });
+          saveChatSession();
+          renderChatMessages();
+          if (sendBtn) sendBtn.disabled = false;
+          return;
+        }
+
+        if (!response.ok || !response.body) {
+          throw new Error('API request failed with status ' + response.status);
+        }
+
+        // Create stream receiver bubble
+        typingEl.remove();
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        box.appendChild(botBubble);
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder('utf-8');
+        let fullBotReply = '';
+        let streamBuffer = '';
+        let detectedCard = null;
+        let detectedProposal = null;
+        let detectedHandover = null;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          streamBuffer += decoder.decode(value, { stream: true });
+          const lines = streamBuffer.split('\n');
+          streamBuffer = lines.pop(); // keep partial
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const dataStr = line.slice(6).trim();
+              if (!dataStr) continue;
+              try {
+                const parsed = JSON.parse(dataStr);
+                if (parsed.type === 'chunk' && parsed.text) {
+                  fullBotReply += parsed.text;
+                  botBubble.innerHTML = formatChatText(fullBotReply);
+                  box.scrollTop = box.scrollHeight;
+                } else if (parsed.type === 'tool_result' && parsed.tool === 'lookup_ticket') {
+                  detectedCard = parsed.data;
+                } else if (parsed.type === 'tool_result' && parsed.tool === 'handover_to_human') {
+                  detectedHandover = parsed.data;
+                } else if (parsed.type === 'ticket_proposal') {
+                  detectedProposal = parsed.proposal;
+                }
+              } catch (parseErr) {
+                // Ignore incomplete SSE chunk parse
+              }
+            }
           }
         }
 
-        if (matched) {
-          appendChatMessage(matched, 'bot');
-        } else {
-          appendChatMessage("Let me connect you to a human support agent. Our tier-2 specialist team is available 24/7.", 'bot', true);
+        // Attach structured card elements if received
+        if (detectedCard) {
+          botBubble.appendChild(createTicketCardElement(detectedCard));
         }
-      }, 350);
-    }
+        if (detectedProposal) {
+          botBubble.appendChild(createProposalCardElement(detectedProposal));
+        }
+        if (detectedHandover) {
+          botBubble.appendChild(createHandoverCardElement(detectedHandover));
+        }
 
-    function appendChatMessage(text, sender, showHumanBtn) {
-      const box = document.getElementById('chat-messages-box');
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble ' + sender;
-      bubble.textContent = text;
-      box.appendChild(bubble);
+        // Record assistant turn in state
+        chatConversation.push({
+          role: 'assistant',
+          content: fullBotReply,
+          ticketCard: detectedCard,
+          proposalCard: detectedProposal,
+          handoverCard: detectedHandover
+        });
+        saveChatSession();
 
-      if (showHumanBtn) {
-        const btn = document.createElement('button');
-        btn.className = 'btn btn-primary';
-        btn.style.fontSize = '14px';
-        btn.style.minHeight = '40px';
-        btn.style.marginTop = '4px';
-        btn.textContent = 'Connect to Human Agent ↗';
-        btn.onclick = () => {
-          showToast("Connecting to on-call agent Sarah...");
-          setTimeout(() => { window.location.href = 'agent-dashboard.html'; }, 1000);
-        };
-        box.appendChild(btn);
+      } catch (networkErr) {
+        console.warn('[BizAssist AI Chat] Fetch error, falling back to local handler:', networkErr);
+        if (typingEl && typingEl.parentNode) typingEl.remove();
+
+        // Local offline fallback simulation
+        const fallbackText = "I am currently running in offline fallback mode. BizAssist AI automates ticket classification, SLA prioritization, and draft replies in under 120ms. If you need urgent assistance, our on-call team is available.";
+        chatConversation.push({
+          role: 'assistant',
+          content: fallbackText
+        });
+        saveChatSession();
+        renderChatMessages();
+      } finally {
+        if (sendBtn) sendBtn.disabled = false;
+        const currentActive = document.getElementById('chat-active-indicator');
+        if (currentActive) currentActive.remove();
       }
-
-      box.scrollTop = box.scrollHeight;
     }
+
+    function createTicketCardElement(ticket) {
+      const card = document.createElement('div');
+      card.className = 'chat-ticket-card';
+      card.innerHTML = `
+        <div class="card-meta-header">
+          <span class="card-code">#${ticket.id}</span>
+          <span class="card-badge">${ticket.stage || 'In Progress'}</span>
+        </div>
+        <div class="card-row"><strong>Category:</strong> ${ticket.category || 'General'}</div>
+        <div class="card-row"><strong>Priority:</strong> ${ticket.priority || 'Normal'}</div>
+        <div class="card-row"><strong>Assigned Team:</strong> ${ticket.assignedTeam || 'Tier-2 Operations'}</div>
+        <div class="card-row"><strong>Latest Note:</strong> ${ticket.lastUpdate || 'Investigating issue'}</div>
+        <div class="card-actions">
+          <button type="button" class="btn-card-action" onclick="loadSampleTicket('${ticket.id}')">View in Tracker</button>
+        </div>
+      `;
+      return card;
+    }
+
+    function createProposalCardElement(proposal) {
+      const card = document.createElement('div');
+      card.className = 'chat-proposal-card';
+      card.innerHTML = `
+        <div class="card-meta-header">
+          <span class="card-code">PROPOSED TICKET</span>
+          <span class="card-badge">${proposal.priority || 'Urgent'}</span>
+        </div>
+        <div class="card-row"><strong>Category:</strong> ${proposal.category}</div>
+        <div class="card-row"><strong>Summary:</strong> ${proposal.summary}</div>
+        <p style="margin-top:6px; font-size:12px; color:var(--text-secondary);">Confirm raising this ticket to dispatch to our on-call engineer.</p>
+        <div class="card-actions">
+          <button type="button" class="btn-card-action" onclick="confirmTicketCreation('${encodeURIComponent(proposal.summary)}', '${proposal.category}', '${proposal.priority}')">Confirm Ticket</button>
+          <button type="button" class="btn-card-action btn-card-secondary" onclick="editTicketProposal()">Edit</button>
+        </div>
+      `;
+      return card;
+    }
+
+    function createHandoverCardElement(handover) {
+      const card = document.createElement('div');
+      card.className = 'chat-handover-card';
+      card.innerHTML = `
+        <div class="card-meta-header">
+          <span class="card-code">HUMAN AGENT HANDOVER</span>
+          <span class="card-badge">${handover.reference_code || 'ESC-LIVE'}</span>
+        </div>
+        <div class="card-row"><strong>Estimated Wait:</strong> ${handover.estimated_wait || 'Under 2 minutes'}</div>
+        <div class="card-row"><strong>Reason:</strong> ${handover.reason || 'Customer inquiry'}</div>
+        <div class="card-actions">
+          <a href="agent-dashboard.html" class="btn-card-action" style="text-decoration:none;">Open Agent Workspace →</a>
+        </div>
+      `;
+      return card;
+    }
+
+    async function confirmTicketCreation(encodedSummary, category, priority) {
+      const summary = decodeURIComponent(encodedSummary);
+      const email = 'customer.direct@bizassist.ai';
+
+      chatConversation.push({
+        role: 'user',
+        content: `Confirmed. Please raise the ticket: "${summary}"`
+      });
+      saveChatSession();
+      renderChatMessages();
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'create_ticket',
+            toolArgs: { summary, category, priority, contact_email: email }
+          })
+        });
+
+        const data = await res.json();
+        if (data.result && data.result.ticket) {
+          const t = data.result.ticket;
+          chatConversation.push({
+            role: 'assistant',
+            content: `Ticket #${t.id} has been created and assigned to ${t.assignedTeam}. You can track its live milestone progress at any time using ID #${t.id}.`,
+            ticketCard: t
+          });
+          saveChatSession();
+          renderChatMessages();
+          showToast(`✓ Ticket #${t.id} created successfully!`);
+        }
+      } catch (err) {
+        showToast("Error creating ticket. Please try again.");
+      }
+    }
+
+    function editTicketProposal() {
+      const input = document.getElementById('chat-input-text');
+      input.value = "Please update category to General and priority to Normal";
+      input.focus();
+    }
+
+    // Auto-init on page load if existing conversation exists
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = sessionStorage.getItem(CHAT_STORAGE_KEY);
+      if (saved) {
+        initChatSession();
+      }
+    });
 
     /* ==========================================================================
        E. BOOK A DEMO MODAL & FOCUS TRAP

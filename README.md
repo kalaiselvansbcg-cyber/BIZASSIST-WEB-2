@@ -40,8 +40,14 @@ The project code is separated into clean, modular files for easy maintenance and
 
 ```
 nexusai/
-├── index.html              # Main landing page with full navigation to all modules
-├── login.html              # Dedicated single-file accessible authentication screen
+├── api/
+│   └── chat.js               # Production Vercel Serverless Function (SSE streaming & tool calling)
+├── knowledge/
+│   └── bizassist.md          # Grounded Markdown knowledge base for the AI Assistant
+├── prompts/
+│   └── system.md             # Strict AI Assistant system prompt
+├── index.html                # Main landing page with upgraded streaming AI Chat Assistant
+├── login.html                # Dedicated single-file accessible authentication screen
 ├── portal.html             # Customer Ticket Portal (Ticket intake, live milestone tracker, search)
 ├── agent-dashboard.html    # Agent Dashboard (Split-pane inbox queue, customer 360, SLA countdown)
 ├── ai-triage.html          # AI Triage Engine (Real-time NLP classification, entity extractor, routing)
@@ -53,8 +59,11 @@ nexusai/
 ├── js/
 │   ├── assets.js           # Vector SVG illustrations & data URI generation
 │   ├── main.js             # Core UI controller (custom difference cursor, nav, toasts, reveals)
-│   └── interactive.js      # Working prototype simulations, routing & form handlers
+│   ├── interactive.js      # Working prototype simulations, routing & form handlers
+│   └── supabase-client.js  # Live Supabase backend sync
+├── .env.example              # Environment variables template for LLM provider
 ├── .gitignore              # Standard Git ignore rules
+├── package.json            # ES module manifest for Vercel Serverless Functions
 └── README.md               # Project documentation and guide
 ```
 
@@ -168,6 +177,37 @@ The project is connected live to Supabase:
 5. `public.demo_requests`: Captures lead bookings and demonstration requests submitted via landing page modals.
 
 Row Level Security (RLS) is enabled across all tables with public policies configured for real-time customer and agent prototype interaction.
+
+---
+
+## 🤖 Production AI Assistant & Serverless Backend
+
+The floating assistant widget is powered by a serverless function (`/api/chat.js`) supporting real natural language interactions, Server-Sent Events (SSE) streaming, tool calling, and rate limiting.
+
+### 1. Setting Environment Variables on Vercel
+1. Go to your project on the [Vercel Dashboard](https://vercel.com/dashboard).
+2. Navigate to **Settings** → **Environment Variables**.
+3. Add the following variables for **Production** and **Preview**:
+   - `LLM_PROVIDER`: `google` (or `anthropic`, `openai`)
+   - `LLM_API_KEY`: Your model API key
+   - `LLM_MODEL`: `gemini-1.5-flash` (or `claude-3-5-haiku-20241022`, `gpt-4o-mini`)
+4. Trigger a redeployment or push to `main` for the variables to take effect.
+
+### 2. Running Locally with API Support
+```bash
+# 1. Copy template to local env file
+cp .env.example .env.local
+
+# 2. Start the local development server (supports /api/chat routing)
+node scratch/server.cjs
+```
+Visit `http://localhost:3000` to interact with the streaming chat widget.
+
+### 3. How to Edit the Knowledge Base
+Edit [`knowledge/bizassist.md`](file:///d:/zeni/knowledge/bizassist.md). Any updates to platform features, metrics, or integration support are immediately injected into the serverless function's system prompt on subsequent requests.
+
+### 4. How to Change the AI Model
+Set `LLM_PROVIDER` and `LLM_MODEL` in your environment variables. `api/chat.js` natively supports Google Gemini (`google`), Anthropic (`anthropic`), and OpenAI (`openai`) behind a single unified `callModel()` pipeline with zero dependencies.
 
 ---
 
