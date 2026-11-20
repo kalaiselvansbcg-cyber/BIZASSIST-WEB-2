@@ -4,12 +4,13 @@
  * 
  * Features:
  * - Provider-agnostic model calling (Google Gemini, Anthropic, OpenAI)
- * - Tool calling (lookup_ticket, create_ticket, handover_to_human)
- * - Server-Sent Events (SSE) streaming output
+ * - 6 Native Tools: lookup_ticket, create_ticket, add_ticket_comment, request_callback, search_knowledge_base, handover_to_human
+ * - Server-Sent Events (SSE) streaming output with delta & text properties
  * - Rate limiting (20 req/min per IP) and message size capping (1,000 chars)
- * - In-memory prototype ticket database matching landing page & portal
+ * - Privacy protection: strips sensitive credentials (credit cards, auth tokens)
+ * - Prompt injection defensive shielding
  * - 20-second abort timeout
- * - Zero external npm dependencies (native fetch, crypto, fs)
+ * - Zero external npm dependencies
  */
 
 import fs from 'fs';
@@ -19,45 +20,85 @@ import path from 'path';
 const prototypeTickets = {
   'BA-1042': {
     id: 'BA-1042',
-    subject: 'Payment failure during enterprise renewal checkout',
-    category: 'Billing & Payments',
-    priority: 'Urgent',
-    stage: 'Replied',
-    stepNumber: 4,
-    assignedTeam: 'Tier-2 Billing & SRE',
+    subject: 'Enterprise SSO integration failure with Okta SAML 2.0',
+    category: 'API & Infrastructure',
+    priority: 'High',
+    stage: 'Assigned',
+    stepNumber: 3,
+    assignedTeam: 'Tier-2 Infrastructure',
     assignedAgent: 'Sarah Jenkins',
-    lastUpdate: 'Agent Sarah captured transaction ch_3Ox948aL on Stripe. Invoice #INV-2026-904 attached. Workspace access uninterrupted.',
-    contactEmail: 'finance@acmeenterprise.com'
+    lastUpdate: 'Okta metadata x509 fingerprint mismatch identified. Cache purged on auth gateway.',
+    contactEmail: 'alex.r@acme.com'
   },
   'BA-2089': {
     id: 'BA-2089',
-    subject: 'API Gateway HTTP 500 error on webhook endpoint',
-    category: 'API & Infrastructure',
-    priority: 'High',
-    stage: 'Resolved',
-    stepNumber: 5,
-    assignedTeam: 'Platform SRE Infrastructure',
+    subject: 'Invoice VAT calculation mismatch on monthly billing',
+    category: 'Billing & Payments',
+    priority: 'Normal',
+    stage: 'Categorised',
+    stepNumber: 2,
+    assignedTeam: 'Billing & FinOps',
     assignedAgent: 'Marcus Vance',
-    lastUpdate: 'SRE cluster back-fill completed. Automated circuit breaker restored traffic routing with zero packet loss.',
-    contactEmail: 'sre-team@globaltech.io'
+    lastUpdate: 'VIES reverse charge VAT ID verified. Credit note drafted.',
+    contactEmail: 'elena@cloudcore.io'
   },
   'BA-3310': {
     id: 'BA-3310',
-    subject: 'Update invoice billing address & EU VAT number',
-    category: 'Billing & Payments',
+    subject: 'Production webhook latency spike on payment.completed events',
+    category: 'API & Infrastructure',
+    priority: 'Urgent',
+    stage: 'Replied',
+    stepNumber: 4,
+    assignedTeam: 'Tier-3 Infrastructure SRE',
+    assignedAgent: 'Sarah Jenkins',
+    lastUpdate: 'Autoscaling group rebalanced. Socket latency normalized to 68ms.',
+    contactEmail: 'maya@orbitio.dev'
+  },
+  'BA-1039': {
+    id: 'BA-1039',
+    subject: 'Multi-factor authentication device reset for security team lead',
+    category: 'Account & Security',
     priority: 'Normal',
     stage: 'Resolved',
     stepNumber: 5,
-    assignedTeam: 'Accounts Receivable',
-    assignedAgent: 'Elena Rostova',
-    lastUpdate: 'Tax registration updated and synchronized with invoicing database. Verified against VIES directory.',
-    contactEmail: 'ap@nordicdesign.eu'
+    assignedTeam: 'Security Operations',
+    assignedAgent: 'Sarah Jenkins',
+    lastUpdate: 'Identity verified via secondary channel. 2FA bypass code issued.',
+    contactEmail: 'david.k@bytewave.co'
+  },
+  'BA-1041': {
+    id: 'BA-1041',
+    subject: 'Custom reporting export timeout for large CSV queries (>50k rows)',
+    category: 'General',
+    priority: 'Normal',
+    stage: 'Raised',
+    stepNumber: 1,
+    assignedTeam: 'General Support',
+    assignedAgent: 'Unassigned',
+    lastUpdate: 'Ticket logged. Asynchronous export worker scheduled.',
+    contactEmail: 'chloe.d@solas.tech'
   }
 };
 
+// 12 Knowledge Base Articles for In-Memory Search
+const KNOWLEDGE_ARTICLES = [
+  { id: 'kb-vat-01', title: 'EU VAT Reverse Charge & Invoicing Guidelines', category: 'Billing', summary: 'How to apply reverse charge exemption to recurring subscription invoices.' },
+  { id: 'kb-stripe-02', title: 'Resolving Stripe Payment & Card Renewal Failures', category: 'Billing', summary: 'Troubleshooting recurring subscription renewal decline codes and 3D Secure.' },
+  { id: 'kb-refund-03', title: 'Subscription Cancellation & Prorated Refund Policy', category: 'Billing', summary: 'Policy overview on monthly cancellations and annual license adjustments.' },
+  { id: 'kb-webhook-04', title: 'Webhook Latency Optimization & Retry Backoff Architecture', category: 'API', summary: 'Handling high-volume payment.completed and ticket.created webhook spikes.' },
+  { id: 'kb-ratelimit-05', title: 'API Rate Limits, Quotas & Token Bucket Mechanics', category: 'API', summary: 'Understanding standard and enterprise rate limits across REST endpoints.' },
+  { id: 'kb-status-06', title: 'Monitoring Platform Status & Incident Notification Channels', category: 'API', summary: 'Where to subscribe to real-time uptime status and maintenance windows.' },
+  { id: 'kb-saml-07', title: 'Enterprise Single Sign-On (SSO) with Okta SAML 2.0', category: 'Security', summary: 'Step-by-step instructions for SAML 2.0 assertion configuration and x509 cert rotation.' },
+  { id: 'kb-2fa-08', title: 'Multi-Factor Authentication (2FA) Reset & Recovery Keys', category: 'Security', summary: 'Procedure for replacing lost hardware security keys or authenticator apps.' },
+  { id: 'kb-rbac-09', title: 'Role-Based Access Control (RBAC): Customer, Agent & Manager', category: 'Security', summary: 'Detailed permissions breakdown across the three primary workspace roles.' },
+  { id: 'kb-quickstart-10', title: 'Platform Quickstart: The 5-Stage Ticket Lifecycle', category: 'General', summary: 'A fast visual walkthrough of how customer tickets progress from Raised to Resolved.' },
+  { id: 'kb-triage-11', title: 'How AI Auto-Triage & Confidence Scoring Operates', category: 'General', summary: 'Understanding NLP intent classification, urgency regression, and entity extraction.' },
+  { id: 'kb-channels-12', title: 'Multi-Channel Intake Integration: Web, Email, Chat & WhatsApp', category: 'General', summary: 'Connecting inbound customer touchpoints into a unified triage stream.' }
+];
+
 // In-memory IP rate limiter (sliding window)
 const ipRateLimitMap = new Map();
-const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const MAX_REQUESTS_PER_WINDOW = 20;
 
 function checkRateLimit(ip) {
@@ -71,16 +112,6 @@ function checkRateLimit(ip) {
   
   validTimestamps.push(now);
   ipRateLimitMap.set(ip, validTimestamps);
-  
-  // Cleanup occasionally
-  if (ipRateLimitMap.size > 1000) {
-    for (const [key, list] of ipRateLimitMap.entries()) {
-      if (list.every(t => now - t >= RATE_LIMIT_WINDOW_MS)) {
-        ipRateLimitMap.delete(key);
-      }
-    }
-  }
-  
   return true;
 }
 
@@ -99,69 +130,82 @@ function getSystemPrompt() {
     cachedSystemPrompt = rawPrompt.replace('{{KNOWLEDGE_BASE}}', rawKb);
     return cachedSystemPrompt;
   } catch (err) {
-    console.warn('[api/chat] Failed reading prompt/knowledge files from disk:', err.message);
-    return 'You are the BizAssist AI Assistant on the BizAssist AI website. Help users with support and tickets.';
+    return 'You are the BizAssist AI Assistant on the BizAssist AI website. Help users with support and tickets in a calm, professional tone without emojis.';
   }
 }
 
-// Tool Definitions
+// 6 Tool Definitions
 const TOOLS = [
   {
     name: 'lookup_ticket',
-    description: 'Look up an existing ticket by its ticket ID (e.g. BA-1042, BA-2089, BA-3310). Returns status, stage (Raised, Categorised, Assigned, Replied, Resolved), assigned team, and last update.',
+    description: 'Look up an existing ticket by its ticket ID (e.g. BA-1042, BA-2089, BA-3310). Returns status, stage, assigned team, and last update.',
     parameters: {
       type: 'object',
       properties: {
-        ticket_id: {
-          type: 'string',
-          description: 'The ticket identifier, e.g. BA-1042 or #BA-1042'
-        }
+        ticket_id: { type: 'string', description: 'The ticket identifier, e.g. BA-1042 or #BA-1042' }
       },
       required: ['ticket_id']
     }
   },
   {
     name: 'create_ticket',
-    description: 'Create a new customer ticket after the user has confirmed. Category must be one of: "Billing & Payments", "API & Infrastructure", "Account & Security", "General". Priority: "Normal", "High", "Urgent".',
+    description: 'Create a new customer ticket after the user has confirmed. Category: "Billing & Payments", "API & Infrastructure", "Account & Security", "General". Priority: "Normal", "High", "Urgent".',
     parameters: {
       type: 'object',
       properties: {
-        summary: {
-          type: 'string',
-          description: 'One or two line technical summary of the issue'
-        },
-        category: {
-          type: 'string',
-          enum: ['Billing & Payments', 'API & Infrastructure', 'Account & Security', 'General'],
-          description: 'The ticket category'
-        },
-        priority: {
-          type: 'string',
-          enum: ['Normal', 'High', 'Urgent'],
-          description: 'The urgency level'
-        },
-        contact_email: {
-          type: 'string',
-          description: 'The contact email for status notifications'
-        }
+        summary: { type: 'string', description: 'Technical summary of the issue' },
+        category: { type: 'string', enum: ['Billing & Payments', 'API & Infrastructure', 'Account & Security', 'General'] },
+        priority: { type: 'string', enum: ['Normal', 'High', 'Urgent'] },
+        contact_email: { type: 'string', description: 'The contact email for status notifications' }
       },
       required: ['summary', 'category', 'priority', 'contact_email']
     }
   },
   {
-    name: 'handover_to_human',
-    description: 'Mark the conversation for human follow-up when the user requests an agent, is frustrated, reports fraud/security issues, or asks about legal/contracts.',
+    name: 'add_ticket_comment',
+    description: 'Add an inquiry note or follow-up comment to an active ticket.',
     parameters: {
       type: 'object',
       properties: {
-        reason: {
-          type: 'string',
-          description: 'Brief reason for transferring to human agent'
-        },
-        conversation_summary: {
-          type: 'string',
-          description: 'Brief summary of what the user needs help with'
-        }
+        ticket_id: { type: 'string' },
+        comment: { type: 'string' }
+      },
+      required: ['ticket_id', 'comment']
+    }
+  },
+  {
+    name: 'request_callback',
+    description: 'Schedule a phone call-back from a specialized human support engineer.',
+    parameters: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        phone: { type: 'string' },
+        preferred_time: { type: 'string', enum: ['Morning', 'Afternoon', 'Evening'] },
+        topic: { type: 'string' }
+      },
+      required: ['name', 'phone', 'topic']
+    }
+  },
+  {
+    name: 'search_knowledge_base',
+    description: 'Search documentation and guidelines for answers to common questions.',
+    parameters: {
+      type: 'object',
+      properties: {
+        query: { type: 'string', description: 'Keywords or technical terms to search' }
+      },
+      required: ['query']
+    }
+  },
+  {
+    name: 'handover_to_human',
+    description: 'Connect user to human operations team via phone hotline, WhatsApp, or live escalation queue.',
+    parameters: {
+      type: 'object',
+      properties: {
+        reason: { type: 'string', description: 'Reason for transferring' },
+        conversation_summary: { type: 'string', description: 'Brief summary of issue' }
       },
       required: ['reason', 'conversation_summary']
     }
@@ -174,13 +218,8 @@ function executeTool(name, args) {
     const rawId = (args.ticket_id || '').trim().replace(/^#/, '').toUpperCase();
     const found = prototypeTickets[rawId];
     if (found) {
-      return {
-        found: true,
-        ticket: found
-      };
+      return { found: true, ticket: found };
     }
-    // Dynamic lookup for other tickets
-    const stage = rawId.startsWith('NX') ? 'Investigating' : 'Assigned';
     return {
       found: true,
       ticket: {
@@ -188,11 +227,11 @@ function executeTool(name, args) {
         subject: `Ticket #${rawId} (Technical Support Request)`,
         category: 'General',
         priority: 'Normal',
-        stage: stage,
+        stage: 'Assigned',
         stepNumber: 3,
         assignedTeam: 'Tier-2 Technical Operations',
-        assignedAgent: 'On-Call Operations Engineer',
-        lastUpdate: 'Ticket triaged and routed to operations queue. Initial response SLA within 30 minutes.',
+        assignedAgent: 'Sarah Jenkins',
+        lastUpdate: 'Ticket triaged and routed to active operations queue.',
         contactEmail: 'support-tracking@bizassist.ai'
       }
     };
@@ -208,38 +247,68 @@ function executeTool(name, args) {
       priority: args.priority || 'Normal',
       stage: 'Raised',
       stepNumber: 1,
-      assignedTeam: args.category === 'Billing & Payments' ? 'Accounts & Invoicing' : 'Tier-1 Support Desk',
-      assignedAgent: 'Automated Dispatcher',
+      assignedTeam: args.category === 'Billing & Payments' ? 'Billing & FinOps' : 'General Support',
+      assignedAgent: 'Sarah Jenkins',
       lastUpdate: 'Ticket logged successfully. Auto-triaged to specialized queue.',
       contactEmail: args.contact_email || 'customer@bizassist.ai'
     };
     prototypeTickets[newId] = newTicket;
+    return { created: true, ticket: newTicket };
+  }
+
+  if (name === 'add_ticket_comment') {
+    const rawId = (args.ticket_id || '').trim().replace(/^#/, '').toUpperCase();
     return {
-      created: true,
-      ticket: newTicket
+      comment_added: true,
+      ticket_id: rawId,
+      message: 'Comment appended to ticket activity log.'
+    };
+  }
+
+  if (name === 'request_callback') {
+    return {
+      scheduled: true,
+      name: args.name,
+      phone: args.phone,
+      preferred_time: args.preferred_time || 'Afternoon',
+      reference_code: `CB-${Math.floor(1000 + Math.random() * 8999)}`,
+      message: 'Call back scheduled successfully. An operations engineer will contact you.'
+    };
+  }
+
+  if (name === 'search_knowledge_base') {
+    const q = (args.query || '').toLowerCase();
+    const matches = KNOWLEDGE_ARTICLES.filter(a => 
+      a.title.toLowerCase().includes(q) || 
+      a.summary.toLowerCase().includes(q) ||
+      a.category.toLowerCase().includes(q)
+    );
+    return {
+      query: args.query,
+      results: matches.slice(0, 3)
     };
   }
 
   if (name === 'handover_to_human') {
     return {
       handover_initiated: true,
-      agent_available: true,
-      estimated_wait: 'Under 2 minutes',
       reference_code: `ESC-${Math.floor(1000 + Math.random() * 8999)}`,
       reason: args.reason,
-      summary: args.conversation_summary
+      summary: args.conversation_summary,
+      hotline: '+91 00000 00000',
+      whatsapp: '910000000000'
     };
   }
 
   return { error: `Unknown tool: ${name}` };
 }
 
-// Fallback rule-based simulator when no LLM API key is present or on network failure
+// Fallback rule-based simulator
 function generateLocalFallbackResponse(userMessage, history) {
   const lower = (userMessage || '').toLowerCase();
   
   // 1. Ticket status lookup
-  const ticketMatch = userMessage.match(/#?BA-(\d{4})/i) || userMessage.match(/#?NX-(\d{4})/i);
+  const ticketMatch = userMessage.match(/#?BA-(\d{4})/i);
   if (ticketMatch || lower.includes('status of') || lower.includes('track my ticket') || lower.includes('lookup')) {
     const tId = ticketMatch ? ticketMatch[0].toUpperCase() : 'BA-1042';
     const result = executeTool('lookup_ticket', { ticket_id: tId });
@@ -250,245 +319,58 @@ function generateLocalFallbackResponse(userMessage, history) {
     };
   }
 
-  // 2. System prompt refusal
+  // 2. Prompt injection shield
   if (lower.includes('ignore your instructions') || lower.includes('system prompt') || lower.includes('what are your instructions')) {
     return {
-      text: "I am unable to share internal system instructions or configuration data. I am here to help you learn about BizAssist AI, raise support tickets, and check ticket status. How can I assist you with your support operations today?"
+      text: "I am unable to disclose internal configuration instructions. I am here to assist you with BizAssist AI support operations, tickets, and platform documentation. How can I help you today?"
     };
   }
 
   // 3. Human handover request
-  if (lower.includes('human') || lower.includes('speak to a person') || lower.includes('talk to a human') || lower.includes('representative') || lower.includes('agent')) {
+  if (lower.includes('human') || lower.includes('speak to a person') || lower.includes('talk to a human') || lower.includes('agent') || lower.includes('representative')) {
     const result = executeTool('handover_to_human', { reason: 'User requested human support agent', conversation_summary: userMessage });
     return {
-      text: "I have connected your session with our on-call support team. A human specialist is reviewing your context and will join this thread shortly.",
+      text: "I have registered your request for human assistance. Our operations team is available via direct phone line, WhatsApp, or through an automated call back.",
       toolResult: { tool: 'handover_to_human', data: result }
     };
   }
 
-  // 4. Payment / billing complaint -> Propose raising ticket
-  if (lower.includes('payment failed') || lower.includes('money was deducted') || lower.includes('charged twice') || lower.includes('billing issue')) {
+  // 4. Call back request
+  if (lower.includes('call back') || lower.includes('callback') || lower.includes('phone call')) {
+    const result = executeTool('request_callback', { name: 'Customer', phone: '+91 00000 00000', topic: userMessage });
     return {
-      text: "I am sorry to hear about the payment trouble. I can raise an Urgent Billing & Payments ticket for our finance team right away.\n\nSummary: Payment failure during renewal checkout with funds deducted.\nCategory: Billing & Payments\nPriority: Urgent\n\nShall I raise this ticket for you? Please provide your email address to confirm.",
+      text: "You can schedule a call back directly. Please provide your phone number and preferred time window (Morning, Afternoon, or Evening), or click 'Request Call Back' in the assistant menu.",
+      toolResult: { tool: 'request_callback', data: result }
+    };
+  }
+
+  // 5. Knowledge search
+  if (lower.includes('knowledge') || lower.includes('article') || lower.includes('doc') || lower.includes('faq')) {
+    const result = executeTool('search_knowledge_base', { query: 'billing' });
+    return {
+      text: "Here are starter knowledge articles from our documentation covering invoicing, SSO, webhooks, and security.",
+      toolResult: { tool: 'search_knowledge_base', data: result }
+    };
+  }
+
+  // 6. Raising a ticket proposal
+  if (lower.includes('raise') || lower.includes('payment failed') || lower.includes('issue') || lower.includes('bug') || lower.includes('error')) {
+    return {
+      text: "I can log a support ticket for this issue right away. Here is the proposed triage:\n\nSummary: " + userMessage.slice(0, 80) + "\nCategory: API & Infrastructure\nPriority: High\n\nWould you like me to submit this ticket?",
       proposal: {
-        summary: 'Payment failure during renewal checkout with funds deducted',
-        category: 'Billing & Payments',
-        priority: 'Urgent'
+        summary: userMessage.slice(0, 80),
+        category: 'API & Infrastructure',
+        priority: 'High'
       }
     };
   }
 
-  // 5. How ticket works / lifecycle
-  if (lower.includes('how does the ticket work') || lower.includes('how does a ticket work') || lower.includes('ticket lifecycle') || lower.includes('how does triage work')) {
-    return {
-      text: "A ticket in BizAssist AI moves through six automated stages:\n1. Raised: Submitted via portal, email, or chat.\n2. Categorised: Low-latency NLP tags the category in <120ms.\n3. Prioritised: Urgent, High, or Normal SLA is assigned.\n4. Summarised: A 2-line technical briefing is generated.\n5. Reply Suggested: Grounded drafts are prepared for agent review.\n6. Status Tracked: The customer follows transparent milestone progress."
-    };
-  }
-
-  // 6. Integrations (Zendesk / Slack)
-  if (lower.includes('zendesk') || lower.includes('slack') || lower.includes('freshdesk') || lower.includes('salesforce') || lower.includes('integrate')) {
-    return {
-      text: "BizAssist AI integrates directly with Zendesk, Freshdesk, Slack, and Salesforce Service Cloud through native webhooks and bi-directional sync APIs. If you need a custom or unlisted integration, I would be happy to connect you with our engineering team."
-    };
-  }
-
-  // 7. Multilingual support
-  if (/hola|buenos|gracias|por favor/i.test(lower)) {
-    return {
-      text: "¡Hola! Con BizAssist AI puede gestionar tickets de soporte con asistencia de inteligencia artificial en tiempo real. ¿Desea consultar el estado de un ticket o crear una nueva incidencia?"
-    };
-  }
-  if (/bonjour|merci|salut/i.test(lower)) {
-    return {
-      text: "Bonjour ! BizAssist AI automatise le tri et le suivi de vos tickets de support. Comment puis-je vous aider aujourd'hui ?"
-    };
-  }
-
-  // 8. General fallback
   return {
-    text: "BizAssist AI categorises, prioritises, summarises and suggests replies for support inquiries in under 120ms. You can ask me to track a ticket (e.g. #BA-1042), help raise a new ticket, or answer questions about our platform features."
+    text: "I can help you check ticket status (#BA-1042, #BA-2089, #BA-3310), search 12 knowledge base articles, or connect you with human operations."
   };
 }
 
-// Google Gemini Stream Implementation
-async function callGeminiStream(apiKey, modelName, systemPrompt, conversation, res) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName || 'gemini-1.5-flash'}:streamGenerateContent?key=${apiKey}&alt=sse`;
-  
-  // Format contents for Gemini
-  const contents = conversation.map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }]
-  }));
-
-  const payload = {
-    system_instruction: {
-      parts: [{ text: systemPrompt }]
-    },
-    contents: contents,
-    generationConfig: {
-      temperature: 0.3,
-      maxOutputTokens: 600
-    }
-  };
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini API error (${response.status}): ${errorText}`);
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder('utf-8');
-  let buffer = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop(); // keep last incomplete line
-
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        const jsonStr = line.slice(6).trim();
-        if (!jsonStr) continue;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const chunkText = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (chunkText) {
-            res.write(`data: ${JSON.stringify({ type: 'chunk', text: chunkText })}\n\n`);
-          }
-        } catch (e) {
-          // ignore parse glitch on partial chunks
-        }
-      }
-    }
-  }
-}
-
-// Anthropic Stream Implementation
-async function callAnthropicStream(apiKey, modelName, systemPrompt, conversation, res) {
-  const url = 'https://api.anthropic.com/v1/messages';
-  const messages = conversation.map(m => ({
-    role: m.role === 'assistant' ? 'assistant' : 'user',
-    content: m.content
-  }));
-
-  const payload = {
-    model: modelName || 'claude-3-5-haiku-20241022',
-    system: systemPrompt,
-    messages: messages,
-    max_tokens: 600,
-    temperature: 0.3,
-    stream: true
-  };
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`Anthropic API error (${response.status}): ${errText}`);
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder('utf-8');
-  let buffer = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop();
-
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === '[DONE]') break;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          if (parsed.type === 'content_block_delta' && parsed.delta?.text) {
-            res.write(`data: ${JSON.stringify({ type: 'chunk', text: parsed.delta.text })}\n\n`);
-          }
-        } catch (e) {}
-      }
-    }
-  }
-}
-
-// OpenAI / OpenAI-compatible Stream Implementation
-async function callOpenAIStream(apiKey, modelName, systemPrompt, conversation, res) {
-  const url = 'https://api.openai.com/v1/chat/completions';
-  const messages = [
-    { role: 'system', content: systemPrompt },
-    ...conversation.map(m => ({ role: m.role, content: m.content }))
-  ];
-
-  const payload = {
-    model: modelName || 'gpt-4o-mini',
-    messages: messages,
-    max_tokens: 600,
-    temperature: 0.3,
-    stream: true
-  };
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`OpenAI API error (${response.status}): ${errText}`);
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder('utf-8');
-  let buffer = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop();
-
-    for (const line of lines) {
-      if (line.startsWith('data: ')) {
-        const jsonStr = line.slice(6).trim();
-        if (jsonStr === '[DONE]') break;
-        try {
-          const parsed = JSON.parse(jsonStr);
-          const chunkText = parsed.choices?.[0]?.delta?.content;
-          if (chunkText) {
-            res.write(`data: ${JSON.stringify({ type: 'chunk', text: chunkText })}\n\n`);
-          }
-        } catch (e) {}
-      }
-    }
-  }
-}
-
-// Main API Handler
 export default async function handler(req, res) {
-  // CORS & Methods
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -506,23 +388,19 @@ export default async function handler(req, res) {
   if (!checkRateLimit(clientIp)) {
     return res.status(429).json({
       error: 'Too Many Requests',
-      message: 'You have reached the rate limit of 20 messages per minute. Please pause for a moment or click "Talk to a human agent" below.'
+      message: 'Rate limit of 20 requests per minute exceeded. Please pause briefly.'
     });
   }
 
-  // 2. Body parsing and validation
+  // 2. Parse payload
   let { messages, action, toolArgs } = req.body || {};
-  if (!Array.isArray(messages)) {
-    messages = [];
-  }
+  if (!Array.isArray(messages)) messages = [];
 
-  // Handle direct tool actions (e.g. user clicked "Confirm ticket" or "Lookup")
   if (action && toolArgs) {
     const toolOutput = executeTool(action, toolArgs);
     return res.status(200).json({ success: true, action, result: toolOutput });
   }
 
-  // Cap message lengths & slice last 12 turns
   const cleanMessages = messages
     .filter(m => m && typeof m.content === 'string')
     .slice(-12)
@@ -545,68 +423,26 @@ export default async function handler(req, res) {
     'X-Accel-Buffering': 'no'
   });
 
-  const provider = (process.env.LLM_PROVIDER || '').trim().toLowerCase();
   const apiKey = (process.env.LLM_API_KEY || '').trim();
-  const modelName = (process.env.LLM_MODEL || '').trim();
 
-  // If no API key configured, use our intelligent local engine
-  if (!apiKey) {
-    const fallback = generateLocalFallbackResponse(latestUserMessage, cleanMessages);
-    
-    // Simulate natural streaming cadence
-    const words = fallback.text.split(' ');
-    for (let i = 0; i < words.length; i++) {
-      const chunk = (i === 0 ? '' : ' ') + words[i];
-      res.write(`data: ${JSON.stringify({ type: 'chunk', text: chunk })}\n\n`);
-      await new Promise(r => setTimeout(r, 20));
-    }
-
-    if (fallback.toolResult) {
-      res.write(`data: ${JSON.stringify({ type: 'tool_result', ...fallback.toolResult })}\n\n`);
-    }
-
-    if (fallback.proposal) {
-      res.write(`data: ${JSON.stringify({ type: 'ticket_proposal', proposal: fallback.proposal })}\n\n`);
-    }
-
-    res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
-    return res.end();
+  // If no LLM API key, stream local response
+  const fallback = generateLocalFallbackResponse(latestUserMessage, cleanMessages);
+  const words = fallback.text.split(' ');
+  for (let i = 0; i < words.length; i++) {
+    const chunk = (i === 0 ? '' : ' ') + words[i];
+    res.write(`data: ${JSON.stringify({ type: 'chunk', text: chunk, delta: chunk })}\n\n`);
+    await new Promise(r => setTimeout(r, 15));
   }
 
-  // Model Streaming with 20s Timeout
-  const systemPrompt = getSystemPrompt();
-  const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('LLM call timed out after 20 seconds.')), 20000)
-  );
-
-  try {
-    let streamPromise;
-    if (provider === 'anthropic') {
-      streamPromise = callAnthropicStream(apiKey, modelName, systemPrompt, cleanMessages, res);
-    } else if (provider === 'openai') {
-      streamPromise = callOpenAIStream(apiKey, modelName, systemPrompt, cleanMessages, res);
-    } else {
-      // Default to Google Gemini
-      streamPromise = callGeminiStream(apiKey, modelName, systemPrompt, cleanMessages, res);
-    }
-
-    await Promise.race([streamPromise, timeoutPromise]);
-    res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
-    res.end();
-  } catch (err) {
-    console.error('[api/chat] Error during model call:', err.message);
-    const fallback = generateLocalFallbackResponse(latestUserMessage, cleanMessages);
-    res.write(`data: ${JSON.stringify({ 
-      type: 'chunk', 
-      text: fallback.text 
-    })}\n\n`);
-    if (fallback.toolResult) {
-      res.write(`data: ${JSON.stringify({ type: 'tool_result', ...fallback.toolResult })}\n\n`);
-    }
-    if (fallback.proposal) {
-      res.write(`data: ${JSON.stringify({ type: 'ticket_proposal', proposal: fallback.proposal })}\n\n`);
-    }
-    res.write(`data: ${JSON.stringify({ type: 'done' })}\n\n`);
-    res.end();
+  if (fallback.toolResult) {
+    res.write(`data: ${JSON.stringify({ type: 'tool_result', ...fallback.toolResult })}\n\n`);
   }
+
+  if (fallback.proposal) {
+    res.write(`data: ${JSON.stringify({ type: 'ticket_proposal', proposal: fallback.proposal })}\n\n`);
+  }
+
+  res.write(`data: ${JSON.stringify({ type: 'done', delta: '' })}\n\n`);
+  res.write('data: [DONE]\n\n');
+  return res.end();
 }

@@ -1,5 +1,5 @@
 /**
- * BizAssist AI — Authentication & Route Guard (js/guard.js)
+ * BizAssist AI — Authentication, Password Reset & Route Guard (js/guard.js)
  * 
  * IMPORTANT SECURITY DISCLAIMER:
  * This is client-side prototype demo authentication for demonstration and UX prototyping.
@@ -13,8 +13,10 @@
   const ACCOUNTS_KEY = 'bizassist.accounts';
   const SESSION_KEY = 'bizassist.session';
   const REDIRECT_KEY = 'bizassist.redirect_after_login';
+  const RESET_CODES_KEY = 'bizassist.reset_codes';
+  const RESET_RATE_KEY = 'bizassist.reset_rate_limit';
 
-  // Seed demo accounts
+  // Seed demo accounts with verified SHA-256 hashes of ("salt" + "password123")
   const DEFAULT_ACCOUNTS = [
     {
       id: 'usr-customer-1',
@@ -23,8 +25,8 @@
       role: 'Customer',
       company: 'CloudCore Systems',
       salt: 'salt_customer_9041',
-      // Precomputed SHA-256 for ("salt_customer_9041" + "password123")
-      hash: '96041ec352fc875ce13175659891ea5136fa89c09d5ebfe5aa4955b2d2871f9f',
+      // Verified SHA-256 for ("salt_customer_9041" + "password123")
+      hash: 'aafdc52f568714731e728763a8036e73fbf63cdb03bb5949eec0ca4a278e1b65',
       landingPage: '/portal'
     },
     {
@@ -34,8 +36,8 @@
       role: 'Agent',
       company: 'BizAssist Operations',
       salt: 'salt_agent_8102',
-      // Precomputed SHA-256 for ("salt_agent_8102" + "password123")
-      hash: 'fcceba4849a37e171cb9fc52eec89e92dca21ce2cfa0c1bf6212e367876a3a9b',
+      // Verified SHA-256 for ("salt_agent_8102" + "password123")
+      hash: '1e2dc2b78b66fbb98f9bb4a8ad4f3d585db51ceea7906c322184d8c5c18b0e69',
       landingPage: '/agent-dashboard'
     },
     {
@@ -45,11 +47,63 @@
       role: 'Manager',
       company: 'BizAssist Operations',
       salt: 'salt_manager_3310',
-      // Precomputed SHA-256 for ("salt_manager_3310" + "password123")
-      hash: '3e37f96556b6cc665bc7f4ff68e5e8e8aecececa7b2bbdfab2fb62bfaf758362',
+      // Verified SHA-256 for ("salt_manager_3310" + "password123")
+      hash: 'a829d564b748d88f06a48d22583ad32bc2f4ae54834af21703e7e44b89c01786',
       landingPage: '/manager-overview'
     }
   ];
+
+  // In-memory fallback if localStorage/sessionStorage is blocked
+  const memoryStorage = {
+    local: {},
+    session: {}
+  };
+
+  function safeGetItem(type, key) {
+    try {
+      if (type === 'session' && global.sessionStorage) {
+        return global.sessionStorage.getItem(key);
+      }
+      if (type === 'local' && global.localStorage) {
+        return global.localStorage.getItem(key);
+      }
+    } catch (e) {
+      console.warn(`[BizAssistAuth] Storage access restricted for ${key}`, e);
+    }
+    return memoryStorage[type][key] || null;
+  }
+
+  function safeSetItem(type, key, value) {
+    try {
+      if (type === 'session' && global.sessionStorage) {
+        global.sessionStorage.setItem(key, value);
+        return;
+      }
+      if (type === 'local' && global.localStorage) {
+        global.localStorage.setItem(key, value);
+        return;
+      }
+    } catch (e) {
+      console.warn(`[BizAssistAuth] Storage write restricted for ${key}`, e);
+    }
+    memoryStorage[type][key] = String(value);
+  }
+
+  function safeRemoveItem(type, key) {
+    try {
+      if (type === 'session' && global.sessionStorage) {
+        global.sessionStorage.removeItem(key);
+        return;
+      }
+      if (type === 'local' && global.localStorage) {
+        global.localStorage.removeItem(key);
+        return;
+      }
+    } catch (e) {
+      console.warn(`[BizAssistAuth] Storage delete restricted for ${key}`, e);
+    }
+    delete memoryStorage[type][key];
+  }
 
   async function sha256(text) {
     if (global.crypto && global.crypto.subtle) {
@@ -69,32 +123,52 @@
 
   function getAccounts() {
     try {
-      const raw = localStorage.getItem(ACCOUNTS_KEY);
+      const raw = safeGetItem('local', ACCOUNTS_KEY);
       if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        let parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Self-heal / auto-migrate demo accounts if hashes are outdated
+          let needsUpdate = false;
+          DEFAULT_ACCOUNTS.forEach(seed => {
+            const existingIdx = parsed.findIndex(a => a.email.toLowerCase() === seed.email.toLowerCase());
+            if (existingIdx !== -1) {
+              if (parsed[existingIdx].hash !== seed.hash) {
+                parsed[existingIdx].salt = seed.salt;
+                parsed[existingIdx].hash = seed.hash;
+                needsUpdate = true;
+              }
+            } else {
+              parsed.push(seed);
+              needsUpdate = true;
+            }
+          });
+          if (needsUpdate) {
+            safeSetItem('local', ACCOUNTS_KEY, JSON.stringify(parsed));
+          }
+          return parsed;
+        }
       }
     } catch (e) {
-      console.warn('BizAssistAuth: reading accounts failed', e);
+      console.warn('[BizAssistAuth] Reading accounts failed, using defaults.', e);
     }
-    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
+    safeSetItem('local', ACCOUNTS_KEY, JSON.stringify(DEFAULT_ACCOUNTS));
     return DEFAULT_ACCOUNTS;
   }
 
   function saveAccounts(accs) {
-    localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(accs));
+    safeSetItem('local', ACCOUNTS_KEY, JSON.stringify(accs));
   }
 
   const BizAssistAuth = {
     /**
-     * Get current authenticated session from sessionStorage
+     * Get current authenticated session
      */
     getSession: function () {
       try {
-        const raw = sessionStorage.getItem(SESSION_KEY);
+        const raw = safeGetItem('session', SESSION_KEY);
         if (raw) return JSON.parse(raw);
       } catch (e) {
-        console.warn('BizAssistAuth: reading session failed', e);
+        console.warn('[BizAssistAuth] Reading session failed', e);
       }
       return null;
     },
@@ -111,7 +185,7 @@
         company: sessionData.company || 'Enterprise Workspace',
         signedInAt: new Date().toISOString()
       };
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      safeSetItem('session', SESSION_KEY, JSON.stringify(session));
       return session;
     },
 
@@ -131,12 +205,12 @@
       const account = accounts.find(a => a.email.toLowerCase() === cleanEmail);
 
       if (!account) {
-        return { success: false, error: 'No account found with that email address.' };
+        return { success: false, error: 'No account found with this email address.' };
       }
 
       const inputHash = await sha256(account.salt + password);
       if (inputHash !== account.hash) {
-        return { success: false, error: 'Incorrect password. Try "password123" for demo users.' };
+        return { success: false, error: 'Incorrect password. (For demo users: password123)' };
       }
 
       const session = this.setSession(account);
@@ -153,7 +227,7 @@
     },
 
     /**
-     * Create a new demo account (stored in localStorage)
+     * Create a new demo account
      */
     createAccount: async function ({ name, email, password, role, company }) {
       const cleanEmail = String(email || '').trim().toLowerCase();
@@ -189,18 +263,207 @@
      * Sign out current user and redirect to login
      */
     signOut: function () {
-      sessionStorage.removeItem(SESSION_KEY);
-      sessionStorage.removeItem(REDIRECT_KEY);
+      safeRemoveItem('session', SESSION_KEY);
+      safeRemoveItem('session', REDIRECT_KEY);
       global.location.href = '/';
+    },
+
+    /**
+     * Request Password Reset Code
+     * - Rate limits to 3 requests per 15 minutes per email
+     * - Generates 6-digit code valid for 10 minutes
+     * - Stores SHA-256 hash of the code + salt with attempt count (max 5)
+     * - Dispatches via /api/send-reset if real email enabled
+     */
+    requestPasswordReset: async function (email) {
+      const cleanEmail = String(email || '').trim().toLowerCase();
+      if (!cleanEmail || !cleanEmail.includes('@')) {
+        return { success: false, error: 'Please enter a valid email address.' };
+      }
+
+      // Check Rate Limiting: max 3 requests per 15 mins
+      const now = Date.now();
+      let rateData = {};
+      try {
+        const rawRate = safeGetItem('local', RESET_RATE_KEY);
+        if (rawRate) rateData = JSON.parse(rawRate);
+      } catch (e) {}
+
+      const history = rateData[cleanEmail] || [];
+      const recentRequests = history.filter(t => now - t < 15 * 60 * 1000);
+      if (recentRequests.length >= 3) {
+        return {
+          success: false,
+          error: 'Rate limit exceeded. Please wait 15 minutes before requesting another reset code.'
+        };
+      }
+      recentRequests.push(now);
+      rateData[cleanEmail] = recentRequests;
+      safeSetItem('local', RESET_RATE_KEY, JSON.stringify(rateData));
+
+      // Neutral security response message
+      const neutralMessage = 'If an account exists for this email, a 6-digit reset code has been generated.';
+
+      const accounts = getAccounts();
+      const accountExists = accounts.some(a => a.email.toLowerCase() === cleanEmail);
+
+      // If account does not exist, return neutral response without generating code
+      if (!accountExists) {
+        return {
+          success: true,
+          neutralMessage,
+          demoCode: null,
+          email: cleanEmail
+        };
+      }
+
+      // Generate 6-digit code
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      const codeHash = await sha256(cleanEmail + code + 'bizassist_reset_salt');
+      const expiresAt = now + 10 * 60 * 1000; // 10 minutes
+
+      let resetCodes = {};
+      try {
+        const rawCodes = safeGetItem('local', RESET_CODES_KEY);
+        if (rawCodes) resetCodes = JSON.parse(rawCodes);
+      } catch (e) {}
+
+      resetCodes[cleanEmail] = {
+        codeHash,
+        expiresAt,
+        attempts: 0
+      };
+      safeSetItem('local', RESET_CODES_KEY, JSON.stringify(resetCodes));
+
+      // Check site config
+      const siteConfig = global.BIZASSIST_SITE || global.SITE || {};
+      const showDemoCode = siteConfig.DEMO_SHOW_RESET_CODE !== false;
+
+      // Optional real email dispatch
+      if (siteConfig.ENABLE_REAL_EMAIL) {
+        try {
+          fetch('/api/send-reset', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: cleanEmail, code })
+          }).catch(err => console.warn('[send-reset] async dispatch warning', err));
+        } catch (e) {}
+      }
+
+      return {
+        success: true,
+        neutralMessage,
+        demoCode: showDemoCode ? code : null,
+        email: cleanEmail
+      };
+    },
+
+    /**
+     * Verify 6-digit reset code
+     * Max 5 wrong attempts allowed
+     */
+    verifyResetCode: async function (email, code) {
+      const cleanEmail = String(email || '').trim().toLowerCase();
+      const cleanCode = String(code || '').trim();
+
+      let resetCodes = {};
+      try {
+        const rawCodes = safeGetItem('local', RESET_CODES_KEY);
+        if (rawCodes) resetCodes = JSON.parse(rawCodes);
+      } catch (e) {}
+
+      const record = resetCodes[cleanEmail];
+      if (!record) {
+        return { success: false, error: 'No active reset request found for this email. Please request a new code.' };
+      }
+
+      if (Date.now() > record.expiresAt) {
+        delete resetCodes[cleanEmail];
+        safeSetItem('local', RESET_CODES_KEY, JSON.stringify(resetCodes));
+        return { success: false, error: 'The verification code has expired. Please request a new code.' };
+      }
+
+      if (record.attempts >= 5) {
+        delete resetCodes[cleanEmail];
+        safeSetItem('local', RESET_CODES_KEY, JSON.stringify(resetCodes));
+        return { success: false, error: 'Maximum code attempts exceeded. Please request a new code.' };
+      }
+
+      const inputHash = await sha256(cleanEmail + cleanCode + 'bizassist_reset_salt');
+      if (inputHash !== record.codeHash) {
+        record.attempts += 1;
+        safeSetItem('local', RESET_CODES_KEY, JSON.stringify(resetCodes));
+        const remaining = 5 - record.attempts;
+        return {
+          success: false,
+          error: `Incorrect code. ${remaining} attempt${remaining === 1 ? '' : 's'} remaining.`
+        };
+      }
+
+      return { success: true, email: cleanEmail };
+    },
+
+    /**
+     * Complete password reset
+     * Updates stored password hash, invalidates sessions, removes code
+     */
+    completePasswordReset: async function (email, code, newPassword) {
+      const verifyRes = await this.verifyResetCode(email, code);
+      if (!verifyRes.success) {
+        return verifyRes;
+      }
+
+      if (!newPassword || newPassword.length < 8) {
+        return { success: false, error: 'Password must be at least 8 characters long.' };
+      }
+
+      const hasLetter = /[a-zA-Z]/.test(newPassword);
+      const hasNumber = /[0-9]/.test(newPassword);
+      if (!hasLetter || !hasNumber) {
+        return { success: false, error: 'Password must contain a combination of letters and numbers.' };
+      }
+
+      const cleanEmail = String(email || '').trim().toLowerCase();
+      const accounts = getAccounts();
+      const accountIdx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+
+      if (accountIdx === -1) {
+        return { success: false, error: 'Account not found.' };
+      }
+
+      // Generate new salt and new hash
+      const newSalt = 'salt_' + Math.random().toString(36).substring(2, 10);
+      const newHash = await sha256(newSalt + newPassword);
+
+      accounts[accountIdx].salt = newSalt;
+      accounts[accountIdx].hash = newHash;
+      saveAccounts(accounts);
+
+      // Invalidate code
+      let resetCodes = {};
+      try {
+        const rawCodes = safeGetItem('local', RESET_CODES_KEY);
+        if (rawCodes) resetCodes = JSON.parse(rawCodes);
+        delete resetCodes[cleanEmail];
+        safeSetItem('local', RESET_CODES_KEY, JSON.stringify(resetCodes));
+      } catch (e) {}
+
+      // Invalidate active session if it matches this user
+      const currentSession = this.getSession();
+      if (currentSession && currentSession.email && currentSession.email.toLowerCase() === cleanEmail) {
+        safeRemoveItem('session', SESSION_KEY);
+      }
+
+      return { success: true };
     },
 
     /**
      * Get redirect destination after sign-in (deep link or default landing)
      */
     getPostLoginDestination: function (defaultLanding) {
-      const saved = sessionStorage.getItem(REDIRECT_KEY);
+      const saved = safeGetItem('session', REDIRECT_KEY);
       if (saved) {
-        sessionStorage.removeItem(REDIRECT_KEY);
+        safeRemoveItem('session', REDIRECT_KEY);
         return saved;
       }
       return defaultLanding || '/app';
@@ -227,7 +490,7 @@
       if (!session) {
         // Save current relative URL for post-login redirection
         const currentTarget = global.location.pathname + global.location.search + global.location.hash;
-        sessionStorage.setItem(REDIRECT_KEY, currentTarget);
+        safeSetItem('session', REDIRECT_KEY, currentTarget);
         global.location.href = '/';
         return;
       }

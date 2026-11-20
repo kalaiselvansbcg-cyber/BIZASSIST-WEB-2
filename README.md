@@ -1,257 +1,122 @@
 # BIZASSIST AI — Customer Support Platform
 
-A modern, accessible, single-file landing page and working prototype for **BIZASSIST AI**, an AI-assisted customer support platform where customers raise tickets and AI categorises, prioritises, summarises, and suggests replies.
+A modern, accessible, zero-build unified application for **BIZASSIST AI**, an AI-assisted customer support platform where customers raise tickets and AI categorises, prioritises, summarises, and suggests replies for modern operations teams.
 
+**Live Application**: [https://bizassist69.vercel.app/](https://bizassist69.vercel.app/)  
 **GitHub Repository**: [https://github.com/kalaiselvansbcg-cyber/BIZASSIST-WEB-2](https://github.com/kalaiselvansbcg-cyber/BIZASSIST-WEB-2)
 
 ---
 
-## 🚀 Quick Access & How to Run
+## 🔒 Security & Prototype Authentication Disclaimer
 
-### Option 1: Direct Browser Access (No Server Required)
-You can directly open `index.html` in any web browser (Chrome, Edge, Safari, Firefox):
-```bash
-# On Windows, simply double-click index.html or navigate to:
-file:///d:/zeni/index.html
+> **IMPORTANT SECURITY NOTICE**:  
+> The authentication and password reset systems in this prototype are **client-side demo authentication** designed for presentation, interactive demonstrations, and rapid UX prototyping.  
+> Passwords and verification codes are salted and hashed using the browser's native **Web Crypto API (SHA-256)** with per-user cryptographic salts to ensure defensive coding without storing credentials in plain text.  
+> However, client-side storage (`localStorage` / `sessionStorage`) must **never** be mistaken for production server-side authentication. In a production environment, authentication and password reset tokens should be managed by a secure server-side session backend (such as Supabase Auth, Clerk, or NextAuth).
+
+---
+
+## 🛠️ Root Cause Diagnosis & Fix Report (Priority 0)
+
+### Bug 1: "The Sign in button does nothing"
+- **Root Cause 1 (Hash Mismatch)**: The pre-seeded SHA-256 hashes for default demo accounts in `js/guard.js` did not match the runtime hash of `salt + "password123"`. When users entered valid credentials or clicked fast-track demo buttons, authentication failed with an internal hash mismatch error.
+- **Root Cause 2 (Invisible Error State)**: In `index.html`, when `BizAssistAuth.signIn()` returned an authentication failure, the error was assigned to `#status-live`, but `#status-live` had `.field-error` CSS which was `display: none` by default because `.is-visible` was not added. The button briefly disabled and re-enabled without any visible feedback.
+- **Root Cause 3 (HTML5 Validation Suppression)**: Form `novalidate` suppressed native browser bubbles, and inline field error alerts were unstyled or missed when fields were left blank.
+- **Root Cause 4 (Stale Storage Cache)**: Browsers that had already loaded the old build retained the bad hashes in `localStorage['bizassist.accounts']`.
+- **Fix Applied**:
+  - Re-computed and verified SHA-256 hashes for all seed demo accounts.
+  - Implemented auto-migration / self-healing in `js/guard.js` to update any stale account hashes in storage automatically.
+  - Created a prominent `.status-alert.error` banner in `index.html` with explicit `.is-visible` toggling.
+  - Added button loading state (`"Signing in..."` / `"Creating account..."`) and defensive error handling.
+
+### Bug 2: "'Forgot password?' does nothing"
+- **Root Cause**: The "Forgot password?" link only invoked `showForgotNotice()`, which un-hid a static, non-interactive disclaimer notice box at the top of the card. No actual password reset view, code input, or password reset logic existed.
+- **Fix Applied**: Built a complete 3-step password reset view (`#view-reset-password`) directly within `index.html`, backed by cryptographic methods in `js/guard.js` and an optional serverless dispatch function `api/send-reset.js`.
+
+---
+
+## 🔑 Priority 1: Working Password Reset Flow
+
+A complete, accessible 3-step password reset experience:
+1. **Step 1 (Email Entry)**:
+   - User enters account email.
+   - Neutral security response: *"If an account exists for this email, a 6-digit reset code has been generated."*
+   - Rate limiting: Max 3 code requests per 15 minutes per email (`bizassist.reset_rate_limit`).
+   - Generates a random 6-digit code valid for 10 minutes. Stores only the SHA-256 hash of the code + salt with attempt counter (max 5 failed attempts).
+   - **Demo Mode**: Because no third-party email service is required by default, a clean demo panel displays:  
+     `Demo mode: your reset code is [482913]` with a 1-click **Copy Code** button (controlled by `SITE.DEMO_SHOW_RESET_CODE` in `config/site.js`).
+   - **Real Email Mode (Optional)**: `api/send-reset.js` handles email dispatch via Resend or SendGrid when configured with environment variables (`EMAIL_PROVIDER`, `EMAIL_API_KEY`, `EMAIL_FROM`).
+2. **Step 2 (6-Digit Code Entry)**:
+   - 6 individual digit input boxes with auto-advance on key entry, backspace navigation, paste support (distributes 6 digits across boxes), and cooldown resend button.
+3. **Step 3 (New Password)**:
+   - New password and confirmation inputs with show/hide password toggles.
+   - Real-time password strength meter (Weak, Good, Strong) with minimum 8 characters and letter + number validation.
+   - On success: updates stored password hash with a fresh salt, destroys active sessions for the user, shows a green success banner (*"Password updated. Please sign in with your new password"*), and returns to the Sign In tab with email prefilled.
+
+---
+
+## 📞 Priority 2: Unified Contact Configuration (`config/site.js`)
+
+Central configuration object exported in `config/site.js`:
+```javascript
+export const SITE = {
+  name: "BizAssist AI",
+  supportPhone: "+91 00000 00000",   // Replace with your real phone number
+  supportPhoneDisplay: "+91 00000 00000",
+  supportWhatsApp: "910000000000",   // Digits only for wa.me links
+  supportEmail: "support@bizassist.ai",
+  supportHours: "Monday to Friday, 9:00 AM – 6:00 PM IST",
+  DEMO_SHOW_RESET_CODE: true,
+  ENABLE_REAL_EMAIL: false
+};
 ```
-
-### Option 2: Run via Local HTTP Server
-If you prefer running a local development server:
-```bash
-# Using Node.js npx serve
-npx serve .
-
-# Or using Python
-python -m http.server 8000
-```
-Then visit: `http://localhost:8000` (or `http://localhost:3000`).
-
-### Option 3: Deploy to GitHub Pages
-1. Push this repository to GitHub.
-2. In your repository settings, go to **Settings** → **Pages**.
-3. Under **Branch**, select `main` (or `master`) and folder `/ (root)`, then click **Save**.
-4. Your site will immediately be live at: `https://<your-username>.github.io/<repo-name>/`.
+- **Placeholder Warning**: If the phone number is set to placeholder (`+91 00000 00000`), a warning is logged to the browser console only—never shown in the UI.
+- **Universal Contact Links**: Every telephone link uses `tel:`, and WhatsApp links use `https://wa.me/910000000000`.
+- **Request a Call Back Modal**: Accessible from the top navigation user menu, Customer Portal, and AI Chatbot. Allows visitors to schedule a phone call-back (Name, Phone, Preferred Window, Topic) which feeds directly into the Agent Dashboard's **Call Back Queue**.
 
 ---
 
-## 🌐 Connected Application & Route Map
+## 🚀 Priority 3: 12 Support Platform Features
 
-BizAssist AI is structured as a **single connected application** with a single entry point at `/` (Login / Sign In) and clean routing across all workspaces.
-
-| Route | View | Accessible To | Description |
-|---|---|---|---|
-| `/` | **Login / Sign In** | Public | Single entry portal with 1-click demo access & account creation |
-| `/about` | **Product Overview** | Public | Marketing landing page with feature deep dives & demo booking |
-| `/app` | **Home Hub** | All roles | Role-specific quick actions, live KPI counters, and guided tour launcher |
-| `/portal` | **Customer Ticket Portal** | Customer (Default) | Raise tickets, search knowledge, and follow real-time 5-stage progress |
-| `/agent-dashboard` | **Agent Dashboard** | Agent (Default), Manager | Multi-pane workspace with live ticket queue, customer 360, & reply drafting |
-| `/ai-triage` | **AI Triage Studio** | Agent, Manager | Autonomous NLP categorization, intent classification, & queue routing |
-| `/suggested-replies` | **Suggested Replies Studio** | Agent, Manager | Tone selector, RAG citation verification, & 1-click dispatch |
-| `/chatbot` | **Knowledge Assistant** | All roles | Full conversation UI with live ticket lookup (`#BA-1042`) & ticket creation |
-| `/manager-overview` | **Manager Overview** | Manager (Default) | Live throughput analytics, team roster capacity, & SLA health |
-
----
-
-## 👥 One-Click Demo Credentials
-
-Fast-track testing buttons are provided on the login page (`/`):
-
-1. **Customer**: `customer@bizassist.ai` / `password123` (Elena Rostova · CloudCore Systems) → Lands on `/portal`
-2. **Support Agent**: `agent@bizassist.ai` / `password123` (Sarah Jenkins · Tier-2 Support) → Lands on `/agent-dashboard`
-3. **Operations Manager**: `manager@bizassist.ai` / `password123` (Marcus Vance · Support Operations) → Lands on `/manager-overview`
-
-> **Demo Security Notice**: Client-side demo authentication uses browser Web Crypto API (SHA-256 with per-user salt) for password handling without plaintext storage. This is for presentation and prototyping purposes only.
+1. **Ticket Attachments**: Drag-and-drop or file selector on the ticket intake form; supports PNG, JPEG, WebP, and PDF up to 3 files (max 5MB each); previews chips with file size and type; persisted in `store.js`.
+2. **Live SLA Countdown & Auto-Escalation**: Target SLAs by priority (Urgent 15m, High 60m, Normal 480m); dynamic real-time countdown on every ticket; visual At-Risk (<20% time) and Breached badges; auto-escalates to on-call manager when breached.
+3. **Search, Filters & Sorting**: Global search input with keyboard shortcut `/` to focus; saved filter chips (All, My Tickets, Urgent, At Risk, Unassigned, Resolved); multi-attribute filters across Category, Priority, Channel, and Sentiment.
+4. **Internal Notes & Audit Activity Timeline**: Toggle between Public Reply and Internal Note (distinct yellow styling with *"Not visible to customer"* badge); complete chronological audit trail on every ticket.
+5. **Assign / Reassign & Workload Balance**: Reassign tickets between Sarah Jenkins, Marcus Vance, Elena Rostova, or Unassigned; live agent capacity counter; Manager **Auto-balance** button evenly redistributes unassigned tickets.
+6. **Knowledge Base & Dynamic Deflection**: 12 starter articles across Billing, API, Security, and Getting Started; as customer types in ticket intake, real-time deflection cards suggest relevant articles with a *"This solved my issue"* button that records deflection without queue wait.
+7. **Notification Centre**: Header bell icon with unread badge counter; dropdown menu of recent events; cross-tab synchronization via storage events.
+8. **CSAT Rating & Review**: Interactive 1 to 5 star rating prompt and feedback textarea displayed automatically when a ticket reaches **Resolved** stage.
+9. **Multi-Channel Intake Tags**: Every ticket tracks its inbound channel (Web Portal, Email, Chatbot, Phone, WhatsApp); breakdown analytics in Manager Overview.
+10. **Reports Export**: 1-click **Export CSV** generating a spreadsheet of all tickets, SLAs, and CSAT scores; **Print Report** applying a print stylesheet for an executive 1-page summary.
+11. **AI Quality Features**: Duplicate ticket detection banner with 1-click Merge; customer sentiment trend indicator; grounded RAG citations in AI drafts (`[1] Ref: ...`); *"Why this priority?"* explanation popover.
+12. **Manager Settings Workspace**: Modal dialog to configure SLA target minutes per priority, manage categories, and toggle AI auto-triage.
 
 ---
 
-## 🧭 6-Step Guided Walkthrough
+## 🤖 Priority 4: Chatbot Assistant Upgrade (`/api/chat`)
 
-Click **"Start Guided Tour"** on `/app` or from the top navigation menu to experience the full customer-to-manager lifecycle:
-1. **Step 1 (`/portal`)**: Customer raises or searches a ticket (e.g. `#BA-1042` or `#BA-1041`).
-2. **Step 2 (`/ai-triage`)**: AI classifies category, priority, sentiment, and assigns queue.
-3. **Step 3 (`/agent-dashboard`)**: Support lead inspects the triaged queue and customer context.
-4. **Step 4 (`/suggested-replies`)**: Review grounded citations, select voice tone, and click "Approve & Dispatch".
-5. **Step 5 (`/portal`)**: Customer portal immediately updates to stage "Replied" via shared reactive store.
-6. **Step 6 (`/manager-overview`)**: Operations manager inspects team roster capacity and SLA adherence.
-
----
-
-## 📁 Repository Structure
-
-The project code is separated into clean, modular files for easy maintenance and version control:
-
-```
-nexusai/
-├── api/
-│   └── chat.js               # Production Vercel Serverless Function (SSE streaming & tool calling)
-├── knowledge/
-│   └── bizassist.md          # Grounded Markdown knowledge base for the AI Assistant
-├── prompts/
-│   └── system.md             # Strict AI Assistant system prompt
-├── index.html                # Main landing page with upgraded streaming AI Chat Assistant
-├── login.html                # Dedicated single-file accessible authentication screen
-├── portal.html             # Customer Ticket Portal (Ticket intake, live milestone tracker, search)
-├── agent-dashboard.html    # Agent Dashboard (Split-pane inbox queue, customer 360, SLA countdown)
-├── ai-triage.html          # AI Triage Engine (Real-time NLP classification, entity extractor, routing)
-├── suggested-replies.html  # Suggested Replies Studio (Tone switcher, variable chips, RAG citations)
-├── chatbot.html            # Knowledge-Based Chatbot (Vector doc index, AI chat, human handover)
-├── manager-overview.html   # Manager Overview & Analytics (KPIs, 7-day throughput chart, agent roster)
-├── css/
-│   └── styles.css          # Design system tokens, typography, layout, and animations
-├── js/
-│   ├── assets.js           # Vector SVG illustrations & data URI generation
-│   ├── main.js             # Core UI controller (custom difference cursor, nav, toasts, reveals)
-│   ├── interactive.js      # Working prototype simulations, routing & form handlers
-│   └── supabase-client.js  # Live Supabase backend sync
-├── .env.example              # Environment variables template for LLM provider
-├── .gitignore              # Standard Git ignore rules
-├── package.json            # ES module manifest for Vercel Serverless Functions
-└── README.md               # Project documentation and guide
-```
+- **Server-Sent Events (SSE)** streaming with `delta` and `text` properties.
+- **6 Native Serverless Tools**: `lookup_ticket`, `create_ticket`, `add_ticket_comment`, `request_callback`, `search_knowledge_base`, `handover_to_human`.
+- **Rich Cards**: 5-stage ticket tracker card, knowledge article cards, human support contact triggers, and ticket confirmation dialogs.
+- **Prompt Injection Defense**: Guardrail checks refuse instructions attempting to alter role or extract system prompts.
+- **Quick Action Chips**: No-emoji prompt buttons for fast navigation.
+- **Conversation Memory**: Maintains up to 12 turns of context.
+- **Utilities**: 1-click **Copy Message** and **Download Transcript** buttons.
 
 ---
 
-## 🌐 Platform Modules & Links
-
-Each of the platform modules and authentication screen has its own dedicated page with live data, interactive forms, and direct actions:
-
-| Module | File | Local HTTP Link | Description |
-|---|---|---|---|
-| **0. Sign In / Authentication** | [`login.html`](file:///d:/zeni/login.html) | [http://localhost:3000/login.html](http://localhost:3000/login.html) | Single-screen accessible login with 4-role switcher (Customer, Agent, Admin, Manager), validation, password reveal, and role routing. |
-| **1. Customer Ticket Portal** | [`portal.html`](file:///d:/zeni/portal.html) | [http://localhost:3000/portal.html](http://localhost:3000/portal.html) | Self-service intake form, active milestone tracker (Submitted → Triaged → Fix Approved → Resolved), knowledge base search bar, and ticket history. |
-| **2. Agent Dashboard** | [`agent-dashboard.html`](file:///d:/zeni/agent-dashboard.html) | [http://localhost:3000/agent-dashboard.html](http://localhost:3000/agent-dashboard.html) | 3-pane agent workspace, filterable queue (P1/P2/Resolved), Customer 360 card, SLA countdown timer, AI draft injector, and Tier-3 escalation. |
-| **3. AI Triage Engine** | [`ai-triage.html`](file:///d:/zeni/ai-triage.html) | [http://localhost:3000/ai-triage.html](http://localhost:3000/ai-triage.html) | Interactive NLP workbench with sample presets, entity tagger, confidence breakdown bar chart, priority regressor, and live streaming event log. |
-| **4. Suggested Replies Studio** | [`suggested-replies.html`](file:///d:/zeni/suggested-replies.html) | [http://localhost:3000/suggested-replies.html](http://localhost:3000/suggested-replies.html) | Human-in-the-loop draft studio, 4 tone pills (*Empathetic*, *Concise*, *Executive*, *Technical*), dynamic variable tokens, and RAG citations. |
-| **5. Knowledge-Based Chatbot** | [`chatbot.html`](file:///d:/zeni/chatbot.html) | [http://localhost:3000/chatbot.html](http://localhost:3000/chatbot.html) | Conversational assistant grounded in 12,840 vector embeddings, quick chips, formatted code/guidelines, feedback buttons, and 1-click human agent handover. |
-| **6. Manager Overview** | [`manager-overview.html`](file:///d:/zeni/manager-overview.html) | [http://localhost:3000/manager-overview.html](http://localhost:3000/manager-overview.html) | Executive analytics command center, 24h/7d/30d/90d toggles, 5 KPI cards, interactive 7-day ingestion/deflection bar chart, and 6-agent roster table. |
+## 🎨 Quiet Luxury Design Tokens
+- Background: Warm Cream (`#FAF8F5`)
+- Ink: Deep Ink (`#111111`)
+- Line: Hairline Stone (`#E3DED6`)
+- Accent: Burnt Terracotta (`#B3402A`)
+- Typography: Cormorant Garamond (Serif), Inter (Sans-Serif), SFMono (Monospace)
+- Corners: Sharp (`border-radius: 0`)
+- **Zero emojis in the UI** (all icons use clean SVGs or typographical symbols).
 
 ---
 
-## 🐙 Uploading to GitHub
-
-To upload this project to your GitHub account:
-
-```bash
-# 1. Create a new repository on github.com (e.g. "nexusai-platform")
-# 2. In your terminal inside d:\zeni:
-git remote add origin https://github.com/<your-username>/<repo-name>.git
-git branch -M main
-git push -u origin main
-```
-
----
-
-## 🎨 Design System & Editorial Rules
-
-- **Palette**: Strict black and white editorial style. Color appears **exclusively inside product UI illustrations**.
-  - Background: `#FFFFFF`
-  - Text: `#000000`
-  - Secondary Text: `#525252`
-  - Metadata Text: `#737373`
-  - Footer Background: `#0A0A0A` (Footer text `#FFFFFF`)
-- **Borders & Dividers**: Strictly 1px with `rgba(0, 0, 0, 0.1)` (and `rgba(255, 255, 255, 0.1)` in the footer). Never thicker than 1px.
-- **Universal Easing**: `cubic-bezier(0.16, 1, 0.3, 1)` applied across every interaction. All hover transitions last at least 500ms.
-- **Typography**:
-  - Font: **Inter** (weights `400`, `500`, `600`, `700`) loaded from Google Fonts.
-  - Headlines: weight `700`, letter-spacing `-0.05em`, line-height `0.9`.
-  - Body: weight `400`, letter-spacing `-0.02em`, line-height `1.5`.
-  - Metadata: monospace, `14px`, uppercase, letter-spacing `0.1em`.
-- **Custom Difference Cursor**:
-  - 32px by 32px fixed container with `mix-blend-mode: difference`.
-  - Lags smoothly with linear interpolation (`lerp: 0.15`).
-  - Scales to **2.5×** on hover over any button, link, or card.
-  - Native cursor hidden on fine-pointer devices; touch devices fall back smoothly to default touch pointers.
-
----
-
-## ⚡ Functional Features & Interactive Walkthrough
-
-Every button, card, and icon on the website is completely functional:
-
-1. **Header & Full-Screen Overlay**:
-   - Logo `nx` smooth-scrolls to the top.
-   - `+` menu button rotates 135° and opens a full-screen black menu overlay with 9vw staggered links.
-   - Pressing `Escape` or clicking any link smoothly navigates to the section.
-
-2. **Hero Staggered Letter Rise**:
-   - The headline *"Support, reimagined."* splits into individual character spans rising from `translateY(100%)` with a 45ms per-character delay.
-   - Line wrappers include bottom padding to preserve descenders in letters `"g"` and `"p"`.
-   - Includes action buttons: **Try Live Prototype →** and **Explore 6 Modules ↓**.
-
-3. **Infinite Marquee ("The life of a ticket")**:
-   - 30s linear continuous loop with asymmetric card radii (`3n+1`, `3n+2`, `3n`).
-   - Pauses on container hover; cards transition from 100% grayscale to vibrant color on hover.
-   - Clicking any step card launches the live step simulator (Intake, Categorisation, Urgency countdown, AI Summary, Suggested Reply, and Lifecycle tracker).
-
-4. **"Today's pain." Interactive Drawers**:
-   - Clicking any of the 5 pain rows (*Lost*, *Queued*, *Repeated*, *Unseen*, *Blind*) reveals NexusAI's exact engineering solution drawer.
-
-5. **"What we built." 6 Interactive Modules**:
-   - **Customer Ticket Portal**: Working ticket submission form and search bar.
-   - **Agent Dashboard**: Priority inbox queue (P1, P2, P3) with ticket assignment.
-   - **AI Triage Engine**: Live semantic classifier with custom inputs and confidence scoring.
-   - **Suggested Replies**: Tone switcher (*Empathetic*, *Concise*, *Formal*) and 1-click response approval.
-   - **Knowledge-Base Chatbot**: Working chat assistant with documentation citations and human handover fallback.
-   - **Manager Overview**: Operations board with 7D/30D/90D filters and interactive daily volume bar chart.
-
-6. **"Five goals." Automated Verification**:
-   - Clicking any goal row runs the synthetic test pipeline and displays verification metrics.
-
-7. **Floating AI Assistant & Toasts**:
-   - Persistent `Ask NexusAI` floating pill in the bottom right corner opens the instant support chatbot from anywhere on the page.
-   - Real-time toast notifications confirm ticket creation, draft dispatch, and demo bookings.
-
----
-
-## 🗄️ Supabase Backend Integration
-
-The project is connected live to Supabase:
-- **Project URL**: `https://imhfqkepsepiscyceoyk.supabase.co`
-- **Project Ref**: `imhfqkepsepiscyceoyk`
-- **Client Service**: [`js/supabase-client.js`](file:///d:/zeni/js/supabase-client.js)
-- **Environment Config**: [`.env`](file:///d:/zeni/.env) & [`.env.example`](file:///d:/zeni/.env.example)
-
-### Active Supabase Database Tables:
-1. `public.tickets`: Stores customer tickets with code (`#NX-4092`), category, priority (P1-P3), SLA countdown, and AI inference metadata.
-2. `public.ticket_messages`: Stores message threads and agent replies for each ticket.
-3. `public.chat_messages`: Logs knowledge base chatbot queries, vector citation references, and user feedback.
-4. `public.knowledge_articles`: Stores indexed engineering & support documentation articles with citations.
-5. `public.demo_requests`: Captures lead bookings and demonstration requests submitted via landing page modals.
-
-Row Level Security (RLS) is enabled across all tables with public policies configured for real-time customer and agent prototype interaction.
-
----
-
-## 🤖 Production AI Assistant & Serverless Backend
-
-The floating assistant widget is powered by a serverless function (`/api/chat.js`) supporting real natural language interactions, Server-Sent Events (SSE) streaming, tool calling, and rate limiting.
-
-### 1. Setting Environment Variables on Vercel
-1. Go to your project on the [Vercel Dashboard](https://vercel.com/dashboard).
-2. Navigate to **Settings** → **Environment Variables**.
-3. Add the following variables for **Production** and **Preview**:
-   - `LLM_PROVIDER`: `google` (or `anthropic`, `openai`)
-   - `LLM_API_KEY`: Your model API key
-   - `LLM_MODEL`: `gemini-1.5-flash` (or `claude-3-5-haiku-20241022`, `gpt-4o-mini`)
-4. Trigger a redeployment or push to `main` for the variables to take effect.
-
-### 2. Running Locally with API Support
-```bash
-# 1. Copy template to local env file
-cp .env.example .env.local
-
-# 2. Start the local development server (supports /api/chat routing)
-node scratch/server.cjs
-```
-Visit `http://localhost:3000` to interact with the streaming chat widget.
-
-### 3. How to Edit the Knowledge Base
-Edit [`knowledge/bizassist.md`](file:///d:/zeni/knowledge/bizassist.md). Any updates to platform features, metrics, or integration support are immediately injected into the serverless function's system prompt on subsequent requests.
-
-### 4. How to Change the AI Model
-Set `LLM_PROVIDER` and `LLM_MODEL` in your environment variables. `api/chat.js` natively supports Google Gemini (`google`), Anthropic (`anthropic`), and OpenAI (`openai`) behind a single unified `callModel()` pipeline with zero dependencies.
-
----
-
-## 📄 License
-MIT License. Created for low-code AI product prototyping demonstration.
+## 👥 Demo Accounts
+- **Customer**: `customer@bizassist.ai` / `password123` (Elena Rostova) → Lands on `/portal`
+- **Support Agent**: `agent@bizassist.ai` / `password123` (Sarah Jenkins) → Lands on `/agent-dashboard`
+- **Operations Manager**: `manager@bizassist.ai` / `password123` (Marcus Vance) → Lands on `/manager-overview`

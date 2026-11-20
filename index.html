@@ -18,6 +18,7 @@
       --muted: #6F6A61;
       --line: #E3DED6;
       --accent: #B3402A;
+      --success: #2E6B48;
       --surface: #FFFFFF;
       --font-serif: 'Cormorant Garamond', Georgia, serif;
       --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -197,7 +198,7 @@
     /* Right Column: Card */
     .card-wrap {
       width: 100%;
-      max-width: 460px;
+      max-width: 480px;
       justify-self: end;
     }
 
@@ -297,7 +298,7 @@
 
     .field-error {
       display: none;
-      margin-top: 4px;
+      margin-top: 6px;
       font-size: 12px;
       font-weight: 600;
       color: var(--accent);
@@ -305,6 +306,38 @@
 
     .field-error.is-visible {
       display: block;
+    }
+
+    /* Prominent Status Message Banner */
+    .status-alert {
+      display: none;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 13px;
+      line-height: 1.45;
+      border: 1px solid transparent;
+    }
+
+    .status-alert.is-visible {
+      display: block;
+    }
+
+    .status-alert.error {
+      background: #FDF4F2;
+      border-color: #EAC9C1;
+      color: #8C2210;
+    }
+
+    .status-alert.success {
+      background: #F0F7F2;
+      border-color: #C5E2CF;
+      color: #1B5E34;
+    }
+
+    .status-alert.info {
+      background: #F4EFEB;
+      border-color: #D8CFC4;
+      color: var(--ink);
     }
 
     .controls-row {
@@ -331,25 +364,11 @@
       color: var(--secondary);
       text-decoration: underline;
       cursor: pointer;
+      padding: 4px 0;
     }
 
     .forgot-btn:hover {
       color: var(--ink);
-    }
-
-    .notice-box {
-      display: none;
-      background: #F4EFEB;
-      border: 1px solid #D8CFC4;
-      padding: 10px 14px;
-      margin-bottom: 16px;
-      font-size: 12px;
-      color: var(--ink);
-      line-height: 1.45;
-    }
-
-    .notice-box.is-visible {
-      display: block;
     }
 
     .btn-submit {
@@ -378,12 +397,157 @@
       cursor: wait;
     }
 
+    .btn-secondary {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 18px;
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 150ms ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--ink);
+      background: #F4EFEB;
+    }
+
     .disclaimer-text {
       font-size: 11px;
       color: var(--muted);
       margin-top: 16px;
       line-height: 1.5;
       text-align: center;
+    }
+
+    /* Password Reset Specific Styles */
+    .reset-view-header {
+      margin-bottom: 20px;
+    }
+
+    .reset-view-title {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .reset-view-sub {
+      font-size: 13px;
+      color: var(--secondary);
+      line-height: 1.45;
+    }
+
+    .demo-code-banner {
+      background: #F4EFEB;
+      border: 1px solid #D8CFC4;
+      padding: 14px 16px;
+      margin: 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .demo-code-text {
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    .demo-code-val {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      font-size: 16px;
+      background: #FFFFFF;
+      padding: 3px 8px;
+      border: 1px solid #C8BFB3;
+      margin-left: 4px;
+    }
+
+    .btn-copy-code {
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #FAF8F5;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .btn-copy-code:hover {
+      background: #2A2A2A;
+    }
+
+    /* 6-Digit Code Inputs */
+    .code-input-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin: 16px 0 20px 0;
+    }
+
+    .code-digit-box {
+      width: 100%;
+      height: 52px;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 22px;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      background: #FFFFFF;
+      color: var(--ink);
+      border-radius: 0;
+      transition: border-color 150ms ease;
+    }
+
+    .code-digit-box:focus {
+      outline: none;
+      border-color: var(--ink);
+      box-shadow: 0 0 0 1px var(--ink);
+    }
+
+    /* Password Strength Meter */
+    .strength-wrapper {
+      margin-top: 8px;
+    }
+
+    .strength-bar-bg {
+      width: 100%;
+      height: 4px;
+      background: #E8E3DA;
+      display: flex;
+      margin-bottom: 6px;
+    }
+
+    .strength-bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 200ms ease, background-color 200ms ease;
+    }
+
+    .strength-label {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .strength-rules {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.4;
     }
 
     .footer-line {
@@ -396,7 +560,7 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 16px;
       font-size: 13px;
       color: var(--muted);
     }
@@ -404,11 +568,23 @@
     .footer-line a {
       color: var(--secondary);
       text-decoration: none;
+      transition: color 150ms ease;
     }
 
     .footer-line a:hover {
       color: var(--ink);
       text-decoration: underline;
+    }
+
+    .footer-contact-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-dot {
+      color: var(--line);
     }
   </style>
 </head>
@@ -458,7 +634,8 @@
       <section class="card-wrap">
         <div class="auth-card">
           
-          <div class="tab-header" role="tablist">
+          <!-- TAB SWITCHER (Hidden during Reset Password) -->
+          <div id="auth-tabs" class="tab-header" role="tablist">
             <button type="button" id="tab-signin-btn" class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('signin')">
               Sign in
             </button>
@@ -467,19 +644,19 @@
             </button>
           </div>
 
-          <div id="status-live" class="field-error" style="margin-bottom:12px;" aria-live="polite"></div>
-          <div id="forgot-notice" class="notice-box" role="status">
-            Password reset is not connected in this prototype. Please use demo credentials (e.g. <code>password123</code>) or click one of the demo buttons on the left.
-          </div>
+          <!-- GLOBAL STATUS ALERT BANNER -->
+          <div id="status-alert" class="status-alert" role="status" aria-live="polite"></div>
 
-          <!-- SIGN IN FORM -->
+          <!-- ========================================== -->
+          <!-- 1. SIGN IN VIEW                            -->
+          <!-- ========================================== -->
           <form id="form-signin" onsubmit="handleSignIn(event)" novalidate>
             <div class="field-group">
               <label for="signin-email" class="field-label">Email address</label>
               <div class="input-wrapper">
                 <input type="email" id="signin-email" class="text-input" placeholder="e.g. agent@bizassist.ai" autocomplete="username" required>
               </div>
-              <div id="signin-email-error" class="field-error">Please enter a valid email.</div>
+              <div id="signin-email-error" class="field-error">Please enter a valid email address.</div>
             </div>
 
             <div class="field-group">
@@ -496,7 +673,7 @@
                 <input type="checkbox" id="keep-signed-in" checked>
                 <span>Keep me signed in</span>
               </label>
-              <button type="button" class="forgot-btn" onclick="showForgotNotice()">Forgot password?</button>
+              <button type="button" class="forgot-btn" onclick="openResetPasswordView()">Forgot password?</button>
             </div>
 
             <button type="submit" id="btn-signin-submit" class="btn-submit">
@@ -504,7 +681,9 @@
             </button>
           </form>
 
-          <!-- SIGN UP FORM -->
+          <!-- ========================================== -->
+          <!-- 2. SIGN UP VIEW                            -->
+          <!-- ========================================== -->
           <form id="form-signup" onsubmit="handleSignUp(event)" style="display: none;" novalidate>
             <div class="field-group">
               <label for="signup-name" class="field-label">Full name</label>
@@ -547,6 +726,126 @@
             </button>
           </form>
 
+          <!-- ========================================== -->
+          <!-- 3. RESET PASSWORD VIEW (3 STEPS)           -->
+          <!-- ========================================== -->
+          <div id="view-reset-password" style="display: none;">
+            
+            <!-- STEP 1: Enter Email -->
+            <div id="reset-step-1">
+              <div class="reset-view-header">
+                <h2 class="reset-view-title">Reset password</h2>
+                <p class="reset-view-sub">Enter your account email to receive a 6-digit verification code.</p>
+              </div>
+
+              <form onsubmit="handleRequestResetCode(event)" novalidate>
+                <div class="field-group">
+                  <label for="reset-email" class="field-label">Account email</label>
+                  <div class="input-wrapper">
+                    <input type="email" id="reset-email" class="text-input" placeholder="e.g. customer@bizassist.ai" autocomplete="email" required>
+                  </div>
+                  <div id="reset-email-error" class="field-error">Please enter a valid email address.</div>
+                </div>
+
+                <button type="submit" id="btn-send-code" class="btn-submit" style="margin-top: 8px;">
+                  Send reset code
+                </button>
+                <button type="button" class="btn-secondary" onclick="closeResetPasswordView()">
+                  Back to sign in
+                </button>
+              </form>
+            </div>
+
+            <!-- STEP 2: Enter 6-digit code -->
+            <div id="reset-step-2" style="display: none;">
+              <div class="reset-view-header">
+                <h2 class="reset-view-title">Enter verification code</h2>
+                <p class="reset-view-sub">
+                  We sent a 6-digit code to <strong id="reset-target-email-display">your email</strong>. Valid for 10 minutes.
+                </p>
+              </div>
+
+              <!-- Demo Mode Reset Code Panel (when enabled in config/site.js) -->
+              <div id="demo-code-box" class="demo-code-banner" style="display: none;">
+                <div class="demo-code-text">
+                  <span>Demo mode code:</span>
+                  <span id="demo-code-text-val" class="demo-code-val">482913</span>
+                </div>
+                <button type="button" class="btn-copy-code" onclick="copyDemoResetCode()">
+                  Copy code
+                </button>
+              </div>
+
+              <form onsubmit="handleVerifyResetCode(event)" novalidate>
+                <div class="code-input-grid" id="code-grid">
+                  <input type="text" maxlength="1" inputmode="numeric" class="code-digit-box" id="code-digit-0" required aria-label="Digit 1">
+                  <input type="text" maxlength="1" inputmode="numeric" class="code-digit-box" id="code-digit-1" required aria-label="Digit 2">
+                  <input type="text" maxlength="1" inputmode="numeric" class="code-digit-box" id="code-digit-2" required aria-label="Digit 3">
+                  <input type="text" maxlength="1" inputmode="numeric" class="code-digit-box" id="code-digit-3" required aria-label="Digit 4">
+                  <input type="text" maxlength="1" inputmode="numeric" class="code-digit-box" id="code-digit-4" required aria-label="Digit 5">
+                  <input type="text" maxlength="1" inputmode="numeric" class="code-digit-box" id="code-digit-5" required aria-label="Digit 6">
+                </div>
+                <div id="reset-code-error" class="field-error" style="margin-bottom: 12px;">Please enter all 6 digits.</div>
+
+                <button type="submit" id="btn-verify-code" class="btn-submit">
+                  Verify code
+                </button>
+                <button type="button" class="btn-secondary" onclick="resendResetCode()">
+                  Resend code
+                </button>
+                <div style="text-align: center; margin-top: 12px;">
+                  <button type="button" class="forgot-btn" onclick="backToStepOne()">Change email</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- STEP 3: Enter New Password -->
+            <div id="reset-step-3" style="display: none;">
+              <div class="reset-view-header">
+                <h2 class="reset-view-title">Set new password</h2>
+                <p class="reset-view-sub">Choose a secure password for your BizAssist account.</p>
+              </div>
+
+              <form onsubmit="handleCompletePasswordReset(event)" novalidate>
+                <div class="field-group">
+                  <label for="new-password" class="field-label">New password</label>
+                  <div class="input-wrapper">
+                    <input type="password" id="new-password" class="text-input" placeholder="Minimum 8 characters" autocomplete="new-password" required style="padding-right: 70px;" oninput="updatePasswordStrength(this.value)">
+                    <button type="button" class="toggle-password-btn" onclick="togglePassword('new-password', this)">Show</button>
+                  </div>
+                  <div class="strength-wrapper">
+                    <div class="strength-bar-bg">
+                      <div id="strength-fill" class="strength-bar-fill"></div>
+                    </div>
+                    <div class="strength-label">
+                      <span>Password strength:</span>
+                      <strong id="strength-text">Too short</strong>
+                    </div>
+                  </div>
+                  <div class="strength-rules">Requires at least 8 characters with both letters and numbers.</div>
+                  <div id="new-password-error" class="field-error">Password does not meet requirements.</div>
+                </div>
+
+                <div class="field-group">
+                  <label for="confirm-password" class="field-label">Confirm new password</label>
+                  <div class="input-wrapper">
+                    <input type="password" id="confirm-password" class="text-input" placeholder="Re-enter new password" autocomplete="new-password" required style="padding-right: 70px;">
+                    <button type="button" class="toggle-password-btn" onclick="togglePassword('confirm-password', this)">Show</button>
+                  </div>
+                  <div id="confirm-password-error" class="field-error">Passwords do not match.</div>
+                </div>
+
+                <button type="submit" id="btn-save-new-pwd" class="btn-submit" style="margin-top: 8px;">
+                  Save new password
+                </button>
+                <button type="button" class="btn-secondary" onclick="closeResetPasswordView()">
+                  Cancel
+                </button>
+              </form>
+            </div>
+
+          </div>
+
           <p class="disclaimer-text">
             Demo Authentication. Passwords are encrypted with browser SHA-256 Web Crypto hashing for demonstration security.
           </p>
@@ -557,31 +856,65 @@
     </div>
   </main>
 
-  <!-- Footer Line -->
+  <!-- Footer Line with Support Phone and WhatsApp Links -->
   <footer class="footer-line">
     <span>© 2026 BIZASSIST AI · Connected Prototype Architecture</span>
-    <div>
-      <a href="/about" style="margin-right: 16px;">Product Overview</a>
-      <span>Single Entry: /</span>
+    
+    <div class="footer-contact-group">
+      <a href="tel:+910000000000" id="footer-support-phone">Support: +91 00000 00000</a>
+      <span class="footer-dot">·</span>
+      <a href="https://wa.me/910000000000?text=Hi%20BizAssist%2C%20I%20need%20help%20with%20sign%20in" id="footer-support-wa" target="_blank" rel="noopener">WhatsApp Support</a>
+      <span class="footer-dot">·</span>
+      <a href="/about">Product Overview</a>
     </div>
   </footer>
 
+  <!-- Scripts -->
+  <script src="config/site.js"></script>
   <script src="js/guard.js"></script>
   <script src="js/store.js"></script>
 
   <script>
     'use strict';
 
+    // State for Password Reset Flow
+    let resetEmail = '';
+    let verifiedResetCode = '';
+
+    // Initialize Footer Contact Details from config/site.js
+    (function initContactLinks() {
+      const site = window.BIZASSIST_SITE || window.SITE || {};
+      const phoneEl = document.getElementById('footer-support-phone');
+      const waEl = document.getElementById('footer-support-wa');
+
+      if (phoneEl && site.supportPhone) {
+        phoneEl.href = 'tel:' + site.supportPhone.replace(/\s+/g, '');
+        phoneEl.textContent = 'Support: ' + (site.supportPhoneDisplay || site.supportPhone);
+      }
+      if (waEl && site.supportWhatsApp) {
+        waEl.href = 'https://wa.me/' + site.supportWhatsApp + '?text=' + encodeURIComponent('Hi BizAssist, I need assistance with the platform.');
+      }
+    })();
+
+    function showAlert(msg, type = 'error') {
+      const alertEl = document.getElementById('status-alert');
+      alertEl.className = `status-alert ${type} is-visible`;
+      alertEl.textContent = msg;
+      alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function clearAlert() {
+      const alertEl = document.getElementById('status-alert');
+      alertEl.className = 'status-alert';
+      alertEl.textContent = '';
+    }
+
     function switchTab(tab) {
       const signinBtn = document.getElementById('tab-signin-btn');
       const signupBtn = document.getElementById('tab-signup-btn');
       const signinForm = document.getElementById('form-signin');
       const signupForm = document.getElementById('form-signup');
-      const live = document.getElementById('status-live');
-      const forgot = document.getElementById('forgot-notice');
-
-      live.textContent = '';
-      forgot.classList.remove('is-visible');
+      clearAlert();
 
       if (tab === 'signin') {
         signinBtn.classList.add('active');
@@ -608,39 +941,35 @@
       btn.textContent = isPwd ? 'Hide' : 'Show';
     }
 
-    function showForgotNotice() {
-      const notice = document.getElementById('forgot-notice');
-      notice.classList.add('is-visible');
-    }
-
     async function handleDemoLogin(role) {
-      const live = document.getElementById('status-live');
-      live.textContent = `Signing in as demo ${role}...`;
+      clearAlert();
+      showAlert(`Signing in as demo ${role}...`, 'info');
       try {
         const res = await window.BizAssistAuth.signInAsDemo(role);
         if (res.success) {
           const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
           window.location.href = dest;
         } else {
-          live.textContent = res.error || 'Demo sign in failed.';
+          showAlert(res.error || 'Demo sign in failed.', 'error');
         }
       } catch (err) {
-        live.textContent = 'Error during demo authentication.';
+        console.error('Demo auth error:', err);
+        showAlert('Error during demo authentication. Check storage permissions.', 'error');
       }
     }
 
     async function handleSignIn(e) {
       e.preventDefault();
+      clearAlert();
+
       const emailEl = document.getElementById('signin-email');
       const pwdEl = document.getElementById('signin-password');
       const emailErr = document.getElementById('signin-email-error');
       const pwdErr = document.getElementById('signin-password-error');
-      const live = document.getElementById('status-live');
       const btn = document.getElementById('btn-signin-submit');
 
       emailErr.classList.remove('is-visible');
       pwdErr.classList.remove('is-visible');
-      live.textContent = '';
 
       const email = emailEl.value.trim();
       const pwd = pwdEl.value;
@@ -648,10 +977,12 @@
       let valid = true;
       if (!email || !email.includes('@')) {
         emailErr.classList.add('is-visible');
+        if (valid) emailEl.focus();
         valid = false;
       }
       if (!pwd || pwd.length < 8) {
         pwdErr.classList.add('is-visible');
+        if (valid) pwdEl.focus();
         valid = false;
       }
       if (!valid) return;
@@ -659,19 +990,27 @@
       btn.disabled = true;
       btn.textContent = 'Signing in...';
 
-      const res = await window.BizAssistAuth.signIn(email, pwd);
-      if (res.success) {
-        const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
-        window.location.href = dest;
-      } else {
+      try {
+        const res = await window.BizAssistAuth.signIn(email, pwd);
+        if (res.success) {
+          const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
+          window.location.href = dest;
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Sign in';
+          showAlert(res.error || 'Authentication failed. Please verify your credentials.', 'error');
+        }
+      } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Sign in';
-        live.textContent = res.error || 'Authentication failed.';
+        showAlert('An error occurred during authentication. Please try again.', 'error');
       }
     }
 
     async function handleSignUp(e) {
       e.preventDefault();
+      clearAlert();
+
       const nameEl = document.getElementById('signup-name');
       const emailEl = document.getElementById('signup-email');
       const roleEl = document.getElementById('signup-role');
@@ -679,13 +1018,11 @@
       const nameErr = document.getElementById('signup-name-error');
       const emailErr = document.getElementById('signup-email-error');
       const pwdErr = document.getElementById('signup-password-error');
-      const live = document.getElementById('status-live');
       const btn = document.getElementById('btn-signup-submit');
 
       nameErr.classList.remove('is-visible');
       emailErr.classList.remove('is-visible');
       pwdErr.classList.remove('is-visible');
-      live.textContent = '';
 
       const name = nameEl.value.trim();
       const email = emailEl.value.trim();
@@ -695,14 +1032,17 @@
       let valid = true;
       if (!name) {
         nameErr.classList.add('is-visible');
+        if (valid) nameEl.focus();
         valid = false;
       }
       if (!email || !email.includes('@')) {
         emailErr.classList.add('is-visible');
+        if (valid) emailEl.focus();
         valid = false;
       }
       if (!pwd || pwd.length < 8) {
         pwdErr.classList.add('is-visible');
+        if (valid) pwdEl.focus();
         valid = false;
       }
       if (!valid) return;
@@ -710,14 +1050,313 @@
       btn.disabled = true;
       btn.textContent = 'Creating account...';
 
-      const res = await window.BizAssistAuth.createAccount({ name, email, role, password: pwd });
-      if (res.success) {
-        const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
-        window.location.href = dest;
-      } else {
+      try {
+        const res = await window.BizAssistAuth.createAccount({ name, email, role, password: pwd });
+        if (res.success) {
+          const dest = window.BizAssistAuth.getPostLoginDestination(res.landingPage);
+          window.location.href = dest;
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Create demo account';
+          showAlert(res.error || 'Registration failed.', 'error');
+        }
+      } catch (err) {
         btn.disabled = false;
         btn.textContent = 'Create demo account';
-        live.textContent = res.error || 'Registration failed.';
+        showAlert('Registration error occurred.', 'error');
+      }
+    }
+
+    // ==========================================
+    // PASSWORD RESET LOGIC (PRIORITY 1)
+    // ==========================================
+    function openResetPasswordView() {
+      clearAlert();
+      document.getElementById('auth-tabs').style.display = 'none';
+      document.getElementById('form-signin').style.display = 'none';
+      document.getElementById('form-signup').style.display = 'none';
+      document.getElementById('view-reset-password').style.display = 'block';
+
+      // Prefill reset email if signin email had text
+      const signinVal = document.getElementById('signin-email').value.trim();
+      if (signinVal) {
+        document.getElementById('reset-email').value = signinVal;
+      }
+
+      showResetStep(1);
+      setTimeout(() => document.getElementById('reset-email').focus(), 50);
+    }
+
+    function closeResetPasswordView() {
+      clearAlert();
+      document.getElementById('view-reset-password').style.display = 'none';
+      document.getElementById('auth-tabs').style.display = 'flex';
+      switchTab('signin');
+      setTimeout(() => document.getElementById('signin-email').focus(), 50);
+    }
+
+    function showResetStep(step) {
+      document.getElementById('reset-step-1').style.display = step === 1 ? 'block' : 'none';
+      document.getElementById('reset-step-2').style.display = step === 2 ? 'block' : 'none';
+      document.getElementById('reset-step-3').style.display = step === 3 ? 'block' : 'none';
+
+      if (step === 2) {
+        initCodeInputGrid();
+        setTimeout(() => document.getElementById('code-digit-0').focus(), 50);
+      } else if (step === 3) {
+        setTimeout(() => document.getElementById('new-password').focus(), 50);
+      }
+    }
+
+    function backToStepOne() {
+      clearAlert();
+      showResetStep(1);
+    }
+
+    async function handleRequestResetCode(e) {
+      e.preventDefault();
+      clearAlert();
+      const emailEl = document.getElementById('reset-email');
+      const errEl = document.getElementById('reset-email-error');
+      const btn = document.getElementById('btn-send-code');
+      errEl.classList.remove('is-visible');
+
+      const email = emailEl.value.trim();
+      if (!email || !email.includes('@')) {
+        errEl.classList.add('is-visible');
+        emailEl.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Generating code...';
+
+      try {
+        const res = await window.BizAssistAuth.requestPasswordReset(email);
+        btn.disabled = false;
+        btn.textContent = 'Send reset code';
+
+        if (res.success) {
+          resetEmail = res.email;
+          document.getElementById('reset-target-email-display').textContent = resetEmail;
+
+          // Demo code banner handling
+          const demoBox = document.getElementById('demo-code-box');
+          const demoVal = document.getElementById('demo-code-text-val');
+          if (res.demoCode) {
+            demoVal.textContent = res.demoCode;
+            demoBox.style.display = 'flex';
+          } else {
+            demoBox.style.display = 'none';
+          }
+
+          showAlert(res.neutralMessage, 'info');
+          showResetStep(2);
+        } else {
+          showAlert(res.error || 'Failed to request reset code.', 'error');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Send reset code';
+        showAlert('An unexpected error occurred while requesting code.', 'error');
+      }
+    }
+
+    async function resendResetCode() {
+      if (!resetEmail) return;
+      clearAlert();
+      showAlert('Requesting a fresh verification code...', 'info');
+      const res = await window.BizAssistAuth.requestPasswordReset(resetEmail);
+      if (res.success) {
+        const demoBox = document.getElementById('demo-code-box');
+        const demoVal = document.getElementById('demo-code-text-val');
+        if (res.demoCode) {
+          demoVal.textContent = res.demoCode;
+          demoBox.style.display = 'flex';
+        }
+        showAlert('A new verification code has been generated.', 'info');
+      } else {
+        showAlert(res.error || 'Could not resend code.', 'error');
+      }
+    }
+
+    function copyDemoResetCode() {
+      const code = document.getElementById('demo-code-text-val').textContent.trim();
+      navigator.clipboard.writeText(code).then(() => {
+        showAlert(`Verification code ${code} copied to clipboard.`, 'success');
+        // Auto-fill into the 6 boxes for fast testing
+        distributeCodeDigits(code);
+      }).catch(() => {
+        distributeCodeDigits(code);
+      });
+    }
+
+    function distributeCodeDigits(codeStr) {
+      const digits = codeStr.replace(/\D/g, '').slice(0, 6).split('');
+      for (let i = 0; i < 6; i++) {
+        const input = document.getElementById(`code-digit-${i}`);
+        if (input) input.value = digits[i] || '';
+      }
+      const lastInput = document.getElementById(`code-digit-${Math.min(digits.length, 5)}`);
+      if (lastInput) lastInput.focus();
+    }
+
+    function initCodeInputGrid() {
+      const inputs = document.querySelectorAll('.code-digit-box');
+      inputs.forEach((input, index) => {
+        input.value = '';
+        input.oninput = (e) => {
+          const val = input.value.replace(/\D/g, '');
+          input.value = val.slice(0, 1);
+          if (val && index < 5) {
+            document.getElementById(`code-digit-${index + 1}`).focus();
+          }
+        };
+
+        input.onkeydown = (e) => {
+          if (e.key === 'Backspace' && !input.value && index > 0) {
+            const prev = document.getElementById(`code-digit-${index - 1}`);
+            if (prev) {
+              prev.focus();
+              prev.value = '';
+            }
+          } else if (e.key === 'Escape') {
+            closeResetPasswordView();
+          }
+        };
+
+        input.onpaste = (e) => {
+          e.preventDefault();
+          const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+          distributeCodeDigits(pastedData);
+        };
+      });
+    }
+
+    async function handleVerifyResetCode(e) {
+      e.preventDefault();
+      clearAlert();
+
+      let code = '';
+      for (let i = 0; i < 6; i++) {
+        const val = document.getElementById(`code-digit-${i}`).value.trim();
+        code += val;
+      }
+
+      const errEl = document.getElementById('reset-code-error');
+      if (code.length !== 6) {
+        errEl.classList.add('is-visible');
+        return;
+      }
+      errEl.classList.remove('is-visible');
+
+      const btn = document.getElementById('btn-verify-code');
+      btn.disabled = true;
+      btn.textContent = 'Verifying...';
+
+      try {
+        const res = await window.BizAssistAuth.verifyResetCode(resetEmail, code);
+        btn.disabled = false;
+        btn.textContent = 'Verify code';
+
+        if (res.success) {
+          verifiedResetCode = code;
+          showAlert('Code verified. Enter your new password below.', 'success');
+          showResetStep(3);
+        } else {
+          showAlert(res.error || 'Invalid code.', 'error');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Verify code';
+        showAlert('Verification failed.', 'error');
+      }
+    }
+
+    function updatePasswordStrength(pwd) {
+      const fill = document.getElementById('strength-fill');
+      const label = document.getElementById('strength-text');
+
+      if (!pwd || pwd.length < 4) {
+        fill.style.width = '10%';
+        fill.style.backgroundColor = '#B3402A';
+        label.textContent = 'Too short';
+        return;
+      }
+
+      let score = 0;
+      if (pwd.length >= 8) score += 1;
+      if (/[a-zA-Z]/.test(pwd) && /[0-9]/.test(pwd)) score += 1;
+      if (/[^a-zA-Z0-9]/.test(pwd) || pwd.length >= 12) score += 1;
+
+      if (score === 1) {
+        fill.style.width = '35%';
+        fill.style.backgroundColor = '#D97706';
+        label.textContent = 'Weak';
+      } else if (score === 2) {
+        fill.style.width = '70%';
+        fill.style.backgroundColor = '#2563EB';
+        label.textContent = 'Good';
+      } else if (score >= 3) {
+        fill.style.width = '100%';
+        fill.style.backgroundColor = '#2E6B48';
+        label.textContent = 'Strong';
+      }
+    }
+
+    async function handleCompletePasswordReset(e) {
+      e.preventDefault();
+      clearAlert();
+
+      const newPwdEl = document.getElementById('new-password');
+      const confirmPwdEl = document.getElementById('confirm-password');
+      const newPwdErr = document.getElementById('new-password-error');
+      const confirmPwdErr = document.getElementById('confirm-password-error');
+      const btn = document.getElementById('btn-save-new-pwd');
+
+      newPwdErr.classList.remove('is-visible');
+      confirmPwdErr.classList.remove('is-visible');
+
+      const newPwd = newPwdEl.value;
+      const confirmPwd = confirmPwdEl.value;
+
+      let valid = true;
+      if (!newPwd || newPwd.length < 8 || !(/[a-zA-Z]/.test(newPwd) && /[0-9]/.test(newPwd))) {
+        newPwdErr.classList.add('is-visible');
+        if (valid) newPwdEl.focus();
+        valid = false;
+      }
+      if (newPwd !== confirmPwd) {
+        confirmPwdErr.classList.add('is-visible');
+        if (valid) confirmPwdEl.focus();
+        valid = false;
+      }
+      if (!valid) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Updating password...';
+
+      try {
+        const res = await window.BizAssistAuth.completePasswordReset(resetEmail, verifiedResetCode, newPwd);
+        btn.disabled = false;
+        btn.textContent = 'Save new password';
+
+        if (res.success) {
+          // Success: Return to Sign In view with prefilled email
+          document.getElementById('view-reset-password').style.display = 'none';
+          document.getElementById('auth-tabs').style.display = 'flex';
+          switchTab('signin');
+          document.getElementById('signin-email').value = resetEmail;
+          document.getElementById('signin-password').value = '';
+          showAlert('Password updated successfully. Please sign in with your new password.', 'success');
+          document.getElementById('signin-password').focus();
+        } else {
+          showAlert(res.error || 'Failed to update password.', 'error');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Save new password';
+        showAlert('Password update encountered an error.', 'error');
       }
     }
   </script>

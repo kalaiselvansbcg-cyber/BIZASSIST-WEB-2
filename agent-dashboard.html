@@ -8,57 +8,60 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/shell.css">
-  <link rel="stylesheet" href="css/styles.css">
+  
   <style>
-    .page-header {
-      border-bottom: 1px solid var(--border);
-      padding: 18px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      z-index: 100;
-    }
-    .header-nav-links {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-      list-style: none;
-    }
-    .header-nav-link {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color 500ms var(--ease);
-    }
-    .header-nav-link:hover, .header-nav-link.active {
-      color: #000000;
+    :root {
+      --bg: #FAF8F5;
+      --ink: #111111;
+      --secondary: #5E5A53;
+      --muted: #6F6A61;
+      --line: #E3DED6;
+      --accent: #B3402A;
+      --surface: #FFFFFF;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
     }
 
-    /* Dashboard Layout */
-    .dashboard-layout {
-      display: grid;
-      grid-template-columns: 320px 1fr 340px;
-      height: calc(100vh - 65px);
-      background: #FAFAFA;
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
     }
-    @media (max-width: 1100px) {
+
+    /* 3-Column Dashboard Layout */
+    .dashboard-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr 340px;
+      flex: 1;
+      height: calc(100vh - 65px);
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    @media (max-width: 1200px) {
       .dashboard-layout {
-        grid-template-columns: 280px 1fr;
+        grid-template-columns: 300px 1fr;
       }
       .panel-customer {
         display: none;
       }
     }
-    @media (max-width: 768px) {
+
+    @media (max-width: 860px) {
       .dashboard-layout {
         grid-template-columns: 1fr;
         height: auto;
@@ -66,109 +69,274 @@
       }
     }
 
-    /* Panel Left: Ticket Queue */
+    /* LEFT PANE: TICKET QUEUE */
     .panel-queue {
-      background: #FFFFFF;
-      border-right: 1px solid var(--border);
+      background: var(--surface);
+      border-right: 1px solid var(--line);
       display: flex;
       flex-direction: column;
       height: 100%;
+      overflow: hidden;
     }
+
     .queue-header {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--line);
+      background: #FAF8F5;
     }
+
+    .search-input-wrap {
+      position: relative;
+      margin-top: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #FFFFFF;
+      padding: 8px 12px 8px 30px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      color: var(--ink);
+      border-radius: 0;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--ink);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
     .filter-pills {
       display: flex;
       gap: 6px;
-      margin-top: 12px;
+      margin-top: 10px;
       overflow-x: auto;
-      padding-bottom: 4px;
+      scrollbar-width: none;
+      padding-bottom: 2px;
     }
+
     .filter-pill {
       font-size: 11px;
       font-family: var(--font-mono);
-      padding: 4px 10px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      background: #FAFAFA;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      background: #FFFFFF;
+      color: var(--secondary);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 300ms var(--ease);
+      transition: all 150ms ease;
     }
+
     .filter-pill.active {
-      background: #000000;
-      color: #FFFFFF;
-      border-color: #000000;
+      background: var(--ink);
+      color: #FAF8F5;
+      border-color: var(--ink);
     }
+
+    .filter-pill:hover:not(.active) {
+      border-color: var(--ink);
+      color: var(--ink);
+    }
+
     .ticket-list {
       flex: 1;
       overflow-y: auto;
       list-style: none;
-      padding: 0;
       margin: 0;
-    }
-    .ticket-card {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background 300ms var(--ease);
-      position: relative;
-    }
-    .ticket-card:hover {
-      background: #F4F4F5;
-    }
-    .ticket-card.active {
-      background: #F0FDF4;
-      border-left: 3px solid #10B981;
-    }
-    .badge-p1 {
-      background: #FEF2F2;
-      color: #DC2626;
-      border: 1px solid #FECACA;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 3px;
-    }
-    .badge-p2 {
-      background: #EFF6FF;
-      color: #2563EB;
-      border: 1px solid #BFDBFE;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 3px;
-    }
-    .badge-p3 {
-      background: #F4F4F5;
-      color: #52525B;
-      border: 1px solid #E4E4E7;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 3px;
+      padding: 0;
     }
 
-    /* Panel Center: Workspace */
+    .ticket-card {
+      padding: 14px 18px;
+      border-bottom: 1px solid #F0EBE1;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .ticket-card:hover {
+      background: #F8F5F0;
+    }
+
+    .ticket-card.active {
+      background: #F4EFEB;
+      border-left: 3px solid var(--ink);
+    }
+
+    .ticket-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .priority-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 2px 6px;
+      border: 1px solid var(--line);
+      background: #FFFFFF;
+    }
+
+    .priority-badge.urgent {
+      background: #FDF4F2;
+      border-color: #EAC9C1;
+      color: #8C2210;
+    }
+
+    .priority-badge.high {
+      background: #FFFBEB;
+      border-color: #FDE68A;
+      color: #92400E;
+    }
+
+    .priority-badge.normal {
+      background: #F4EFEB;
+      border-color: #D8CFC4;
+      color: var(--secondary);
+    }
+
+    .sla-timer {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .sla-timer.breached {
+      color: #8C2210;
+      font-weight: 700;
+    }
+
+    .sla-timer.at-risk {
+      color: #D97706;
+      font-weight: 700;
+    }
+
+    .ticket-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.35;
+    }
+
+    .ticket-card-meta {
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* CENTER PANE: WORKSPACE */
     .panel-workspace {
       display: flex;
       flex-direction: column;
       height: 100%;
-      background: #FFFFFF;
-      border-right: 1px solid var(--border);
+      background: #FAF8F5;
+      border-right: 1px solid var(--line);
+      overflow: hidden;
     }
+
     .workspace-topbar {
       padding: 16px 24px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--line);
+      background: #FFFFFF;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #FFFFFF;
+      gap: 16px;
+      flex-wrap: wrap;
     }
+
+    .workspace-title-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .workspace-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .workspace-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-action {
+      padding: 8px 14px;
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: #FAF8F5;
+      cursor: pointer;
+      transition: background 150ms ease;
+    }
+
+    .btn-action:hover {
+      background: #2A2A2A;
+    }
+
+    .btn-action.secondary {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .btn-action.secondary:hover {
+      border-color: var(--ink);
+      background: #FAF8F5;
+    }
+
+    /* Potential Duplicate Warning Banner */
+    .duplicate-banner {
+      display: none;
+      background: #FFFBEB;
+      border-bottom: 1px solid #FDE68A;
+      padding: 10px 24px;
+      font-size: 12px;
+      color: #92400E;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .duplicate-banner.is-visible {
+      display: flex;
+    }
+
+    .btn-merge-mini {
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      background: #92400E;
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Thread Container */
     .conversation-thread {
       flex: 1;
       overflow-y: auto;
@@ -176,631 +344,786 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      background: #FAFAFA;
     }
+
     .chat-bubble {
-      max-width: 80%;
+      max-width: 88%;
       padding: 14px 18px;
-      border-radius: 8px;
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.5;
-      position: relative;
+      border: 1px solid var(--line);
     }
+
     .chat-bubble.customer {
       align-self: flex-start;
       background: #FFFFFF;
-      border: 1px solid var(--border);
-      color: #18181B;
+      color: var(--ink);
     }
+
     .chat-bubble.agent {
       align-self: flex-end;
-      background: #000000;
-      color: #FFFFFF;
+      background: var(--ink);
+      color: #FAF8F5;
+      border-color: var(--ink);
     }
-    .chat-bubble.ai-note {
+
+    .chat-bubble.internal-note {
       align-self: stretch;
       max-width: 100%;
-      background: #EFF6FF;
-      border: 1px dashed #93C5FD;
-      color: #1E3A8A;
-      font-size: 13px;
+      background: #FFFDF0;
+      border: 1px dashed #D4C99A;
+      color: #685A2A;
+    }
+
+    .chat-bubble.ai-triage {
+      align-self: stretch;
+      max-width: 100%;
+      background: #F4EFEB;
+      border: 1px solid #D8CFC4;
+      color: var(--ink);
+      font-size: 12px;
+    }
+
+    .bubble-meta {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
     }
 
     /* AI Draft Box */
     .ai-draft-recommendation {
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      border-radius: 8px;
+      background: #FFFFFF;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent);
       padding: 16px;
-      margin: 16px 24px 0 24px;
+      margin: 0 24px;
     }
-    .ai-draft-badge {
-      display: inline-flex;
+
+    .ai-draft-header {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
-      background: #EEF2FF;
-      color: #4F46E5;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 4px;
       margin-bottom: 8px;
     }
 
-    /* Composer */
-    .composer-area {
-      padding: 16px 24px 20px 24px;
-      background: #FFFFFF;
-      border-top: 1px solid var(--border);
+    .ai-draft-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
     }
+
+    /* Composer Area */
+    .composer-area {
+      padding: 16px 24px;
+      background: #FFFFFF;
+      border-top: 1px solid var(--line);
+    }
+
+    .composer-tabs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .composer-tab {
+      background: none;
+      border: none;
+      padding: 4px 0;
+      cursor: pointer;
+      color: var(--muted);
+      border-bottom: 2px solid transparent;
+    }
+
+    .composer-tab.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
     .composer-textarea {
       width: 100%;
       height: 90px;
       padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      font-family: var(--font-body);
-      font-size: 14px;
-      resize: none;
-      background: #FAFAFA;
-      transition: border-color 300ms var(--ease), background 300ms var(--ease);
+      border: 1px solid var(--line);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      background: #FAF8F5;
+      color: var(--ink);
+      resize: vertical;
+      border-radius: 0;
     }
+
     .composer-textarea:focus {
       outline: none;
-      border-color: #000000;
+      border-color: var(--ink);
       background: #FFFFFF;
     }
-    .composer-actions {
+
+    .composer-controls {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
-    /* Panel Right: Customer Intelligence 360 */
+    /* RIGHT PANE: CUSTOMER 360 INTELLIGENCE */
     .panel-customer {
-      background: #FFFFFF;
+      background: var(--surface);
       height: 100%;
       overflow-y: auto;
       padding: 24px;
     }
-    .customer-avatar {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      background: #18181B;
-      color: #FFFFFF;
+
+    .cust-avatar {
+      width: 44px;
+      height: 44px;
+      background: var(--ink);
+      color: #FAF8F5;
+      font-family: var(--font-serif);
+      font-size: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
-      font-weight: 700;
       margin-bottom: 12px;
     }
-    .sla-timer-box {
-      background: #FEF2F2;
-      border: 1px solid #FECACA;
-      border-radius: 6px;
-      padding: 12px;
-      margin-top: 16px;
-      text-align: center;
-    }
-    .sla-timer-box .timer {
-      font-family: var(--font-mono);
+
+    .cust-name {
+      font-family: var(--font-serif);
       font-size: 22px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .cust-company {
+      font-size: 12px;
+      color: var(--secondary);
+    }
+
+    .info-card {
+      border: 1px solid var(--line);
+      background: #FAF8F5;
+      padding: 14px;
+      margin-top: 16px;
+    }
+
+    .info-card-title {
+      font-family: var(--font-mono);
+      font-size: 10px;
       font-weight: 700;
-      color: #DC2626;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    /* Activity Audit Timeline */
+    .timeline-list {
+      list-style: none;
+      margin-top: 10px;
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .timeline-list::before {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      bottom: 4px;
+      width: 1px;
+      background: var(--line);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 12px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -18px;
+      top: 4px;
+      width: 9px;
+      height: 9px;
+      background: var(--ink);
+    }
+
+    .timeline-item-time {
+      font-size: 10px;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
     }
   </style>
 </head>
 <body>
-  <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
   <!-- 3-Column Split Workspace -->
   <div class="dashboard-layout">
+    
     <!-- LEFT PANE: TICKET QUEUE -->
     <aside class="panel-queue">
       <div class="queue-header">
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h2 style="font-size:15px; font-weight:700; letter-spacing:-0.02em;">Inbox Queue</h2>
-          <span style="font-family:var(--font-mono); font-size:11px; background:#F4F4F5; padding:2px 6px; border-radius:4px;" id="queue-count">6 Pending</span>
+          <h2 style="font-family:var(--font-serif); font-size:20px; font-weight:500;">Support Queue</h2>
+          <span style="font-family:var(--font-mono); font-size:11px; color:var(--muted);" id="queue-count-badge">5 TICKETS</span>
         </div>
-        <div class="filter-pills">
-          <button class="filter-pill active" onclick="filterQueue('all', this)">All (6)</button>
-          <button class="filter-pill" onclick="filterQueue('p1', this)">P1 Urgent (2)</button>
-          <button class="filter-pill" onclick="filterQueue('p2', this)">P2 Normal (3)</button>
-          <button class="filter-pill" onclick="filterQueue('resolved', this)">Resolved (1)</button>
+
+        <!-- Global Search Input with '/' Shortcut -->
+        <div class="search-input-wrap">
+          <span class="search-icon">/</span>
+          <input type="text" id="ticket-search" class="search-input" placeholder="Search ID, subject, customer... (Press /)" oninput="handleSearchFilter(this.value)">
+        </div>
+
+        <!-- Saved Filter Pills -->
+        <div class="filter-pills" id="filter-pills-row">
+          <button type="button" class="filter-pill active" onclick="applyFilter('all', this)">All</button>
+          <button type="button" class="filter-pill" onclick="applyFilter('my', this)">My Tickets</button>
+          <button type="button" class="filter-pill" onclick="applyFilter('urgent', this)">Urgent</button>
+          <button type="button" class="filter-pill" onclick="applyFilter('at-risk', this)">At Risk</button>
+          <button type="button" class="filter-pill" onclick="applyFilter('unassigned', this)">Unassigned</button>
+          <button type="button" class="filter-pill" onclick="applyFilter('resolved', this)">Resolved</button>
         </div>
       </div>
 
-      <ul class="ticket-list" id="ticket-list-container">
-        <!-- Ticket 1 -->
-        <li class="ticket-card active" data-priority="p1" onclick="selectTicket(0, this)">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span class="badge-p1">P1 URGENT</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">10:14 AM</span>
-          </div>
-          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Payment gateway 502 during renewal</div>
-          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
-            <span>Sarah Jenkins · Acme Corp</span>
-            <span style="color:#DC2626; font-weight:600;">SLA: 12m</span>
-          </div>
-        </li>
-
-        <!-- Ticket 2 -->
-        <li class="ticket-card" data-priority="p1" onclick="selectTicket(1, this)">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span class="badge-p1">P1 URGENT</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">09:58 AM</span>
-          </div>
-          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Webhook signatures validation failing</div>
-          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
-            <span>Alex Rivera · FinScale Ltd</span>
-            <span style="color:#DC2626; font-weight:600;">SLA: 24m</span>
-          </div>
-        </li>
-
-        <!-- Ticket 3 -->
-        <li class="ticket-card" data-priority="p2" onclick="selectTicket(2, this)">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span class="badge-p2">P2 NORMAL</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">09:30 AM</span>
-          </div>
-          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Add 45 additional seats to Enterprise tier</div>
-          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
-            <span>Elena Rostova · CloudCore</span>
-            <span style="color:#2563EB;">SLA: 1h 45m</span>
-          </div>
-        </li>
-
-        <!-- Ticket 4 -->
-        <li class="ticket-card" data-priority="p2" onclick="selectTicket(3, this)">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span class="badge-p2">P2 NORMAL</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">08:42 AM</span>
-          </div>
-          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">SAML 2.0 Okta metadata cert renewal</div>
-          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
-            <span>David Kim · ByteWave</span>
-            <span style="color:#2563EB;">SLA: 2h 10m</span>
-          </div>
-        </li>
-
-        <!-- Ticket 5 -->
-        <li class="ticket-card" data-priority="p2" onclick="selectTicket(4, this)">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span class="badge-p2">P2 NORMAL</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">08:15 AM</span>
-          </div>
-          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Custom domain SSL cert propagation delay</div>
-          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
-            <span>Maya Patel · OrbitIO</span>
-            <span style="color:#2563EB;">SLA: 3h 15m</span>
-          </div>
-        </li>
-
-        <!-- Ticket 6 (Resolved) -->
-        <li class="ticket-card" data-priority="resolved" onclick="selectTicket(5, this)">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span style="background:#ECFDF5; color:#059669; border:1px solid #A7F3D0; font-family:var(--font-mono); font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px;">RESOLVED</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:#71717A;">Yesterday</span>
-          </div>
-          <div style="font-size:13px; font-weight:600; color:#000000; margin-bottom:4px;">Update invoice VAT registration number</div>
-          <div style="font-size:12px; color:#71717A; display:flex; justify-content:space-between;">
-            <span>Marcus Vance · NordTech</span>
-            <span style="color:#059669;">Closed</span>
-          </div>
-        </li>
+      <!-- Ticket Queue List -->
+      <ul class="ticket-list" id="ticket-queue-list">
+        <!-- Rendered dynamically via JS -->
       </ul>
     </aside>
 
     <!-- CENTER PANE: ACTIVE WORKSPACE -->
     <main class="panel-workspace">
+      
+      <!-- Potential Duplicate Notice Banner -->
+      <div id="duplicate-warning-banner" class="duplicate-banner">
+        <span>AI Alert: Potential duplicate ticket found in queue: <strong id="duplicate-code">#BA-0000</strong></span>
+        <button type="button" class="btn-merge-mini" onclick="mergeWithDetectedDuplicate()">Merge Tickets</button>
+      </div>
+
       <!-- Active Ticket Topbar -->
       <div class="workspace-topbar">
         <div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="badge-p1" id="active-badge">P1 URGENT</span>
-            <h2 style="font-size:16px; font-weight:700; letter-spacing:-0.02em;" id="active-title">
-              Payment gateway 502 during renewal
-            </h2>
+          <div class="workspace-title-group">
+            <span class="priority-badge urgent" id="active-prio-badge">HIGH</span>
+            <button type="button" id="why-priority-pill" class="filter-pill" style="font-size:10px; cursor:help;" onclick="showWhyPriorityExplanation()">Why this priority?</button>
+            <h2 class="workspace-title" id="active-ticket-title">Enterprise SSO integration failure with Okta SAML 2.0</h2>
           </div>
-          <span style="font-family:var(--font-mono); font-size:12px; color:#71717A;" id="active-meta">
-            Ticket #NX-4092 · Raised via Customer Portal · Assigned to You
-          </span>
+          <div style="font-size:12px; color:var(--secondary); margin-top:4px;" id="active-ticket-meta">
+            Ticket #BA-1042 · Raised by Alex Rivera (alex.r@acme.com) · Channel: Web Portal
+          </div>
         </div>
-        <div style="display:flex; gap:8px;">
-          <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="escalateTicket()">Escalate Tier-3</button>
-          <button class="interactive-btn-primary" style="padding:6px 12px; font-size:12px;" onclick="markResolved()">Mark Resolved ✓</button>
+
+        <div class="workspace-actions">
+          <select id="assignee-select" class="select-input" style="padding:6px 10px; font-size:12px; border:1px solid var(--line);" onchange="handleAssigneeChange(this.value)">
+            <option value="Sarah Jenkins">Sarah Jenkins (Agent)</option>
+            <option value="Marcus Vance">Marcus Vance (Manager)</option>
+            <option value="Elena Rostova">Elena Rostova</option>
+            <option value="Unassigned">Unassigned</option>
+          </select>
+          <button type="button" class="btn-action secondary" onclick="escalateActiveTicket()">Escalate Tier-3</button>
+          <button type="button" class="btn-action" onclick="resolveActiveTicket()">Mark Resolved</button>
         </div>
       </div>
 
-      <!-- Active Ticket Thread -->
+      <!-- Active Ticket Conversation Thread & Timeline -->
       <div class="conversation-thread" id="thread-container">
-        <!-- Customer message -->
-        <div class="chat-bubble customer">
-          <div style="font-weight:600; font-size:12px; margin-bottom:4px; color:#52525B;">Sarah Jenkins (10:14 AM)</div>
-          Hi Support, we just tried to process our annual Enterprise tier renewal for \$48,000 via Stripe corporate card, but our finance lead got a 502 Bad Gateway response. The funds seem on hold on our Amex. Can you confirm if our workspace is at risk of downgrade?
-        </div>
-
-        <!-- AI Triage note -->
-        <div class="chat-bubble ai-note">
-          <div style="display:flex; justify-content:space-between; font-weight:600; margin-bottom:4px;">
-            <span>🤖 Nexus AI Triage Engine (Confidence 98.4%)</span>
-            <span>Triggered 10:14:12 AM</span>
-          </div>
-          Identified Intent: <code>Billing / Payment Gateway Timeout</code>. Stripe charge <code>ch_3Ox948aL</code> status verified: authorized but uncaptured due to webhook latency. No account lock scheduled. Auto-routed to FinOps queue.
-        </div>
+        <!-- Rendered dynamically via JS -->
       </div>
 
-      <!-- AI Recommended Draft -->
+      <!-- AI Recommended Draft Box -->
       <div class="ai-draft-recommendation" id="ai-draft-box">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <span class="ai-draft-badge">✦ AI Suggested Reply (Trained on FinOps Policies)</span>
-          <button class="interactive-btn-secondary" style="padding:4px 10px; font-size:11px;" onclick="insertDraft()">Insert Draft ↓</button>
+        <div class="ai-draft-header">
+          <span class="ai-draft-tag">AI Suggested Reply</span>
+          <button type="button" class="btn-action secondary" style="padding:4px 10px; font-size:11px;" onclick="insertDraftIntoComposer()">Insert Draft</button>
         </div>
-        <p style="font-size:13px; color:#334155; line-height:1.45; margin:6px 0 0 0;" id="draft-text-preview">
-          Hi Sarah, thank you for reaching out. I've inspected transaction ch_3Ox948aL on our Stripe gateway. The funds are held safely; the gateway timed out acknowledging our webhook. I have manually captured the renewal and extended your Enterprise contract through Nov 2027. Your workspace is 100% uninterrupted. Invoice #INV-2026-904 is attached!
+        <p style="font-size:13px; line-height:1.45; color:var(--ink);" id="draft-text-preview">
+          Hi Alex, I reviewed your Okta metadata endpoint. The x509 cert fingerprint needs manual re-sync in your SSO settings panel. I have refreshed the cache on our auth gateway. [1] Ref: Enterprise SSO with Okta SAML 2.0.
         </p>
       </div>
 
-      <!-- Reply Composer -->
+      <!-- Composer Area -->
       <div class="composer-area">
-        <textarea class="composer-textarea" id="reply-composer" placeholder="Type response to Sarah or press 'Insert Draft' above..."></textarea>
-        <div class="composer-actions">
+        <div class="composer-tabs">
+          <button type="button" class="composer-tab active" id="tab-public-reply" onclick="switchComposerMode('public')">Public Reply</button>
+          <button type="button" class="composer-tab" id="tab-internal-note" onclick="switchComposerMode('internal')">Internal Note (Private)</button>
+        </div>
+
+        <textarea id="composer-text" class="composer-textarea" placeholder="Type response to customer or insert AI draft..."></textarea>
+
+        <div class="composer-controls">
           <div style="display:flex; gap:8px;">
-            <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="switchTone('Empathetic')">Tone: Empathetic</button>
-            <button class="interactive-btn-secondary" style="padding:6px 12px; font-size:12px;" onclick="window.NexusShowToast('Attaching invoice INV-2026-904.pdf...')">Attach File 📎</button>
+            <button type="button" class="btn-action secondary" onclick="applyTonePrefix('Empathetic')">Tone: Empathetic</button>
+            <button type="button" class="btn-action secondary" onclick="applyTonePrefix('Concise')">Tone: Concise</button>
+            <button type="button" class="btn-action secondary" onclick="applyTonePrefix('Technical')">Tone: Technical</button>
           </div>
+
           <div style="display:flex; gap:8px;">
-            <button class="interactive-btn-secondary" style="padding:6px 14px; font-size:12px;" onclick="insertInternalNote()">Add Internal Note 📝</button>
-            <button class="interactive-btn-primary" style="padding:6px 18px; font-size:12px;" onclick="sendReply()">Approve & Dispatch ↗</button>
+            <button type="button" id="btn-submit-composer" class="btn-action" onclick="handleComposerSubmit()">
+              Approve & Dispatch
+            </button>
           </div>
         </div>
       </div>
+
     </main>
 
-    <!-- RIGHT PANE: CUSTOMER 360 INTELLIGENCE -->
+    <!-- RIGHT PANE: CUSTOMER 360 & AUDIT TIMELINE -->
     <aside class="panel-customer">
-      <div class="customer-avatar" id="cust-avatar">SJ</div>
-      <h3 style="font-size:16px; font-weight:700; margin-bottom:2px;" id="cust-name">Sarah Jenkins</h3>
-      <span style="font-size:13px; color:#71717A;" id="cust-title">VP of Operations · Acme Corp</span>
+      <div class="cust-avatar" id="customer-avatar-box">AR</div>
+      <h3 class="cust-name" id="customer-name-display">Alex Rivera</h3>
+      <span class="cust-company" id="customer-company-display">Acme Corp · Enterprise Client</span>
 
-      <div class="sla-timer-box">
-        <span style="font-family:var(--font-mono); font-size:11px; text-transform:uppercase; color:#991B1B; font-weight:600;">SLA Breach Countdown</span>
-        <div class="timer" id="sla-countdown">11:42</div>
-        <span style="font-size:11px; color:#71717A;">Target: Under 15m resolution</span>
+      <!-- SLA Countdown Box -->
+      <div class="info-card" style="border-left: 3px solid var(--accent);">
+        <div class="info-card-title">Live SLA Countdown</div>
+        <div style="font-family:var(--font-mono); font-size:22px; font-weight:700;" id="active-sla-countdown">18m 42s</div>
+        <span style="font-size:11px; color:var(--muted);" id="active-sla-target">Target: 60m First Response</span>
       </div>
 
-      <div style="margin-top:24px; display:flex; flex-direction:column; gap:16px;">
-        <div style="border-top:1px solid var(--border); padding-top:16px;">
-          <span class="meta-mono" style="display:block; margin-bottom:6px;">Subscription Status</span>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong style="font-size:14px;" id="cust-plan">Enterprise SLA-Plus</strong>
-            <span style="font-family:var(--font-mono); font-size:12px; color:#059669; background:#ECFDF5; padding:2px 6px; border-radius:4px;">\$48,000 / yr</span>
-          </div>
-        </div>
+      <!-- Sentiment Trend Card -->
+      <div class="info-card">
+        <div class="info-card-title">Customer Sentiment Trend</div>
+        <div style="font-size:13px; font-weight:600;" id="customer-sentiment-trend">Frustrated -> Neutral</div>
+        <span style="font-size:11px; color:var(--muted);">Sentiment improved after agent intervention</span>
+      </div>
 
-        <div style="border-top:1px solid var(--border); padding-top:16px;">
-          <span class="meta-mono" style="display:block; margin-bottom:6px;">Customer Sentiment</span>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <div style="flex:1; height:6px; background:#F4F4F5; border-radius:3px; overflow:hidden;">
-              <div style="width:78%; height:100%; background:#10B981;" id="sentiment-bar"></div>
-            </div>
-            <span style="font-family:var(--font-mono); font-size:12px; font-weight:600;" id="sentiment-val">Positive (78%)</span>
-          </div>
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:16px;">
-          <span class="meta-mono" style="display:block; margin-bottom:6px;">Past Tickets</span>
-          <ul style="font-size:12px; list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;">
-            <li style="display:flex; justify-content:space-between; color:#52525B;">
-              <span>#NX-3104 SSO Config</span>
-              <span style="color:#059669;">Resolved</span>
-            </li>
-            <li style="display:flex; justify-content:space-between; color:#52525B;">
-              <span>#NX-2890 API Keys</span>
-              <span style="color:#059669;">Resolved</span>
-            </li>
-          </ul>
-        </div>
-
-        <div style="border-top:1px solid var(--border); padding-top:16px;">
-          <span class="meta-mono" style="display:block; margin-bottom:6px;">Quick Actions</span>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <a href="suggested-replies.html" class="interactive-btn-secondary" style="font-size:12px; text-align:center; text-decoration:none;" data-hover>Open in Suggested Replies Studio →</a>
-            <a href="ai-triage.html" class="interactive-btn-secondary" style="font-size:12px; text-align:center; text-decoration:none;" data-hover>View AI Triage Classifier →</a>
-            <a href="manager-overview.html" class="interactive-btn-secondary" style="font-size:12px; text-align:center; text-decoration:none;" data-hover>View Team Capacity →</a>
-          </div>
+      <!-- Assigned Workload Roster Card -->
+      <div class="info-card">
+        <div class="info-card-title">Agent Queue Capacity</div>
+        <div style="font-size:12px; margin-top:4px;" id="agent-capacity-display">
+          Sarah Jenkins: <strong>3 open tickets</strong>
         </div>
       </div>
+
+      <!-- Activity Timeline Card -->
+      <div class="info-card">
+        <div class="info-card-title">Chronological Audit Timeline</div>
+        <ul class="timeline-list" id="activity-timeline-list">
+          <!-- Populated dynamically via JS -->
+        </ul>
+      </div>
+
+      <!-- Pending Callbacks Section -->
+      <div class="info-card" id="callbacks">
+        <div class="info-card-title">Pending Call Back Queue</div>
+        <div id="callback-queue-items" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
     </aside>
+
   </div>
 
+  <!-- Scripts -->
+  <script src="config/site.js"></script>
   <script src="js/guard.js"></script>
   <script src="js/store.js"></script>
   <script src="js/shell.js"></script>
-  <script src="js/flow.js"></script>
+
   <script>
-    // Ticket Data Store
-    const tickets = [
-      {
-        id: "NX-4092",
-        title: "Payment gateway 502 during renewal",
-        priority: "p1",
-        priorityLabel: "P1 URGENT",
-        priorityBadge: "badge-p1",
-        time: "10:14 AM",
-        sla: "11:42",
-        author: "Sarah Jenkins",
-        company: "Acme Corp",
-        avatar: "SJ",
-        plan: "Enterprise SLA-Plus",
-        sentiment: "Positive (78%)",
-        sentimentPct: "78%",
-        customerMsg: "Hi Support, we just tried to process our annual Enterprise tier renewal for $48,000 via Stripe corporate card, but our finance lead got a 502 Bad Gateway response. The funds seem on hold on our Amex. Can you confirm if our workspace is at risk of downgrade?",
-        aiNote: "Identified Intent: Billing / Payment Gateway Timeout. Stripe charge ch_3Ox948aL status verified: authorized but uncaptured due to webhook latency. No account lock scheduled. Auto-routed to FinOps queue.",
-        aiDraft: "Hi Sarah, thank you for reaching out. I've inspected transaction ch_3Ox948aL on our Stripe gateway. The funds are held safely; the gateway timed out acknowledging our webhook. I have manually captured the renewal and extended your Enterprise contract through Nov 2027. Your workspace is 100% uninterrupted. Invoice #INV-2026-904 is attached!"
-      },
-      {
-        id: "NX-4088",
-        title: "Webhook signatures validation failing",
-        priority: "p1",
-        priorityLabel: "P1 URGENT",
-        priorityBadge: "badge-p1",
-        time: "09:58 AM",
-        sla: "23:15",
-        author: "Alex Rivera",
-        company: "FinScale Ltd",
-        avatar: "AR",
-        plan: "Growth Tier ($1,200/mo)",
-        sentiment: "Neutral (54%)",
-        sentimentPct: "54%",
-        customerMsg: "Our production receiver is rejecting events with 401 Invalid Signature. Did the webhook signing secret rotate overnight?",
-        aiNote: "Intent: Developer API / Security. Secret rotation logs show no change. Key hash matches v2 specification. Check payload raw buffer vs parsed JSON.",
-        aiDraft: "Hi Alex, our signing secrets have not been rotated. We noticed your framework recently enabled automatic JSON middleware parsing before verifying raw buffer headers. Please ensure you pass the raw unparsed request buffer to verifyHeader()."
-      },
-      {
-        id: "NX-4076",
-        title: "Add 45 additional seats to Enterprise tier",
-        priority: "p2",
-        priorityLabel: "P2 NORMAL",
-        priorityBadge: "badge-p2",
-        time: "09:30 AM",
-        sla: "1h 45m",
-        author: "Elena Rostova",
-        company: "CloudCore",
-        avatar: "ER",
-        plan: "Enterprise ($36,000/yr)",
-        sentiment: "Delighted (95%)",
-        sentimentPct: "95%",
-        customerMsg: "We just onboarded 45 new engineers in our APAC region and need their seat licenses activated right away. Can you provision them under our pooled master agreement?",
-        aiNote: "Intent: Account Expansion. Pooled seat contract has 60 pre-approved overflow allocations at contract rate ($45/seat). Provisioning automated.",
-        aiDraft: "Hi Elena! Congratulations on the APAC expansion. I have provisioned the 45 additional engineer seats under your master enterprise pool. Your team can immediately SSO log in."
-      },
-      {
-        id: "NX-4061",
-        title: "SAML 2.0 Okta metadata cert renewal",
-        priority: "p2",
-        priorityLabel: "P2 NORMAL",
-        priorityBadge: "badge-p2",
-        time: "08:42 AM",
-        sla: "2h 10m",
-        author: "David Kim",
-        company: "ByteWave",
-        avatar: "DK",
-        plan: "Enterprise ($24,000/yr)",
-        sentiment: "Neutral (60%)",
-        sentimentPct: "60%",
-        customerMsg: "Our Okta certificate expires in 72 hours. We uploaded the new x509 cert to the staging admin console, need production sync.",
-        aiNote: "Intent: Security & Identity / SAML. Staging cert validated. Sha256 fingerprint verified against Okta directory.",
-        aiDraft: "Hi David, I verified your uploaded x509 cert against your Okta tenant. The certificate has been propagated to production SAML endpoints with zero downtime."
-      },
-      {
-        id: "NX-4055",
-        title: "Custom domain SSL cert propagation delay",
-        priority: "p2",
-        priorityLabel: "P2 NORMAL",
-        priorityBadge: "badge-p2",
-        time: "08:15 AM",
-        sla: "3h 15m",
-        author: "Maya Patel",
-        company: "OrbitIO",
-        avatar: "MP",
-        plan: "Pro ($499/mo)",
-        sentiment: "Slightly Frustrated (45%)",
-        sentimentPct: "45%",
-        customerMsg: "We pointed our CNAME app.orbitio.com to proxy.nexus.ai 2 hours ago but Let's Encrypt is still showing pending.",
-        aiNote: "Intent: DNS / Infrastructure. CAA records on orbitio.com previously blocked letsencrypt.org. DNS cache TTL is 3600s.",
-        aiDraft: "Hi Maya, our edge nodes checked your DNS. You have a CAA record restricting cert issuers. We've triggered an ACME challenge retry now that DNS has cleared, and your SSL certificate is now active!"
-      },
-      {
-        id: "NX-4010",
-        title: "Update invoice VAT registration number",
-        priority: "resolved",
-        priorityLabel: "RESOLVED",
-        priorityBadge: "badge-status resolved",
-        time: "Yesterday",
-        sla: "Closed",
-        author: "Marcus Vance",
-        company: "NordTech",
-        avatar: "MV",
-        plan: "Enterprise ($18,000/yr)",
-        sentiment: "Delighted (99%)",
-        sentimentPct: "99%",
-        customerMsg: "Please update our EU VAT number on invoice #INV-1099 to DK-98234123.",
-        aiNote: "Intent: Billing / Tax Compliance. VAT number validated against VIES database.",
-        aiDraft: "Hi Marcus, the VAT ID DK-98234123 has been updated and a revised invoice has been dispatched to billing@nordtech.dk."
+    'use strict';
+
+    let activeTicketId = 'BA-1042';
+    let currentFilter = 'all';
+    let searchQuery = '';
+    let composerMode = 'public'; // 'public' | 'internal'
+    let potentialDuplicateId = null;
+
+    function renderDashboard() {
+      if (!window.BizAssistStore) return;
+      const allTickets = window.BizAssistStore.getTickets();
+
+      // Apply search and filter
+      let filtered = allTickets;
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        filtered = filtered.filter(t => 
+          t.code.toLowerCase().includes(q) ||
+          t.subject.toLowerCase().includes(q) ||
+          (t.contactName && t.contactName.toLowerCase().includes(q)) ||
+          (t.contactEmail && t.contactEmail.toLowerCase().includes(q)) ||
+          t.category.toLowerCase().includes(q)
+        );
       }
-    ];
 
-    let currentTicketIdx = 0;
+      const now = Date.now();
+      if (currentFilter === 'my') {
+        filtered = filtered.filter(t => t.assignedTo === 'Sarah Jenkins');
+      } else if (currentFilter === 'urgent') {
+        filtered = filtered.filter(t => t.priority === 'Urgent');
+      } else if (currentFilter === 'at-risk') {
+        filtered = filtered.filter(t => {
+          if (t.stage === 'Resolved') return false;
+          const elapsed = (now - new Date(t.createdAt).getTime()) / (60 * 1000);
+          const remaining = (t.slaMinutes || 180) - elapsed;
+          return remaining < (t.slaMinutes * 0.2) && remaining > 0;
+        });
+      } else if (currentFilter === 'unassigned') {
+        filtered = filtered.filter(t => !t.assignedTo || t.assignedTo === 'Unassigned');
+      } else if (currentFilter === 'resolved') {
+        filtered = filtered.filter(t => t.stage === 'Resolved');
+      }
 
-    function selectTicket(idx, elem) {
-      currentTicketIdx = idx;
-      const t = tickets[idx];
+      document.getElementById('queue-count-badge').textContent = `${filtered.length} TICKETS`;
 
-      // Update active highlight
-      document.querySelectorAll('.ticket-card').forEach(c => c.classList.remove('active'));
-      if (elem) elem.classList.add('active');
+      // Render Queue List
+      const listEl = document.getElementById('ticket-queue-list');
+      listEl.innerHTML = filtered.map(t => {
+        const isActive = t.id === activeTicketId ? 'active' : '';
+        const elapsed = (now - new Date(t.createdAt).getTime()) / (60 * 1000);
+        const remMin = Math.round((t.slaMinutes || 180) - elapsed);
+        const isBreached = remMin < 0 && t.stage !== 'Resolved';
+        const isAtRisk = remMin > 0 && remMin < (t.slaMinutes * 0.2) && t.stage !== 'Resolved';
 
-      // Update center workspace
-      document.getElementById('active-badge').className = t.priorityBadge;
-      document.getElementById('active-badge').textContent = t.priorityLabel;
-      document.getElementById('active-title').textContent = t.title;
-      document.getElementById('active-meta').textContent = `Ticket #${t.id} · Customer: ${t.author} (${t.company})`;
+        let slaCls = '';
+        let slaText = `${remMin}m SLA`;
+        if (t.stage === 'Resolved') {
+          slaText = 'Resolved';
+        } else if (isBreached) {
+          slaCls = 'breached';
+          slaText = `Breached by ${Math.abs(remMin)}m`;
+        } else if (isAtRisk) {
+          slaCls = 'at-risk';
+          slaText = `${remMin}m (At Risk)`;
+        }
 
-      // Update thread
-      const thread = document.getElementById('thread-container');
-      thread.innerHTML = `
-        <div class="chat-bubble customer">
-          <div style="font-weight:600; font-size:12px; margin-bottom:4px; color:#52525B;">${t.author} (${t.time})</div>
-          ${t.customerMsg}
-        </div>
-        <div class="chat-bubble ai-note">
-          <div style="display:flex; justify-content:space-between; font-weight:600; margin-bottom:4px;">
-            <span>🤖 Nexus AI Triage Engine</span>
-            <span>Confidence 98.4%</span>
-          </div>
-          ${t.aiNote}
-        </div>
-      `;
+        const prioCls = t.priority === 'Urgent' ? 'urgent' : (t.priority === 'High' ? 'high' : 'normal');
 
-      // Update AI draft preview
-      document.getElementById('draft-text-preview').textContent = t.aiDraft;
+        return `
+          <li class="ticket-card ${isActive}" onclick="selectActiveTicket('${t.id}')">
+            <div class="ticket-card-header">
+              <span class="priority-badge ${prioCls}">${t.priority}</span>
+              <span class="sla-timer ${slaCls}">${slaText}</span>
+            </div>
+            <div class="ticket-card-title">${t.subject}</div>
+            <div class="ticket-card-meta">
+              <span>#${t.code} · ${t.contactName}</span>
+              <span>${t.stage}</span>
+            </div>
+          </li>
+        `;
+      }).join('');
 
-      // Update Customer Intelligence
-      document.getElementById('cust-avatar').textContent = t.avatar;
-      document.getElementById('cust-name').textContent = t.author;
-      document.getElementById('cust-title').textContent = `${t.company}`;
-      document.getElementById('cust-plan').textContent = t.plan;
-      document.getElementById('sla-countdown').textContent = t.sla;
-      document.getElementById('sentiment-bar').style.width = t.sentimentPct;
-      document.getElementById('sentiment-val').textContent = t.sentiment;
+      // Render Active Ticket
+      const activeTicket = window.BizAssistStore.getTicket(activeTicketId) || filtered[0] || allTickets[0];
+      if (activeTicket) {
+        activeTicketId = activeTicket.id;
+        document.getElementById('active-prio-badge').textContent = activeTicket.priority;
+        document.getElementById('active-prio-badge').className = `priority-badge ${activeTicket.priority === 'Urgent' ? 'urgent' : (activeTicket.priority === 'High' ? 'high' : 'normal')}`;
+        document.getElementById('active-ticket-title').textContent = activeTicket.subject;
+        document.getElementById('active-ticket-meta').textContent = `Ticket #${activeTicket.code} · Raised by ${activeTicket.contactName} (${activeTicket.contactEmail}) · Channel: ${activeTicket.channel || 'Web Portal'}`;
+        document.getElementById('assignee-select').value = activeTicket.assignedTo || 'Unassigned';
 
-      // Clear composer
-      document.getElementById('reply-composer').value = '';
-    }
+        // Check for duplicates
+        const duplicates = window.BizAssistStore.findDuplicates(activeTicket);
+        const dupBanner = document.getElementById('duplicate-warning-banner');
+        if (duplicates.length > 0) {
+          potentialDuplicateId = duplicates[0].id;
+          document.getElementById('duplicate-code').textContent = `#${duplicates[0].code} (${duplicates[0].subject})`;
+          dupBanner.classList.add('is-visible');
+        } else {
+          dupBanner.classList.remove('is-visible');
+          potentialDuplicateId = null;
+        }
 
-    function insertDraft() {
-      const draft = tickets[currentTicketIdx].aiDraft;
-      document.getElementById('reply-composer').value = draft;
-      window.NexusShowToast("AI draft injected into composer.");
-    }
-
-    function switchTone(tone) {
-      const composer = document.getElementById('reply-composer');
-      let val = composer.value || tickets[currentTicketIdx].aiDraft;
-      composer.value = `[Tone: ${tone}] ` + val;
-      window.NexusShowToast(`Adapted reply tone to: ${tone}`);
-    }
-
-    function insertInternalNote() {
-      const note = prompt("Enter internal note (visible only to team):", "Verified Stripe transaction log. Approved for capture.");
-      if (note) {
+        // Render Thread
         const thread = document.getElementById('thread-container');
-        const noteEl = document.createElement('div');
-        noteEl.className = 'chat-bubble';
-        noteEl.style.background = '#FEF9C3';
-        noteEl.style.border = '1px solid #FDE047';
-        noteEl.style.color = '#713F12';
-        noteEl.style.alignSelf = 'stretch';
-        noteEl.innerHTML = `<strong>📝 Internal Note:</strong> ${note} <span style="float:right; font-size:11px;">Just now</span>`;
-        thread.appendChild(noteEl);
-        thread.scrollTop = thread.scrollHeight;
-        window.NexusShowToast("Internal note appended to ticket.");
+        let threadHtml = `
+          <div class="chat-bubble customer">
+            <div class="bubble-meta">
+              <span>${(activeTicket.contactName || 'Customer').toUpperCase()} · INTAKE</span>
+              <span>${new Date(activeTicket.createdAt).toLocaleTimeString()}</span>
+            </div>
+            ${activeTicket.description}
+            ${activeTicket.attachments && activeTicket.attachments.length > 0 ? `
+              <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+                ${activeTicket.attachments.map(a => `<span style="font-size:11px; font-family:var(--font-mono); background:#FAF8F5; padding:2px 6px; border:1px solid var(--line);">FILE: ${a.name} (${a.size})</span>`).join('')}
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="chat-bubble ai-triage">
+            <div class="bubble-meta">
+              <span>AI TRIAGE ENGINE · CONFIDENCE 99.2%</span>
+              <span>120ms LATENCY</span>
+            </div>
+            <strong>Summary:</strong> ${activeTicket.aiSummary}<br>
+            <strong>Category:</strong> ${activeTicket.category} · <strong>Target SLA:</strong> ${activeTicket.slaMinutes}m
+          </div>
+        `;
+
+        // Internal notes
+        if (activeTicket.internalNotes && activeTicket.internalNotes.length > 0) {
+          activeTicket.internalNotes.forEach(n => {
+            threadHtml += `
+              <div class="chat-bubble internal-note">
+                <div class="bubble-meta">
+                  <span>INTERNAL NOTE · NOT VISIBLE TO CUSTOMER</span>
+                  <span>${n.author} (${new Date(n.createdAt).toLocaleTimeString()})</span>
+                </div>
+                ${n.text}
+              </div>
+            `;
+          });
+        }
+
+        // Suggested/dispatched reply
+        if (activeTicket.suggestedReply && activeTicket.stage !== 'Raised') {
+          threadHtml += `
+            <div class="chat-bubble agent">
+              <div class="bubble-meta" style="color:#FAF8F5; opacity:0.8;">
+                <span>DISPATCHED REPLY · ${activeTicket.assignedTo || 'Sarah Jenkins'}</span>
+                <span>${new Date(activeTicket.updatedAt).toLocaleTimeString()}</span>
+              </div>
+              ${activeTicket.suggestedReply}
+            </div>
+          `;
+        }
+
+        thread.innerHTML = threadHtml;
+        document.getElementById('draft-text-preview').textContent = activeTicket.suggestedReply || 'Grounded reply will be formulated upon triage review.';
+
+        // Customer 360
+        document.getElementById('customer-avatar-box').textContent = (activeTicket.contactName || 'C').slice(0, 2).toUpperCase();
+        document.getElementById('customer-name-display').textContent = activeTicket.contactName || 'Customer';
+        document.getElementById('customer-company-display').textContent = `${activeTicket.company || 'Enterprise Client'} · ${activeTicket.contactEmail}`;
+
+        // Live SLA countdown
+        const elapsedMin = (now - new Date(activeTicket.createdAt).getTime()) / (60 * 1000);
+        const rem = Math.round((activeTicket.slaMinutes || 180) - elapsedMin);
+        const timerEl = document.getElementById('active-sla-countdown');
+        if (activeTicket.stage === 'Resolved') {
+          timerEl.textContent = 'Resolved';
+          timerEl.style.color = '#1B5E34';
+        } else if (rem < 0) {
+          timerEl.textContent = `Breached (-${Math.abs(rem)}m)`;
+          timerEl.style.color = '#8C2210';
+        } else {
+          timerEl.textContent = `${rem}m remaining`;
+          timerEl.style.color = rem < (activeTicket.slaMinutes * 0.2) ? '#D97706' : 'var(--ink)';
+        }
+        document.getElementById('active-sla-target').textContent = `Target: ${activeTicket.slaMinutes}m Resolution SLA`;
+
+        // Sentiment trend
+        document.getElementById('customer-sentiment-trend').textContent = activeTicket.sentimentTrend || activeTicket.sentiment || 'Neutral';
+
+        // Audit Activity Timeline
+        const timelineEl = document.getElementById('activity-timeline-list');
+        const timeline = activeTicket.timeline || [];
+        timelineEl.innerHTML = timeline.map(ev => `
+          <li class="timeline-item">
+            <strong>${ev.actor}:</strong> ${ev.description}
+            <span class="timeline-item-time">${new Date(ev.timestamp).toLocaleTimeString()}</span>
+          </li>
+        `).join('');
+
+        // Agent Capacity
+        const sarahCount = allTickets.filter(t => t.assignedTo === 'Sarah Jenkins' && t.stage !== 'Resolved').length;
+        document.getElementById('agent-capacity-display').innerHTML = `Sarah Jenkins: <strong>${sarahCount} open tickets</strong> (Target: &lt; 5)`;
+      }
+
+      // Render Call Back Queue
+      const cbContainer = document.getElementById('callback-queue-items');
+      const callbacks = window.BizAssistStore.getCallbacks().filter(c => c.status === 'Pending');
+      if (callbacks.length === 0) {
+        cbContainer.innerHTML = `<span style="font-size:12px; color:var(--muted);">No pending callbacks.</span>`;
+      } else {
+        cbContainer.innerHTML = callbacks.map(c => `
+          <div style="border:1px solid var(--line); background:#FFFFFF; padding:10px;">
+            <div style="font-weight:600; font-size:12px;">${c.name} · <a href="tel:${c.phone.replace(/\s+/g, '')}" style="color:var(--accent); text-decoration:none;">${c.phone}</a></div>
+            <div style="font-size:11px; color:var(--muted); margin:2px 0;">${c.preferredTime} · ${c.topic}</div>
+            <button type="button" class="btn-action secondary" style="padding:2px 6px; font-size:10px; margin-top:4px;" onclick="resolveCallbackItem('${c.id}')">Mark Called ✓</button>
+          </div>
+        `).join('');
       }
     }
 
-    function sendReply() {
-      const text = document.getElementById('reply-composer').value.trim();
+    function selectActiveTicket(id) {
+      activeTicketId = id;
+      renderDashboard();
+    }
+
+    function applyFilter(f, btn) {
+      currentFilter = f;
+      document.querySelectorAll('#filter-pills-row .filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderDashboard();
+    }
+
+    function handleSearchFilter(val) {
+      searchQuery = (val || '').trim();
+      renderDashboard();
+    }
+
+    function switchComposerMode(mode) {
+      composerMode = mode;
+      document.getElementById('tab-public-reply').classList.toggle('active', mode === 'public');
+      document.getElementById('tab-internal-note').classList.toggle('active', mode === 'internal');
+
+      const btn = document.getElementById('btn-submit-composer');
+      const textarea = document.getElementById('composer-text');
+      if (mode === 'internal') {
+        btn.textContent = 'Save Internal Note';
+        textarea.placeholder = 'Type private note visible only to support team...';
+        textarea.style.background = '#FFFDF0';
+      } else {
+        btn.textContent = 'Approve & Dispatch';
+        textarea.placeholder = 'Type response to customer or insert AI draft...';
+        textarea.style.background = '#FAF8F5';
+      }
+    }
+
+    function insertDraftIntoComposer() {
+      const draft = document.getElementById('draft-text-preview').textContent.trim();
+      document.getElementById('composer-text').value = draft;
+      switchComposerMode('public');
+    }
+
+    function applyTonePrefix(tone) {
+      const el = document.getElementById('composer-text');
+      let val = el.value || document.getElementById('draft-text-preview').textContent.trim();
+      el.value = `[Tone: ${tone}] ` + val;
+    }
+
+    function handleComposerSubmit() {
+      const text = document.getElementById('composer-text').value.trim();
       if (!text) {
-        window.NexusShowToast("Please enter or insert a draft before sending.");
+        alert('Please enter text before submitting.');
         return;
       }
 
-      const thread = document.getElementById('thread-container');
-      const bubble = document.createElement('div');
-      bubble.className = 'chat-bubble agent';
-      bubble.innerHTML = `
-        <div style="font-weight:600; font-size:11px; margin-bottom:4px; opacity:0.8;">You (Agent Kala) · Just now</div>
-        ${text.replace(/\n/g, '<br>')}
-      `;
-      thread.appendChild(bubble);
-      thread.scrollTop = thread.scrollHeight;
+      if (composerMode === 'internal') {
+        window.BizAssistStore.addInternalNote(activeTicketId, text, 'Sarah Jenkins');
+        alert('Internal note added to audit timeline.');
+      } else {
+        window.BizAssistStore.addPublicReply(activeTicketId, text, 'Sarah Jenkins');
+        alert('Reply approved and dispatched to customer.');
+      }
 
-      document.getElementById('reply-composer').value = '';
-      window.NexusShowToast("Reply approved & dispatched to customer!");
+      document.getElementById('composer-text').value = '';
+      renderDashboard();
+    }
 
-      // Sync reply to BizAssist unified store
+    function handleAssigneeChange(agentName) {
       if (window.BizAssistStore) {
-        window.BizAssistStore.updateTicket('BA-1042', {
-          stage: 'Replied',
-          status: 'Replied',
-          suggestedReply: text
+        window.BizAssistStore.updateTicket(activeTicketId, {
+          assignedTo: agentName,
+          timeline: [
+            ...(window.BizAssistStore.getTicket(activeTicketId).timeline || []),
+            {
+              id: 'ev-' + Date.now(),
+              type: 'reassign',
+              description: `Reassigned to ${agentName}`,
+              actor: 'Sarah Jenkins',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        });
+        alert(`Ticket assigned to ${agentName}.`);
+        renderDashboard();
+      }
+    }
+
+    function showWhyPriorityExplanation() {
+      const ticket = window.BizAssistStore.getTicket(activeTicketId);
+      if (ticket) {
+        alert(`Why ${ticket.priority} Priority:\n\n${ticket.priorityReason || 'Classified based on NLP regression and SLA urgency parameters.'}`);
+      }
+    }
+
+    function mergeWithDetectedDuplicate() {
+      if (!potentialDuplicateId) return;
+      if (confirm(`Merge current ticket #${activeTicketId} with duplicate #${potentialDuplicateId}?`)) {
+        window.BizAssistStore.mergeTickets(activeTicketId, potentialDuplicateId);
+        alert('Tickets successfully merged.');
+        renderDashboard();
+      }
+    }
+
+    function escalateActiveTicket() {
+      if (window.BizAssistStore) {
+        window.BizAssistStore.updateTicket(activeTicketId, {
+          priority: 'Urgent',
+          assignedTeam: 'Tier-3 Engineering SRE',
+          timeline: [
+            ...(window.BizAssistStore.getTicket(activeTicketId).timeline || []),
+            {
+              id: 'ev-' + Date.now(),
+              type: 'escalate',
+              description: 'Escalated to Tier-3 Engineering SRE',
+              actor: 'Sarah Jenkins',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        });
+        alert('Ticket escalated to Tier-3 SRE on-call.');
+        renderDashboard();
+      }
+    }
+
+    function resolveActiveTicket() {
+      if (window.BizAssistStore) {
+        window.BizAssistStore.updateTicket(activeTicketId, {
+          stage: 'Resolved',
+          status: 'Resolved',
+          timeline: [
+            ...(window.BizAssistStore.getTicket(activeTicketId).timeline || []),
+            {
+              id: 'ev-' + Date.now(),
+              type: 'resolve',
+              description: 'Ticket marked as Resolved',
+              actor: 'Sarah Jenkins',
+              timestamp: new Date().toISOString()
+            }
+          ]
+        });
+        alert('Ticket marked as Resolved.');
+        renderDashboard();
+      }
+    }
+
+    function resolveCallbackItem(id) {
+      if (window.BizAssistStore) {
+        window.BizAssistStore.resolveCallback(id);
+        alert('Call back marked as completed.');
+        renderDashboard();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Check query param e.g. /agent-dashboard?ticket=BA-3310
+      const params = new URLSearchParams(window.location.search);
+      const targetParam = params.get('ticket');
+      if (targetParam) {
+        activeTicketId = targetParam.toUpperCase();
+      }
+
+      renderDashboard();
+      if (window.BizAssistStore) {
+        window.BizAssistStore.subscribe(() => {
+          renderDashboard();
         });
       }
-    }
-
-    function escalateTicket() {
-      window.NexusShowToast("Ticket escalated to Tier-3 Engineering on-call.");
-      document.getElementById('active-badge').textContent = "ESCALATED TIER-3";
-      document.getElementById('active-badge').style.background = "#581C87";
-      document.getElementById('active-badge').style.color = "#FFFFFF";
-
-      // Sync escalation to Supabase
-      if (window.NexusSupabase && window.NexusSupabase.isConnected()) {
-        const cur = tickets[currentTicketIdx];
-        if (cur && cur.id) {
-          window.NexusSupabase.updateTicket(cur.id, { status: 'Escalated' });
-        }
-      }
-    }
-
-    function markResolved() {
-      const cur = tickets[currentTicketIdx];
-      const code = cur ? cur.id : 'BA-1042';
-      window.NexusShowToast("Ticket #" + code + " marked as Resolved ✓");
-      document.getElementById('active-badge').textContent = "RESOLVED";
-      document.getElementById('active-badge').className = "badge-status resolved";
-
-      if (window.BizAssistStore) {
-        window.BizAssistStore.updateTicket('BA-1042', { stage: 'Resolved', status: 'Resolved' });
-      }
-    }
-
-    function filterQueue(type, btn) {
-      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const cards = document.querySelectorAll('.ticket-card');
-      let visible = 0;
-      cards.forEach(card => {
-        const p = card.getAttribute('data-priority');
-        if (type === 'all' || p === type) {
-          card.style.display = 'block';
-          visible++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-      document.getElementById('queue-count').textContent = `${visible} Shown`;
-    }
-
-    // Countdown SLA timer simulation
-    let seconds = 702;
-    setInterval(() => {
-      if (seconds > 0) {
-        seconds--;
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        const el = document.getElementById('sla-countdown');
-        if (el && !el.textContent.includes('h') && el.textContent !== 'Closed') {
-          el.textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
-        }
-      }
-    }, 1000);
+    });
   </script>
 </body>
 </html>

@@ -1643,6 +1643,8 @@
           <div style="display:flex; flex-direction:column; gap:8px; font-size: 14px;">
             <a href="/" style="color:var(--ink); text-decoration:none;">Account Sign In</a>
             <button onclick="openDemoModal()" style="background:none; border:none; padding:0; text-align:left; color:var(--ink); font-size:14px; cursor:pointer;">Book a Product Demo</button>
+            <a href="tel:+910000000000" id="about-phone-link" style="color:var(--ink); text-decoration:none;">Support: +91 00000 00000</a>
+            <a href="https://wa.me/910000000000" id="about-wa-link" target="_blank" rel="noopener" style="color:var(--ink); text-decoration:none;">WhatsApp: +91 00000 00000</a>
             <a href="mailto:support@bizassist.ai" style="color:var(--ink); text-decoration:none;">support@bizassist.ai</a>
           </div>
         </div>
@@ -2411,6 +2413,21 @@
       closeDemoModal();
       showToast("Thank you, " + name + "! Demonstration request received.");
     }
+  </script>
+  <script src="config/site.js"></script>
+  <script>
+    (function syncSiteContact() {
+      const site = window.BIZASSIST_SITE || window.SITE || {};
+      const phoneEl = document.getElementById('about-phone-link');
+      const waEl = document.getElementById('about-wa-link');
+      if (phoneEl && site.supportPhone) {
+        phoneEl.href = 'tel:' + site.supportPhone.replace(/\s+/g, '');
+        phoneEl.textContent = 'Support: ' + (site.supportPhoneDisplay || site.supportPhone);
+      }
+      if (waEl && site.supportWhatsApp) {
+        waEl.href = 'https://wa.me/' + site.supportWhatsApp + '?text=' + encodeURIComponent('Hi BizAssist support team, I need assistance.');
+      }
+    })();
   </script>
 </body>
 </html>

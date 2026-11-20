@@ -232,24 +232,25 @@
             <span>Hallucination Risk: <strong style="color:#059669;">&lt; 0.01%</strong></span>
           </div>
           <button class="interactive-btn-secondary" style="font-size:11px; padding:4px 10px;" onclick="regenerateDraft()">
-            Regenerate Draft ✦
+            Regenerate Draft
           </button>
         </div>
 
         <!-- Final Actions -->
         <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
           <div style="display:flex; gap:8px;">
-            <button class="interactive-btn-secondary" onclick="copyDraft()">Copy to Clipboard 📋</button>
+            <button class="interactive-btn-secondary" onclick="copyDraft()">Copy to Clipboard</button>
             <a href="agent-dashboard.html" class="interactive-btn-secondary" style="text-decoration:none;" data-hover>Insert into Dashboard →</a>
           </div>
           <button class="interactive-btn-primary" onclick="approveAndDispatch()">
-            Approve & Dispatch Reply ↗
+            Approve & Dispatch Reply
           </button>
         </div>
       </div>
     </div>
   </main>
 
+  <script src="config/site.js"></script>
   <script src="js/guard.js"></script>
   <script src="js/store.js"></script>
   <script src="js/shell.js"></script>
