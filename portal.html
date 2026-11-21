@@ -643,6 +643,7 @@
   <script src="config/site.js"></script>
   <script src="js/guard.js"></script>
   <script src="js/store.js"></script>
+  <script src="assets/rag-client.js"></script>
   <script src="js/shell.js"></script>
 
   <script>
@@ -1020,6 +1021,10 @@
           <div style="font-size:10px; color:var(--primary); font-weight:700; text-transform:uppercase; font-family:var(--font-mono);">${a.category}</div>
           <div style="font-weight:600; font-size:13px; color:var(--ink); margin:2px 0;">${a.title}</div>
           <p style="font-size:12px; color:var(--muted); line-height:1.4;">${a.summary}</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; padding-top:6px; border-top:1px solid var(--line);">
+            <span style="font-size:10px; color:var(--muted); font-family:var(--font-mono);">${a.id}</span>
+            <button type="button" class="btn-secondary" style="padding:2px 8px; font-size:11px; border-radius:4px; cursor:pointer;" onclick="if(window.BizAssistShell) BizAssistShell.sendQuickMessage('Tell me about: ${a.title.replace(/'/g, "\\'")}')">Ask AI Assistant →</button>
+          </div>
         </div>
       `).join('');
     }

@@ -1,28 +1,73 @@
 'use strict';
-// Retrieval for the BizAssist AI chatbot.
-// - Always works with keyword (BM25) search, no API needed.
-// - If kb/embeddings.json exists (built by scripts/build-embeddings.js) it blends
-//   semantic similarity with keyword scores for better recall.
-// Files starting with "_" in /api are not exposed as Vercel routes.
+/**
+ * BizAssist AI — RAG Retrieval Engine
+ * Supports Supabase pgvector semantic search with local BM25 keyword matching fallback.
+ */
 
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = path.join(__dirname, '..');
 
-const kbPath = path.join(__dirname, '..', 'kb', 'knowledge-base.json');
+const kbPath = path.join(rootDir, 'kb', 'knowledge-base.json');
 const KB = JSON.parse(fs.readFileSync(kbPath, 'utf8'));
 
 let EMB = null;
 try {
-  const embPath = path.join(__dirname, '..', 'kb', 'embeddings.json');
+  const embPath = path.join(rootDir, 'kb', 'embeddings.json');
   if (fs.existsSync(embPath)) {
     EMB = JSON.parse(fs.readFileSync(embPath, 'utf8'));
   }
 } catch (_) {
-  EMB = null; // keyword-only mode
+  EMB = null;
+}
+
+// Initialize Supabase client if credentials exist in environment
+let supabase = null;
+function getSupabaseClient() {
+  if (supabase) return supabase;
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+  if (url && key) {
+    supabase = createClient(url, key);
+  }
+  return supabase;
+}
+
+/**
+ * Retrieve semantically similar chunks from Supabase pgvector
+ */
+export async function retrieveFromSupabase(queryEmbedding, threshold = 0.5, limit = 4) {
+  const sb = getSupabaseClient();
+  if (!sb || !Array.isArray(queryEmbedding) || queryEmbedding.length === 0) {
+    return null;
+  }
+
+  try {
+    const { data, error } = await sb.rpc('match_knowledge_chunks', {
+      query_embedding: queryEmbedding,
+      match_threshold: threshold,
+      match_count: limit
+    });
+
+    if (error || !Array.isArray(data) || data.length === 0) {
+      return null;
+    }
+
+    return data.map(item => ({
+      id: item.article_id,
+      title: item.title,
+      category: item.category,
+      text: item.content,
+      score: Number(item.similarity.toFixed(3))
+    }));
+  } catch (err) {
+    return null;
+  }
 }
 
 const STOP = new Set(
@@ -33,7 +78,7 @@ function stem(w) {
   return w.length > 4 ? w.replace(/(ing|ed|es|s)$/, '') : w;
 }
 
-function tokenize(text) {
+export function tokenize(text) {
   return String(text)
     .toLowerCase()
     .replace(/[^a-z0-9#\-\s.]/g, ' ')
@@ -92,20 +137,20 @@ function cosine(a, b) {
   return na && nb ? dot / (Math.sqrt(na) * Math.sqrt(nb)) : 0;
 }
 
-function embeddingsAvailable() {
+export function embeddingsAvailable() {
   return !!(EMB && EMB.vectors && EMB.model);
 }
 
-function embeddingModel() {
-  return EMB ? EMB.model : null;
+export function embeddingModel() {
+  return EMB ? EMB.model : 'gemini-embedding-001';
 }
 
-function embeddingDim() {
-  return EMB ? EMB.dim : null;
+export function embeddingDim() {
+  return EMB ? EMB.dim : 768;
 }
 
-// Returns up to k KB entries, best first. queryEmbedding is optional.
-function retrieve(query, queryEmbedding, k = 4) {
+// Local BM25 + cosine fallback
+export function retrieve(query, queryEmbedding, k = 4) {
   const kw = bm25Scores(query);
   const maxKw = Math.max(...kw, 0);
   const useEmb = embeddingsAvailable() && Array.isArray(queryEmbedding);
@@ -122,9 +167,9 @@ function retrieve(query, queryEmbedding, k = 4) {
   }).sort((a, b) => b.score - a.score);
 
   return ranked
-    .filter((r) => (useEmb ? r.score >= 0.3 && (r.semantic >= 0.4 || r.kwRaw > 0) : r.kwRaw > 0 && r.score >= 0.25))
+    .filter((r) => (useEmb ? (r.semantic >= 0.4 || (r.kwRaw > 0 && r.score >= 0.25)) : r.kwRaw > 0 && r.score >= 0.25))
     .slice(0, k)
     .map((r) => ({ id: r.doc.id, title: r.doc.title, text: r.doc.text, score: Number(r.score.toFixed(3)) }));
 }
 
-export { retrieve, tokenize, embeddingsAvailable, embeddingModel, embeddingDim, KB };
+export { KB };

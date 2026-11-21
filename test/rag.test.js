@@ -39,7 +39,18 @@ const req = (messages, method = 'POST', ip = '1.1.1.1') => ({
   let calls = [];
   global.fetch = async (url, opts) => {
     calls.push({ url, body: JSON.parse(opts.body), headers: opts.headers });
-    return { ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: 'Mocked answer.' }] } }] }) };
+    if (url.includes('embedContent')) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ embedding: { values: new Array(768).fill(0.01) } })
+      };
+    }
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ candidates: [{ content: { parts: [{ text: 'Mocked answer.' }] } }] })
+    };
   };
 
   // Grounded question -> model is called with context, key is in header not URL.
@@ -49,11 +60,13 @@ const req = (messages, method = 'POST', ip = '1.1.1.1') => ({
   assert.strictEqual(res.body.reply, 'Mocked answer.');
   assert.strictEqual(res.body.grounded, true);
   assert.strictEqual(res.body.sources[0].id, 'ai-triage');
-  assert.strictEqual(calls.length, 1);
-  assert.ok(!calls[0].url.includes('test-key'), 'key must not be in URL');
-  assert.strictEqual(calls[0].headers['x-goog-api-key'], 'test-key-not-real');
-  assert.ok(calls[0].body.system_instruction.parts[0].text.includes('120ms'), 'context injected');
-  assert.strictEqual(calls[0].body.contents[0].role, 'user');
+
+  const genCalls = calls.filter(c => c.url.includes('generateContent'));
+  assert.strictEqual(genCalls.length, 1);
+  assert.ok(!genCalls[0].url.includes('test-key'), 'key must not be in URL');
+  assert.strictEqual(genCalls[0].headers['x-goog-api-key'], 'test-key-not-real');
+  assert.ok(genCalls[0].body.system_instruction.parts[0].text.includes('120ms'), 'context injected');
+  assert.strictEqual(genCalls[0].body.contents[0].role, 'user');
 
   // Out of scope -> no model call, canned handover answer.
   calls = [];
@@ -61,7 +74,8 @@ const req = (messages, method = 'POST', ip = '1.1.1.1') => ({
   await handler(req([{ role: 'user', content: 'what is the weather in Paris' }], 'POST', '2.2.2.2'), res);
   assert.strictEqual(res.code, 200);
   assert.strictEqual(res.body.grounded, false);
-  assert.strictEqual(calls.length, 0, 'no quota spent on out-of-scope');
+  const outOfScopeGen = calls.filter(c => c.url.includes('generateContent'));
+  assert.strictEqual(outOfScopeGen.length, 0, 'no quota spent on out-of-scope');
 
   // Assistant role is mapped to "model" and HTML is stripped.
   calls = [];
@@ -72,11 +86,17 @@ const req = (messages, method = 'POST', ip = '1.1.1.1') => ({
     { role: 'user', content: 'and P2?' }
   ], 'POST', '3.3.3.3'), res);
   assert.strictEqual(res.code, 200);
-  assert.deepStrictEqual(calls[0].body.contents.map((c) => c.role), ['user', 'model', 'user']);
-  assert.ok(!calls[0].body.contents[0].parts[0].text.includes('<b>'));
+  const slaGenCalls = calls.filter(c => c.url.includes('generateContent'));
+  assert.deepStrictEqual(slaGenCalls[0].body.contents.map((c) => c.role), ['user', 'model', 'user']);
+  assert.ok(!slaGenCalls[0].body.contents[0].parts[0].text.includes('<b>'));
 
   // Gemini quota error -> 503 + fallback flag.
-  global.fetch = async () => ({ ok: false, status: 429, json: async () => ({}) });
+  global.fetch = async (url) => {
+    if (url.includes('embedContent')) {
+      return { ok: true, status: 200, json: async () => ({ embedding: { values: new Array(768).fill(0.01) } }) };
+    }
+    return { ok: false, status: 429, json: async () => ({}) };
+  };
   res = mockRes();
   await handler(req([{ role: 'user', content: 'How does AI triage work?' }], 'POST', '4.4.4.4'), res);
   assert.strictEqual(res.code, 503);
@@ -98,7 +118,13 @@ const req = (messages, method = 'POST', ip = '1.1.1.1') => ({
   process.env.GEMINI_API_KEY = 'test-key-not-real';
 
   // Rate limit: 11th call from one IP in a minute is refused.
-  global.fetch = async () => ({ ok: true, status: 200, json: async () => ({ candidates: [{ content: { parts: [{ text: 'ok' }] } }] }) });
+  global.fetch = async () => {
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ candidates: [{ content: { parts: [{ text: 'ok' }] } }] })
+    };
+  };
   let last;
   for (let i = 0; i < 11; i++) {
     last = mockRes();

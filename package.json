@@ -7,6 +7,11 @@
     "start": "node dev-server.js",
     "dev": "node dev-server.js",
     "test": "node test/rag.test.js",
+    "ingest": "node scripts/ingest.js",
     "build:embeddings": "node scripts/build-embeddings.js"
+  },
+  "dependencies": {
+    "@google/genai": "^3.6.1",
+    "@supabase/supabase-js": "^2.119.2"
   }
 }
