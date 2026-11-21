@@ -499,6 +499,56 @@
     document.body.appendChild(wrap);
   }
 
+  /**
+   * Offline keyword fallback answer generator for BizAssist AI Assistant
+   */
+  function getOfflineKeywordReply(query) {
+    const q = (query || '').toLowerCase();
+    const site = getSiteConfig();
+
+    // Ticket lookup
+    const match = q.match(/#?(ba-\d{4})/i);
+    if (match && global.BizAssistStore) {
+      const t = global.BizAssistStore.getTicket(match[1]);
+      if (t) {
+        return `Ticket #${t.code} (${t.subject}): Status is ${t.stage}. Priority is ${t.priority}, assigned to ${t.assignedTo} (${t.assignedTeam}).`;
+      }
+    }
+
+    // Triage / Categorisation / SLA
+    if (q.includes('triage') || q.includes('categor') || q.includes('sla') || q.includes('priority')) {
+      return 'BizAssist AI classifies incoming tickets across Billing, Technical, Account, and Security. Priority P1 has a 1-hour SLA, P2 has 4 hours, and P3 has 24 hours.';
+    }
+
+    // Integrations / Okta / Zendesk / Slack
+    if (q.includes('integration') || q.includes('okta') || q.includes('saml') || q.includes('zendesk') || q.includes('slack')) {
+      return 'BizAssist AI integrates with Zendesk, Slack real-time notifications, and Okta SAML 2.0 single sign-on.';
+    }
+
+    // Pricing / Setup
+    if (q.includes('price') || q.includes('pricing') || q.includes('cost') || q.includes('plan')) {
+      return 'BizAssist AI offers Starter ($29/seat/mo), Professional ($79/seat/mo), and Enterprise custom tiers with 99.9% uptime SLA.';
+    }
+
+    // Portal / Dashboard
+    if (q.includes('portal') || q.includes('dashboard') || q.includes('queue')) {
+      return 'Customers raise and track tickets in the Customer Portal (portal.html), while agents manage SLA countdowns and AI replies in the Agent Dashboard (agent-dashboard.html).';
+    }
+
+    // Suggested Replies
+    if (q.includes('suggested') || q.includes('replies') || q.includes('draft')) {
+      return 'BizAssist AI generates context-aware suggested replies that support agents can review, refine, and approve in one click.';
+    }
+
+    // Human handover / contact
+    if (q.includes('human') || q.includes('agent') || q.includes('call') || q.includes('phone') || q.includes('whatsapp') || q.includes('person')) {
+      return `You can reach our human operations team directly by phone at ${site.supportPhoneDisplay || site.supportPhone || '+91 00000 00000'}, via WhatsApp, or through "Request Call Back".`;
+    }
+
+    // Default offline fallback
+    return 'I am currently in offline assistant mode. You can track tickets (#BA-1042, #BA-2089, #BA-3310), search documentation, or request a call back from human support.';
+  }
+
   const BizAssistShell = {
     init: function () {
       const path = global.location.pathname;
@@ -913,7 +963,12 @@
         });
 
         const data = await res.json().catch(() => ({}));
-        const botText = data.reply || data.text || 'Thank you for reaching out. You can raise a ticket in the Customer Portal or track existing tickets #BA-1042, #BA-3310, or #BA-2089.';
+        let botText = '';
+        if (!res.ok || data.fallback || !data.reply) {
+          botText = getOfflineKeywordReply(text);
+        } else {
+          botText = data.reply;
+        }
         
         thinkingBubble.textContent = botText;
         drawerChatHistory.push({ role: 'assistant', content: botText });
@@ -932,7 +987,9 @@
         thinkingBubble.appendChild(toolsBar);
 
       } catch (err) {
-        thinkingBubble.textContent = `Prototype Mode: To check status, enter ticket ID (e.g. #BA-1042). For direct support, call ${site.supportPhoneDisplay || site.supportPhone || '+91 00000 00000'}.`;
+        const fallbackMsg = getOfflineKeywordReply(text);
+        thinkingBubble.textContent = fallbackMsg;
+        drawerChatHistory.push({ role: 'assistant', content: fallbackMsg });
       } finally {
         if (sendBtn) sendBtn.disabled = false;
         input.disabled = false;

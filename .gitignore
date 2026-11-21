@@ -22,6 +22,8 @@ temp/
 *.sublime-project
 *.sublime-workspace
 
-# Environment
-.env*
+# Environment & Secrets
+.env
+.env.local
+.env.*
 !.env.example

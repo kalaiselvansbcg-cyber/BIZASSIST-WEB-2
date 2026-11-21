@@ -469,6 +469,56 @@
       URL.revokeObjectURL(url);
     }
 
+    /**
+     * Offline keyword answer provider for instant replies when offline or Gemini is busy.
+     */
+    function getOfflineKeywordReply(query) {
+      const q = (query || '').toLowerCase();
+      const site = window.BIZASSIST_SITE || window.SITE || {};
+
+      // Ticket lookup
+      const match = q.match(/#?(ba-\d{4})/i);
+      if (match && window.BizAssistStore) {
+        const t = window.BizAssistStore.getTicket(match[1]);
+        if (t) {
+          return `Ticket #${t.code} (${t.subject}): Currently in status "${t.stage}". Priority is ${t.priority}, assigned to ${t.assignedTo} (${t.assignedTeam}).`;
+        }
+      }
+
+      // Triage / Categorisation / SLA
+      if (q.includes('triage') || q.includes('categor') || q.includes('sla') || q.includes('priority')) {
+        return 'BizAssist AI classifies tickets automatically across 4 core categories: Billing, Technical, Account, and Security. Priority P1 tickets have a strict 1-hour SLA, P2 has a 4-hour SLA, and P3 has a 24-hour SLA.';
+      }
+
+      // Integrations / Okta / Zendesk / Slack
+      if (q.includes('integration') || q.includes('okta') || q.includes('saml') || q.includes('zendesk') || q.includes('slack')) {
+        return 'BizAssist AI integrates seamlessly with Zendesk for ticket bi-directional sync, Slack for real-time SLA alerts, and Okta SAML 2.0 for single sign-on enterprise security.';
+      }
+
+      // Pricing / Setup
+      if (q.includes('price') || q.includes('pricing') || q.includes('cost') || q.includes('plan')) {
+        return 'BizAssist AI offers Starter ($29/seat/mo), Professional ($79/seat/mo), and Enterprise custom tiers with 99.9% uptime SLA and dedicated support.';
+      }
+
+      // Portal / Dashboard
+      if (q.includes('portal') || q.includes('dashboard') || q.includes('queue')) {
+        return 'Customers raise and track tickets in the Customer Portal (portal.html), while support agents manage incoming tickets, review AI summaries, and approve suggested replies in the Agent Dashboard (agent-dashboard.html).';
+      }
+
+      // Suggested Replies
+      if (q.includes('suggested') || q.includes('replies') || q.includes('draft')) {
+        return 'BizAssist AI drafts contextual suggested replies using company knowledge and customer history. Support agents can review, edit tone (Empathetic, Direct, Technical), and approve replies with one click.';
+      }
+
+      // Human handover / contact
+      if (q.includes('human') || q.includes('agent') || q.includes('call') || q.includes('phone') || q.includes('whatsapp') || q.includes('person')) {
+        return `You can connect directly with our support team by phone at ${site.supportPhoneDisplay || site.supportPhone || '+91 00000 00000'}, via WhatsApp, or by clicking "Request Call Back".`;
+      }
+
+      // Default offline fallback
+      return 'I am currently in offline assistant mode. You can track tickets (#BA-1042, #BA-2089, #BA-3310), search indexed documentation, or request a call back from human support.';
+    }
+
     async function handleChatSubmit(e) {
       if (e) e.preventDefault();
       const input = document.getElementById('user-msg-input');
@@ -553,13 +603,13 @@
       if (btnSend) btnSend.disabled = true;
       input.disabled = true;
 
-      // Typing indicator (three bouncing dots)
+      // Typing indicator
       const typingRow = document.createElement('div');
       typingRow.className = 'msg-row bot';
       typingRow.id = 'chat-typing-indicator';
       const typingBubble = document.createElement('div');
       typingBubble.className = 'msg-bubble bot';
-      typingBubble.innerHTML = '<span style="display:inline-flex; gap:4px; align-items:center; font-style:italic; color:var(--muted);">Thinking<span>.</span><span>.</span><span>.</span></span>';
+      typingBubble.textContent = 'Thinking...';
       typingRow.appendChild(typingBubble);
       thread.appendChild(typingRow);
       thread.scrollTop = thread.scrollHeight;
@@ -578,10 +628,12 @@
         document.getElementById('chat-typing-indicator')?.remove();
 
         const data = await res.json().catch(() => ({}));
-        let botText = data.reply || data.text || '';
+        let botText = '';
 
-        if (!botText) {
-          botText = 'Thank you for reaching out. You can check ticket status (#BA-1042, #BA-2089, #BA-3310), search articles, or request a call back from support.';
+        if (!res.ok || data.fallback || !data.reply) {
+          botText = getOfflineKeywordReply(text);
+        } else {
+          botText = data.reply;
         }
 
         // Render with textContent for complete XSS safety
@@ -591,7 +643,7 @@
 
       } catch (err) {
         document.getElementById('chat-typing-indicator')?.remove();
-        const fallbackMsg = `Prototype Assistant: To check ticket status, enter #BA-1042, #BA-2089, or #BA-3310. For direct support, call ${site.supportPhoneDisplay || site.supportPhone || '+91 00000 00000'}.`;
+        const fallbackMsg = getOfflineKeywordReply(text);
         appendMessage('bot', fallbackMsg, false);
         conversationHistory.push({ role: 'assistant', content: fallbackMsg });
       } finally {

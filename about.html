@@ -1930,6 +1930,10 @@
       <button type="submit" id="chat-send-btn" class="chat-send-btn">Send</button>
     </form>
 
+    <div class="chat-privacy-note" style="font-size:11px; color:var(--text-muted); padding:6px 16px 8px; background:var(--surface); border-bottom:1px solid var(--border);">
+      Don't enter passwords or card numbers. Messages are sent to Google Gemini to generate replies.
+    </div>
+
     <div class="chat-panel-footer">
       <button type="button" class="chat-handover-link" onclick="triggerHumanHandover()">Talk to a human agent</button>
       <span class="chat-brand-meta">AI-Assisted Support</span>
@@ -2417,7 +2421,7 @@
       const typingEl = document.createElement('div');
       typingEl.className = 'chat-typing-indicator';
       typingEl.id = 'chat-active-indicator';
-      typingEl.textContent = 'Assistant typing...';
+      typingEl.textContent = 'Thinking...';
       box.appendChild(typingEl);
       box.scrollTop = box.scrollHeight;
 
@@ -2429,87 +2433,43 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            messages: chatConversation.map(m => ({ role: m.role, content: m.content }))
+            messages: chatConversation.slice(-10).map(m => ({ role: m.role, content: m.content }))
           })
         });
 
-        if (!response.ok && response.status === 429) {
-          const errData = await response.json();
-          typingEl.remove();
-          chatConversation.push({
-            role: 'assistant',
-            content: errData.message || "Rate limit reached. Please pause a moment or speak to an agent."
-          });
-          saveChatSession();
-          renderChatMessages();
-          if (sendBtn) sendBtn.disabled = false;
-          return;
+        const data = await response.json().catch(() => ({}));
+        if (typingEl && typingEl.parentNode) typingEl.remove();
+
+        let fullBotReply = '';
+        if (!response.ok || data.fallback || !data.reply) {
+          fullBotReply = "I am running in offline mode. BizAssist AI automates ticket classification and response drafts in under 120ms. You can track tickets (e.g. #BA-1042) or connect to human support.";
+        } else {
+          fullBotReply = data.reply;
         }
 
-        if (!response.ok || !response.body) throw new Error('API failed');
-
-        typingEl.remove();
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot';
+        botBubble.textContent = fullBotReply;
         box.appendChild(botBubble);
-
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder('utf-8');
-        let fullBotReply = '';
-        let streamBuffer = '';
-        let detectedCard = null;
-        let detectedProposal = null;
-        let detectedHandover = null;
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          streamBuffer += decoder.decode(value, { stream: true });
-          const lines = streamBuffer.split('\n');
-          streamBuffer = lines.pop();
-
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              const dataStr = line.slice(6).trim();
-              if (!dataStr) continue;
-              try {
-                const parsed = JSON.parse(dataStr);
-                if (parsed.type === 'chunk' && parsed.text) {
-                  fullBotReply += parsed.text;
-                  botBubble.innerHTML = formatChatText(fullBotReply);
-                  box.scrollTop = box.scrollHeight;
-                } else if (parsed.type === 'tool_result' && parsed.tool === 'lookup_ticket') {
-                  detectedCard = parsed.data;
-                } else if (parsed.type === 'tool_result' && parsed.tool === 'handover_to_human') {
-                  detectedHandover = parsed.data;
-                } else if (parsed.type === 'ticket_proposal') {
-                  detectedProposal = parsed.proposal;
-                }
-              } catch (parseErr) {}
-            }
-          }
-        }
-
-        if (detectedCard) botBubble.appendChild(createTicketCardElement(detectedCard));
-        if (detectedProposal) botBubble.appendChild(createProposalCardElement(detectedProposal));
-        if (detectedHandover) botBubble.appendChild(createHandoverCardElement(detectedHandover));
+        box.scrollTop = box.scrollHeight;
 
         chatConversation.push({
           role: 'assistant',
-          content: fullBotReply,
-          ticketCard: detectedCard,
-          proposalCard: detectedProposal,
-          handoverCard: detectedHandover
+          content: fullBotReply
         });
         saveChatSession();
 
       } catch (networkErr) {
         if (typingEl && typingEl.parentNode) typingEl.remove();
         const fallbackText = "I am running in offline mode. BizAssist AI automates ticket classification and response drafts in under 120ms. You can track tickets (e.g. #BA-1042) or connect to human support.";
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        botBubble.textContent = fallbackText;
+        box.appendChild(botBubble);
+        box.scrollTop = box.scrollHeight;
+
         chatConversation.push({ role: 'assistant', content: fallbackText });
         saveChatSession();
-        renderChatMessages();
       } finally {
         if (sendBtn) sendBtn.disabled = false;
         const cur = document.getElementById('chat-active-indicator');
