@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node scratch/server.cjs",
+    "start": "node dev-server.js",
+    "dev": "node dev-server.js",
     "test": "node test/rag.test.js",
     "build:embeddings": "node scripts/build-embeddings.js"
   }
