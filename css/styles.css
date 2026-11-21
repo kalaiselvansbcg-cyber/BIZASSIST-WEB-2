@@ -296,41 +296,43 @@ a, button, input, select, textarea, [data-hover] {
   flex-wrap: wrap;
 }
 .btn-editorial-primary {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #000000;
+  background: var(--primary);
+  color: var(--on-primary);
+  border: 1px solid var(--primary);
   padding: 16px 28px;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
-  border-radius: 4px;
+  border-radius: 8px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: transform 500ms var(--ease), opacity 500ms var(--ease);
+  min-height: 44px;
+  transition: transform 300ms var(--ease), background 300ms var(--ease);
 }
 .btn-editorial-primary:hover {
-  opacity: 0.8;
+  background: var(--primary-hover);
   transform: translateY(-2px);
 }
 .btn-editorial-secondary {
-  background: transparent;
-  color: #000000;
-  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--primary);
+  border: 1px solid var(--primary);
   padding: 16px 28px;
   font-family: var(--font-body);
   font-size: 15px;
   font-weight: 600;
-  border-radius: 4px;
+  border-radius: 8px;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: transform 500ms var(--ease), background 500ms var(--ease);
+  min-height: 44px;
+  transition: transform 300ms var(--ease), background 300ms var(--ease);
 }
 .btn-editorial-secondary:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--surface-soft);
   transform: translateY(-2px);
 }
 
@@ -1094,54 +1096,58 @@ a, button, input, select, textarea, [data-hover] {
 .interactive-input, .interactive-select, .interactive-textarea {
   width: 100%;
   border: 1px solid var(--border);
-  background: #FAFAFA;
+  background: var(--surface);
   padding: 12px 16px;
   font-family: var(--font-body);
   font-size: 14px;
-  border-radius: 6px;
-  color: #000000;
-  transition: border-color 500ms var(--ease), background 500ms var(--ease);
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
 }
 .interactive-input:focus, .interactive-select:focus, .interactive-textarea:focus {
   outline: none;
-  border-color: #000000;
-  background: #FFFFFF;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--focus-ring);
+  background: var(--surface);
 }
 .interactive-textarea {
   min-height: 90px;
   resize: vertical;
 }
 .interactive-btn-primary {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid #000000;
+  background: var(--primary);
+  color: var(--on-primary);
+  border: 1px solid var(--primary);
   padding: 12px 22px;
   font-family: var(--font-body);
   font-size: 14px;
   font-weight: 600;
-  border-radius: 6px;
-  transition: opacity 500ms var(--ease), transform 500ms var(--ease);
+  border-radius: 8px;
+  min-height: 44px;
+  transition: opacity 300ms var(--ease), background 300ms var(--ease), transform 300ms var(--ease);
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 .interactive-btn-primary:hover {
-  opacity: 0.85;
+  background: var(--primary-hover);
   transform: translateY(-1px);
 }
 .interactive-btn-secondary {
-  background: #F4F4F5;
-  color: #18181B;
+  background: var(--surface);
+  color: var(--primary);
   border: 1px solid var(--border);
   padding: 10px 18px;
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  border-radius: 6px;
-  transition: background 500ms var(--ease);
+  border-radius: 8px;
+  min-height: 44px;
+  transition: background 300ms var(--ease), border-color 300ms var(--ease);
 }
 .interactive-btn-secondary:hover {
-  background: #E4E4E7;
+  background: var(--surface-soft);
+  border-color: var(--primary);
 }
 .interactive-chip-row {
   display: flex;
@@ -1150,19 +1156,19 @@ a, button, input, select, textarea, [data-hover] {
   margin-bottom: 16px;
 }
 .interactive-chip {
-  background: #F4F4F5;
-  color: #52525B;
+  background: var(--surface-soft);
+  color: var(--text-muted);
   border: 1px solid var(--border);
   padding: 6px 14px;
   font-family: var(--font-mono);
   font-size: 11px;
   border-radius: 16px;
-  transition: background 500ms var(--ease), color 500ms var(--ease);
+  transition: background 300ms var(--ease), color 300ms var(--ease), border-color 300ms var(--ease);
 }
 .interactive-chip.is-active, .interactive-chip:hover {
-  background: #000000;
-  color: #ffffff;
-  border-color: #000000;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
 }
 .chat-bubble-stream {
   display: flex;
@@ -1171,27 +1177,27 @@ a, button, input, select, textarea, [data-hover] {
   max-height: 280px;
   overflow-y: auto;
   padding: 16px;
-  background: #FAFAFA;
+  background: var(--surface-soft);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   margin-bottom: 16px;
 }
 .chat-bubble-msg {
   max-width: 80%;
   padding: 10px 16px;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 13px;
   line-height: 1.45;
 }
 .chat-bubble-msg.user {
   align-self: flex-end;
-  background: #000000;
-  color: #ffffff;
+  background: var(--primary);
+  color: var(--on-primary);
 }
 .chat-bubble-msg.ai {
   align-self: flex-start;
-  background: #FFFFFF;
-  color: #18181B;
+  background: var(--surface);
+  color: var(--text);
   border: 1px solid var(--border);
 }
 .chat-bubble-citation {
@@ -1216,14 +1222,14 @@ a, button, input, select, textarea, [data-hover] {
   pointer-events: none;
 }
 .toast-card {
-  background: #000000;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
   padding: 14px 20px;
-  border-radius: 6px;
+  border-radius: var(--radius, 12px);
   font-family: var(--font-body);
   font-size: 14px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
   gap: 12px;

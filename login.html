@@ -9,23 +9,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="css/theme.css">
   
   <style>
-    /* ==========================================================================
-       1. STRICT BLACK & WHITE TOKENS
-       - Single light theme. Every color explicitly declared.
-       - Hairlines: rgba(0, 0, 0, 0.14)
-       ========================================================================== */
     :root {
-      --bg: #FAF8F5;
-      --text: #111111;
-      --text-secondary: #5E5A53;
-      --text-muted: #6F6A61;
-      --hairline: #E3DED6;
-      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --duration: 0.9s;
+      --text-secondary: var(--text-muted);
+      --hairline: var(--border);
     }
 
     *, *::before, *::after {
@@ -281,17 +271,17 @@
       border-color: var(--text);
     }
 
-    /* Checked state: solid black with white text */
+    /* Checked state: solid purple with white text */
     .role-radio:checked + .role-pill-label {
-      background: #000000;
-      color: #FFFFFF;
-      border-color: #000000;
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
     }
 
     /* Keyboard focus ring */
     .role-radio:focus-visible + .role-pill-label {
-      outline: 2px solid var(--text);
-      outline-offset: 3px;
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 2px;
     }
 
     /* ==========================================================================
@@ -320,10 +310,10 @@
       width: 100%;
       min-height: 48px;
       padding: 12px 16px;
-      border: 1px solid #000000;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      background: #FFFFFF;
-      color: #000000;
+      background: var(--surface);
+      color: var(--text);
       font-family: var(--font-sans);
       font-size: 16px;
       letter-spacing: -0.02em;
@@ -332,13 +322,13 @@
 
     .text-input:focus {
       outline: none;
-      border-color: #000000;
-      box-shadow: 0 0 0 1px #000000;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px var(--focus-ring);
     }
 
     .text-input[aria-invalid="true"] {
-      border-color: #000000;
-      box-shadow: 0 0 0 2px #000000;
+      border-color: var(--danger);
+      box-shadow: 0 0 0 2px var(--danger);
     }
 
     /* Show / Hide toggle button inside password field */
@@ -408,9 +398,9 @@
     .checkbox-input {
       width: 18px;
       height: 18px;
-      border: 1px solid #000000;
+      border: 1px solid var(--border);
       border-radius: 4px;
-      accent-color: #000000;
+      accent-color: var(--primary);
       cursor: pointer;
     }
 
@@ -431,20 +421,20 @@
     }
 
     .forgot-btn:hover {
-      color: var(--text);
+      color: var(--primary);
     }
 
     /* Inline message for Forgot Password */
     .inline-notice {
       display: none;
-      background: #FFFFFF;
-      border: 1px solid #000000;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 12px 14px;
       margin-bottom: 20px;
       font-size: 14px;
-      font-weight: 700;
-      color: #000000;
+      font-weight: 600;
+      color: var(--primary);
       line-height: 1.4;
     }
 
@@ -460,9 +450,9 @@
       min-height: 52px;
       padding: 0 28px;
       border-radius: 999px;
-      border: 1px solid #000000;
-      background: #000000;
-      color: #FFFFFF;
+      border: 1px solid var(--primary);
+      background: var(--primary);
+      color: var(--on-primary);
       font-family: var(--font-sans);
       font-size: 16px;
       font-weight: 600;
@@ -471,15 +461,14 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 300ms var(--ease), 
-                  color 300ms var(--ease),
-                  border-color 300ms var(--ease);
+      transition: background 250ms var(--ease), 
+                  border-color 250ms var(--ease);
     }
 
     .btn-pill-primary:hover {
-      background: #FFFFFF;
-      color: #000000;
-      border-color: #000000;
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: var(--on-primary);
     }
 
     .btn-pill-primary:disabled {
@@ -538,7 +527,7 @@
     .quick-route-link {
       font-size: 15px;
       font-weight: 600;
-      color: var(--text);
+      color: var(--primary);
       text-decoration: none;
       display: inline-flex;
       align-items: center;
@@ -546,13 +535,14 @@
       min-height: 44px;
       padding: 0 16px;
       border-radius: 8px;
-      border: 1px solid var(--hairline);
-      background: #FFFFFF;
-      transition: border-color 200ms ease;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all 200ms ease;
     }
 
     .quick-route-link:hover {
-      border-color: #000000;
+      border-color: var(--primary);
+      background: var(--surface-soft);
     }
 
     /* ==========================================================================

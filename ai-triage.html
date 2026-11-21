@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/shell.css">
   <link rel="stylesheet" href="css/styles.css">
@@ -44,7 +45,7 @@
 
     .header-nav-link:hover,
     .header-nav-link.active {
-      color: #000000;
+      color: var(--primary);
     }
 
     .triage-container {
@@ -67,9 +68,10 @@
     }
 
     .panel-card {
-      background: #FFFFFF;
+      background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: var(--radius, 12px);
+      box-shadow: var(--shadow);
       padding: 28px;
     }
 
@@ -81,20 +83,21 @@
     }
 
     .preset-chip {
-      background: #F4F4F5;
+      background: var(--surface-soft);
       border: 1px solid var(--border);
+      color: var(--text-muted);
       padding: 6px 12px;
       font-size: 12px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm, 6px);
       cursor: pointer;
-      transition: all 300ms var(--ease);
+      transition: all 200ms var(--ease);
       font-family: var(--font-body);
     }
 
     .preset-chip:hover {
-      background: #000000;
-      color: #FFFFFF;
-      border-color: #000000;
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
     }
 
     .confidence-bar-wrap {
@@ -110,7 +113,7 @@
 
     .confidence-track {
       height: 8px;
-      background: #F4F4F5;
+      background: var(--surface-soft);
       border-radius: 4px;
       overflow: hidden;
     }
@@ -254,7 +257,7 @@
               <strong id="intent-1-pct">96.8%</strong>
             </div>
             <div class="confidence-track">
-              <div class="confidence-fill" id="intent-1-bar" style="width:96.8%; background:#000000;"></div>
+              <div class="confidence-fill" id="intent-1-bar" style="width:96.8%; background:var(--primary);"></div>
             </div>
           </div>
 
@@ -264,7 +267,7 @@
               <strong id="intent-2-pct">2.4%</strong>
             </div>
             <div class="confidence-track">
-              <div class="confidence-fill" id="intent-2-bar" style="width:2.4%; background:#71717A;"></div>
+              <div class="confidence-fill" id="intent-2-bar" style="width:2.4%; background:#8B5CF6;"></div>
             </div>
           </div>
 
@@ -274,7 +277,7 @@
               <strong id="intent-3-pct">0.8%</strong>
             </div>
             <div class="confidence-track">
-              <div class="confidence-fill" id="intent-3-bar" style="width:0.8%; background:#D4D4D8;"></div>
+              <div class="confidence-fill" id="intent-3-bar" style="width:0.8%; background:#C084FC;"></div>
             </div>
           </div>
         </div>

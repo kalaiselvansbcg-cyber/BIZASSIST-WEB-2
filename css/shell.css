@@ -5,25 +5,27 @@
 
 :root {
   --shell-bg: var(--bg, #FFFFFF);
-  --shell-ink: var(--ink, #000000);
-  --shell-secondary: var(--ink-soft, #111111);
-  --shell-muted: var(--muted, #6B6B6B);
-  --shell-line: var(--line, #E5E5E5);
-  --shell-accent: var(--primary, #000000);
+  --shell-ink: var(--text, #1F1535);
+  --shell-secondary: var(--text-muted, #6B6482);
+  --shell-muted: var(--text-muted, #6B6482);
+  --shell-line: var(--border, #E4DDF7);
+  --shell-accent: var(--primary, #7C3AED);
   --shell-surface: var(--surface, #FFFFFF);
+  --shell-surface-soft: var(--surface-soft, #F5F3FF);
   --shell-font-sans: var(--font-sans, 'Inter', -apple-system, sans-serif);
   --shell-font-mono: var(--font-mono, monospace);
-  --shell-radius: var(--radius-sm, 6px);
+  --shell-radius: var(--radius-sm, 8px);
 }
 
 [data-theme="dark"] {
-  --shell-bg: #000000;
-  --shell-ink: #FFFFFF;
-  --shell-secondary: #E5E5E5;
-  --shell-muted: #888888;
-  --shell-line: #262626;
-  --shell-accent: #FFFFFF;
-  --shell-surface: #000000;
+  --shell-bg: var(--bg, #14101F);
+  --shell-ink: var(--text, #F3EFFF);
+  --shell-secondary: var(--text-muted, #B3A9D1);
+  --shell-muted: var(--text-muted, #B3A9D1);
+  --shell-line: var(--border, #3A2F5C);
+  --shell-accent: var(--primary, #A78BFA);
+  --shell-surface: var(--surface, #1D1730);
+  --shell-surface-soft: var(--surface-soft, #261E3D);
 }
 
 /* App Shell Global Header */
@@ -136,15 +138,15 @@
 }
 
 .biz-shell-nav-link:hover {
-  color: var(--shell-ink);
-  background: var(--surface-alt, #F5F5F5);
+  color: var(--primary);
+  background: var(--surface-soft, #F5F3FF);
 }
 
 .biz-shell-nav-link.active {
-  color: var(--shell-ink);
+  color: var(--primary);
   font-weight: 600;
-  background: var(--surface-alt, #F5F5F5);
-  border: 1px solid var(--shell-line);
+  background: var(--primary-soft, #EDE9FE);
+  border: 1px solid var(--border);
 }
 
 /* Role Quick-Switcher Pills in Header */
@@ -519,15 +521,15 @@
   color: var(--shell-ink, #000000);
 }
 
-/* Floating AI Assistant Trigger & Drawer (Clean Black & White) */
+/* Floating AI Assistant Trigger & Drawer (Clean White + Purple) */
 .biz-floating-chat-trigger {
   position: fixed;
   bottom: 24px;
   right: 24px;
   z-index: 900;
-  background: var(--shell-ink, #000000);
-  color: var(--shell-surface, #FFFFFF);
-  border: 1px solid var(--shell-ink, #000000);
+  background: var(--primary, #7C3AED);
+  color: var(--on-primary, #FFFFFF);
+  border: 1px solid var(--primary, #7C3AED);
   border-radius: 999px;
   padding: 11px 18px;
   font-family: var(--shell-font-sans);
@@ -537,21 +539,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  transition: opacity 150ms ease;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.25);
+  transition: all 150ms ease;
 }
 
 [data-theme="dark"] .biz-floating-chat-trigger {
-  background: #FFFFFF;
-  color: #000000;
-  border-color: #FFFFFF;
+  background: var(--primary, #A78BFA);
+  color: var(--on-primary, #14101F);
+  border-color: var(--primary, #A78BFA);
 }
 
 .biz-floating-chat-trigger:hover {
-  opacity: 0.9;
-}
+  background: var(--primary-hover, #6D28D9);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
 }
 
 .biz-floating-chat-drawer {
@@ -622,35 +623,40 @@
 
 .biz-floating-chat-send {
   padding: 0 14px;
-  background: var(--shell-ink, #000000);
-  color: var(--shell-surface, #FFFFFF);
+  background: var(--primary, #7C3AED);
+  color: var(--on-primary, #FFFFFF);
   border: none;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.biz-floating-chat-send:hover {
+  background: var(--primary-hover, #6D28D9);
 }
 
 /* Chat bubble styling */
 .biz-chat-bubble {
   max-width: 85%;
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 13px;
   line-height: 1.45;
 }
 
 .biz-chat-bubble.bot {
   align-self: flex-start;
-  background: var(--surface-alt, #F5F5F5);
-  color: var(--shell-ink);
-  border: 1px solid var(--shell-line);
+  background: var(--surface-soft, #F5F3FF);
+  color: var(--text, #1F1535);
+  border: 1px solid var(--border, #E4DDF7);
 }
 
 .biz-chat-bubble.user {
   align-self: flex-end;
-  background: var(--shell-ink, #000000);
-  color: var(--shell-surface, #FFFFFF);
+  background: var(--primary, #7C3AED);
+  color: var(--on-primary, #FFFFFF);
 }
 
 /* Callback modal styles */
@@ -716,17 +722,18 @@
 .biz-callback-submit-btn {
   flex: 1;
   padding: 10px 16px;
-  background: var(--shell-ink, #000000);
-  color: var(--shell-surface, #FFFFFF);
-  border: 1px solid var(--shell-ink, #000000);
+  background: var(--primary, #7C3AED);
+  color: var(--on-primary, #FFFFFF);
+  border: 1px solid var(--primary, #7C3AED);
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
+  transition: background 150ms ease;
 }
 
 .biz-callback-submit-btn:hover {
-  opacity: 0.9;
+  background: var(--primary-hover, #6D28D9);
 }
 
 .biz-callback-cancel-btn {

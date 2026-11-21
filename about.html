@@ -11,28 +11,14 @@
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" as="style">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Quiet Luxury Design System Tokens -->
+  <!-- White + Purple Design System Tokens -->
+  <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="css/theme.css">
 
   <style>
-    /* ==========================================================================
-       QUIET LUXURY STYLESHEET (index.html)
-       Editorial restraint, warm cream background, serif headlines, hairline borders.
-       ========================================================================== */
-
     :root {
-      --bg: #FAF8F5;           /* warm cream */
-      --surface: #FFFFFF;      /* pure white cards */
-      --surface-alt: #EFEBE4;  /* panels, frames */
-      --ink: #111111;          /* text, primary buttons */
-      --ink-soft: #5E5A53;     /* body copy */
-      --muted: #6F6A61;        /* labels */
-      --line: #E3DED6;         /* hairlines */
-      --accent: #B3402A;       /* Urgent red dot & error only */
-      --radius: 0;
-      --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
-      --font-sans: "Inter", "Helvetica Neue", Arial, sans-serif;
-      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+      --secondary: var(--text-muted);
+      --accent: var(--danger);
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --duration: 450ms;
     }
@@ -192,37 +178,47 @@
 
     .header-link-signin {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--ink);
+      letter-spacing: 0.15em;
+      color: var(--primary);
+      background: transparent;
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-sm, 8px);
+      padding: 8px 18px;
       text-decoration: none;
       min-height: 44px;
       display: inline-flex;
       align-items: center;
+      transition: all 150ms ease;
     }
     .header-link-signin:hover {
-      opacity: 0.7;
+      background: var(--surface-soft);
+      border-color: var(--primary-hover);
+      color: var(--primary-hover);
     }
 
     .header-btn-demo {
       min-height: 44px;
-      padding: 12px 24px;
-      background: var(--ink);
-      color: #FFFFFF;
-      border: 1px solid var(--ink);
-      border-radius: 0;
+      padding: 10px 22px;
+      background: var(--primary);
+      color: var(--on-primary);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-sm, 8px);
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.15em;
       cursor: pointer;
       text-decoration: none;
-      transition: background 250ms var(--ease), color 250ms var(--ease);
+      display: inline-flex;
+      align-items: center;
+      transition: background 150ms ease, border-color 150ms ease;
     }
     .header-btn-demo:hover {
-      background: var(--bg);
-      color: var(--ink);
+      background: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: var(--on-primary);
     }
 
     @media (max-width: 860px) {

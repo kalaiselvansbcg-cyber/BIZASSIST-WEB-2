@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/shell.css">
   
@@ -60,8 +61,8 @@
 
     /* LEFT PANE: QUEUE LIST */
     .panel-queue {
-      background: var(--surface);
-      border-right: 1px solid var(--line);
+      background: var(--surface-soft);
+      border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       height: 100%;
@@ -70,7 +71,7 @@
 
     .queue-header {
       padding: 14px 16px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--border);
       background: var(--surface);
       display: flex;
       flex-direction: column;
@@ -107,9 +108,9 @@
     }
     .queue-search-input:focus {
       outline: none;
-      border-color: var(--ink);
+      border-color: var(--primary);
       background: var(--surface);
-      box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 0 0 2px var(--focus-ring);
     }
     .queue-search-icon {
       position: absolute;
@@ -192,15 +193,15 @@
       position: relative;
     }
     .ticket-card:hover {
-      background: var(--surface-alt);
+      background: var(--surface-soft);
     }
     .ticket-card.active {
-      background: var(--surface-alt);
-      border-left-color: var(--ink) !important;
+      background: var(--primary-soft) !important;
+      border-left: 4px solid var(--primary) !important;
     }
-    .ticket-card.prio-urgent { border-left-color: var(--ink); }
-    .ticket-card.prio-high { border-left-color: #555555; }
-    .ticket-card.prio-normal { border-left-color: var(--line); }
+    .ticket-card.prio-urgent { border-left-color: var(--prio-urgent); }
+    .ticket-card.prio-high { border-left-color: var(--prio-high); }
+    .ticket-card.prio-normal { border-left-color: var(--border); }
 
     /* Card Line 1: Priority dot + Bold Subject */
     .card-line-1 {

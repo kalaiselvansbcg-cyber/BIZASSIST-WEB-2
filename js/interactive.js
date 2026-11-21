@@ -372,22 +372,22 @@
           '<div style="font-size:24px; font-weight:700; color:var(--ink); margin-top:4px;" id="mgr-stat-2">68.4%</div>' +
           '<span style="font-size:11px; color:var(--muted);">Automated instant answers</span>' +
           '</div>' +
-          '<div style="background:#F5F5F5; border:1px solid var(--border); padding:16px; border-radius:8px;">' +
+          '<div style="background:var(--surface-soft, #F5F3FF); border:1px solid var(--border); padding:16px; border-radius:8px;">' +
           '<span class="interactive-label">SLA COMPLIANCE</span>' +
           '<div style="font-size:24px; font-weight:700; color:var(--ink); margin-top:4px;" id="mgr-stat-3">99.8%</div>' +
           '<span style="font-size:11px; color:var(--muted);">0 Breaches this period</span>' +
           '</div>' +
           '</div>' +
-          '<div style="background:#FAFAFA; border:1px solid var(--border); padding:20px; border-radius:8px;">' +
+          '<div style="background:var(--surface, #FFFFFF); border:1px solid var(--border); padding:20px; border-radius:8px;">' +
           '<span class="interactive-label">DAILY VOLUME BY DAY (CLICK BARS TO INSPECT)</span>' +
           '<div style="display:flex; justify-content:space-between; align-items:flex-end; height:120px; padding-top:20px; gap:12px;">' +
-          '<div style="flex:1; background:#171717; height:60%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Mon: 240 Tickets (72% AI resolved)\')">M</div>' +
-          '<div style="flex:1; background:#171717; height:85%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Tue: 310 Tickets (69% AI resolved)\')">T</div>' +
-          '<div style="flex:1; background:#171717; height:95%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Wed: 340 Tickets (74% AI resolved)\')">W</div>' +
-          '<div style="flex:1; background:#171717; height:90%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Thu: 325 Tickets (70% AI resolved)\')">T</div>' +
-          '<div style="flex:1; background:#171717; height:100%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Fri: 380 Tickets (71% AI resolved)\')">F</div>' +
-          '<div style="flex:1; background:#737373; height:40%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sat: 120 Tickets (82% AI resolved)\')">S</div>' +
-          '<div style="flex:1; background:#737373; height:35%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sun: 98 Tickets (85% AI resolved)\')">S</div>' +
+          '<div style="flex:1; background:var(--primary, #7C3AED); height:60%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Mon: 240 Tickets (72% AI resolved)\')">M</div>' +
+          '<div style="flex:1; background:var(--primary, #7C3AED); height:85%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Tue: 310 Tickets (69% AI resolved)\')">T</div>' +
+          '<div style="flex:1; background:var(--primary, #7C3AED); height:95%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Wed: 340 Tickets (74% AI resolved)\')">W</div>' +
+          '<div style="flex:1; background:var(--primary, #7C3AED); height:90%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Thu: 325 Tickets (70% AI resolved)\')">T</div>' +
+          '<div style="flex:1; background:var(--primary, #7C3AED); height:100%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Fri: 380 Tickets (71% AI resolved)\')">F</div>' +
+          '<div style="flex:1; background:#A855F7; height:40%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sat: 120 Tickets (82% AI resolved)\')">S</div>' +
+          '<div style="flex:1; background:#C084FC; height:35%; border-radius:4px; text-align:center; color:#fff; font-size:10px; padding-top:4px; cursor:pointer;" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Sun: 98 Tickets (85% AI resolved)\')">S</div>' +
           '</div>' +
           '</div>' +
           '<button class="interactive-btn-primary" onclick="(window.BizAssistShowToast || window.NexusShowToast)(\'Exported executive analytics PDF.\')">Export PDF Executive Report ↓</button>' +

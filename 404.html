@@ -8,19 +8,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles/theme.css">
   <link rel="stylesheet" href="css/theme.css">
 
   <style>
     :root {
-      --bg: #FAF8F5;
-      --ink: #111111;
-      --secondary: #5E5A53;
-      --muted: #6F6A61;
-      --line: #E3DED6;
-      --accent: #B3402A;
-      --font-serif: 'Cormorant Garamond', Georgia, serif;
-      --font-sans: 'Inter', sans-serif;
-      --font-mono: 'SFMono-Regular', Consolas, monospace;
+      --secondary: var(--text-muted);
+      --accent: var(--danger);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -100,18 +94,19 @@
     .btn-return {
       display: inline-block;
       padding: 12px 24px;
-      background: var(--ink);
-      color: #FAF8F5;
+      background: var(--primary);
+      color: var(--on-primary);
       text-decoration: none;
       font-size: 13px;
       font-weight: 600;
       letter-spacing: 0.05em;
       text-transform: uppercase;
+      border-radius: var(--radius-sm, 8px);
       transition: background 150ms ease;
     }
 
     .btn-return:hover {
-      background: #2A2A2A;
+      background: var(--primary-hover);
     }
 
     .footer {
