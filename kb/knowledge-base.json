@@ -1,0 +1,93 @@
+[
+  {
+    "id": "ai-triage",
+    "title": "AI triage: categorise, prioritise, summarise",
+    "category": "AI Engine",
+    "keywords": ["triage", "categorise", "categorize", "classification", "intent", "sentiment", "urgency", "nlp", "summary", "entities"],
+    "text": "BizAssist AI triage automatically processes every inbound ticket. NLP extracts entities, detects the customer's intent and tags the ticket as billing, technical or access in under 120ms. An urgency score is calculated from financial impact, and mission-critical tickets move to position #1 in the queue in under 300ms. A sentiment score is attached to each ticket. Long customer messages are condensed into a two-line summary, which the site says saves agents up to 80% of reading time. The triage view shows the category, priority, sentiment and summary for each ticket. Agents see the AI triage card with a confidence percentage in the agent dashboard."
+  },
+  {
+    "id": "priority-sla",
+    "title": "Priority levels and SLA targets",
+    "category": "AI Engine",
+    "keywords": ["priority", "p1", "p2", "p3", "sla", "urgent", "response time", "countdown", "vip"],
+    "text": "Tickets are ranked P1 (critical, system down), P2 (high urgency) and P3 (normal). Critical revenue outages and VIP accounts automatically jump to Priority 1 before agents open the queue. The first-response SLA targets shown in the customer portal are under 15 minutes for P1 and under 1 hour for P2. The agent dashboard shows a real-time SLA countdown timer for each ticket."
+  },
+  {
+    "id": "suggested-replies",
+    "title": "Suggested replies studio",
+    "category": "Agents",
+    "keywords": ["reply", "replies", "draft", "tone", "friendly", "formal", "short", "approve", "dispatch", "knowledge base", "citations"],
+    "text": "The Suggested Replies Studio is a human-in-the-loop draft generator. For each ticket the AI prepares a fact-grounded reply using the knowledge base, with citations. The reply is editable and can be switched between three tones with one click: Friendly, Formal or Short. Agents can copy the reply, or approve and dispatch it. A human always reviews the draft before it is sent. The site states drafts can cut handle times by up to 80%."
+  },
+  {
+    "id": "customer-portal",
+    "title": "Customer ticket portal",
+    "category": "Customers",
+    "keywords": ["portal", "raise", "submit", "ticket", "register", "form", "category", "history", "self-service"],
+    "text": "The customer ticket portal is a self-service page where customers register, raise tickets and follow progress. The ticket form has a subject, a category (Billing & Payments, Authentication / SSO, Technical Bug, Feature Request), an urgency (P1 Critical, P2 High, P3 Normal) and an issue details box. Submitted tickets go through AI triage, which the portal says takes under 300 milliseconds. Urgent and revenue-impacting issues are escalated to on-call specialists. The portal also shows summary stats and a previous tickets history table with ticket ID, subject, category, resolution time and status."
+  },
+  {
+    "id": "ticket-tracker",
+    "title": "Tracking a ticket",
+    "category": "Customers",
+    "keywords": ["track", "tracker", "status", "milestone", "progress", "timeline", "stages"],
+    "text": "Customers can enter a ticket identifier in the ticket tracker to see live milestone updates, AI triage timestamps and assigned agent notes. A ticket moves through five stages: 1 Raised, 2 Categorised, 3 Assigned, 4 Replied, 5 Resolved. The customer portal gives the same live milestone tracking with real-time agent updates, so customers do not have to wonder whether someone is working on their issue."
+  },
+  {
+    "id": "agent-dashboard",
+    "title": "Agent dashboard",
+    "category": "Agents",
+    "keywords": ["agent", "dashboard", "queue", "inbox", "customer 360", "escalate", "tier-3", "internal note", "resolve", "filters"],
+    "text": "The agent dashboard is a unified three-pane workspace. The left pane is the inbox queue with filters: All, P1 Urgent, P2 Normal and Resolved. The centre pane shows the ticket thread, the AI triage card with its confidence score, the AI suggested reply and actions: Escalate Tier-3, Mark Resolved, Insert Draft, Attach File, Add Internal Note and Approve & Dispatch. The right pane is Customer 360 with the customer's profile, subscription status, sentiment, past tickets, the SLA countdown and quick links to the suggested replies studio, AI triage classifier and team capacity."
+  },
+  {
+    "id": "ticket-lifecycle",
+    "title": "The life of a ticket",
+    "category": "Workflow",
+    "keywords": ["lifecycle", "workflow", "flow", "stages", "end-to-end", "process"],
+    "text": "A ticket goes through six stages. Stage 1 Ticket raised: the customer submits an inquiry via the self-service portal, email or chat with no manual routing. Stage 2 Categorised: NLP detects intent and tags the issue. Stage 3 Prioritised: critical revenue outages and VIP accounts jump to Priority 1. Stage 4 Summarised: long messages become a two-line digest. Stage 5 Reply suggested: a fact-grounded response is ready with one-click tone adaptation. Stage 6 Status tracked: customers check progress at any time while managers track resolution health on the executive board."
+  },
+  {
+    "id": "duplicates",
+    "title": "Similar and duplicate tickets",
+    "category": "AI Engine",
+    "keywords": ["duplicate", "similar", "merge", "related", "same issue"],
+    "text": "When AI triage analyses a ticket it checks for similar tickets. In the live demo, for a checkout 502 error it flags two similar tickets (#BA-1039 and #BA-1041) and offers a Merge Tickets button so agents can combine them."
+  },
+  {
+    "id": "manager-insights",
+    "title": "Manager insights and overview",
+    "category": "Managers",
+    "keywords": ["manager", "insights", "analytics", "volume", "handle time", "capacity", "load", "report", "metrics", "deflection"],
+    "text": "The manager overview is an executive command centre with throughput bar charts, agent load balancing and SLA tracking. The demo insights show weekly volume by category: Billing & Invoicing 42% (6,254 tickets), API & Infrastructure 34% (5,063), Account & Security SAML 15% (2,233) and General Questions 9% (1,342). Average handle time with BizAssist AI is shown as 3m 12s versus a previous manual baseline of 48 minutes, a 93% drop. An example insight says billing tickets rose 30% in a week while automated drafts deflected 68% of manual triage and kept SLA compliance at 100%. These are demo figures from the live prototype."
+  },
+  {
+    "id": "chatbot-handover",
+    "title": "Knowledge chatbot and human handover",
+    "category": "Customers",
+    "keywords": ["chatbot", "bot", "assistant", "handover", "human", "agent", "call back", "transcript", "clear history", "24/7"],
+    "text": "The knowledge chatbot is a 24/7 conversational assistant that answers routine questions from the knowledge base and hands over to a human agent when it is unsure. In the chatbot page customers can look up sample ticket milestones, search documentation articles, request a call back, download the chat transcript or clear the chat history."
+  },
+  {
+    "id": "okta-saml",
+    "title": "Okta SAML 2.0 and SSO",
+    "category": "Documentation",
+    "keywords": ["okta", "saml", "sso", "authentication", "azure ad", "certificate", "metadata", "login"],
+    "text": "The documentation includes an Okta SAML 2.0 guide, available as a quick link in the chatbot. Authentication / SSO is one of the ticket categories in the customer portal, and Account & Security SAML is about 15% of weekly ticket volume in the demo insights. Sample tickets in the demo cover SAML 2.0 Okta metadata certificate renewal and SAML 2.0 Azure AD assertion mapping. Detailed setup steps are not published on the website; for specific SSO configuration help, raise an Authentication / SSO ticket or contact the team."
+  },
+  {
+    "id": "sample-tickets",
+    "title": "Sample tickets #BA-1042, #BA-2089, #BA-3310",
+    "category": "Demo data",
+    "keywords": ["#ba-1042", "#ba-2089", "#ba-3310", "ba-1042", "ba-2089", "ba-3310", "sample", "demo", "payment", "billing", "api latency", "vat"],
+    "text": "Three sample tickets can be looked up in the demo. #BA-1042 is a P1 Billing ticket: payment failure during an enterprise renewal checkout. Its timeline: Raised 10:14 AM, Categorised 10:14:15 AM, Assigned 10:15 AM to FinOps, Replied 10:18 AM by Agent Sarah, Resolved awaiting confirmation. Agent Sarah captured the Stripe transaction ch_3Ox948aL, attached invoice #INV-2026-904 and confirmed workspace access was uninterrupted. #BA-2089 is an API Latency ticket. #BA-3310 is a VAT Update ticket. These are demo tickets, not real customer data."
+  },
+  {
+    "id": "demo-contact",
+    "title": "Booking a demo, contact, pricing and setup",
+    "category": "Company",
+    "keywords": ["demo", "book", "contact", "email", "pricing", "price", "cost", "plan", "setup", "setup time", "install", "integration", "integrations", "zendesk", "slack", "salesforce", "freshdesk", "support"],
+    "text": "To see BizAssist AI on your own support queues, use Book a Demo on the website or email demo@bizassist.ai. Support is available at support@bizassist.ai. BizAssist AI offers transparent volume pricing with Starter ($29/seat/mo), Professional ($79/seat/mo), and Enterprise custom plans with 99.9% uptime SLA. Setup takes minutes for self-service or under one business day for enterprise deployment. Verified integrations include Zendesk, Freshdesk, Slack alerts, and Okta SAML 2.0 SSO. Ticket intake supports the self-service portal, email and chat."
+  }
+]

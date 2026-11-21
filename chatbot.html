@@ -360,6 +360,7 @@
   <script src="config/site.js"></script>
   <script src="js/guard.js"></script>
   <script src="js/store.js"></script>
+  <script src="assets/rag-client.js"></script>
   <script src="js/shell.js"></script>
 
   <script>
@@ -615,29 +616,39 @@
       thread.scrollTop = thread.scrollHeight;
 
       try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: conversationHistory.slice(-10),
-            page: 'chatbot'
-          })
-        });
+        let res = null;
+        if (window.askBizAssist) {
+          res = await window.askBizAssist(conversationHistory);
+        } else {
+          const fetchRes = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: conversationHistory.slice(-10),
+              page: 'chatbot'
+            })
+          });
+          const data = await fetchRes.json().catch(() => ({}));
+          res = {
+            reply: data.reply,
+            sources: data.sources || [],
+            grounded: !!data.grounded,
+            fallback: !fetchRes.ok || data.fallback || !data.reply
+          };
+        }
 
         // Remove typing indicator
         document.getElementById('chat-typing-indicator')?.remove();
 
-        const data = await res.json().catch(() => ({}));
         let botText = '';
-
-        if (!res.ok || data.fallback || !data.reply) {
+        if (res.fallback || !res.reply) {
           botText = getOfflineKeywordReply(text);
+          appendMessage('bot', botText, false);
         } else {
-          botText = data.reply;
+          botText = res.reply;
+          appendMessage('bot', botText, false, res.sources);
         }
 
-        // Render with textContent for complete XSS safety
-        appendMessage('bot', botText, false);
         conversationHistory.push({ role: 'assistant', content: botText });
         sessionStorage.setItem('bizassist.chat_history', JSON.stringify(conversationHistory.slice(-20)));
 
@@ -654,7 +665,7 @@
       }
     }
 
-    function appendMessage(role, content, isHtml = false) {
+    function appendMessage(role, content, isHtml = false, sources = null) {
       const thread = document.getElementById('chat-thread');
       const row = document.createElement('div');
       row.className = `msg-row ${role}`;
@@ -665,6 +676,15 @@
       } else {
         bubble.textContent = content;
       }
+
+      if (Array.isArray(sources) && sources.length > 0) {
+        const sourcesDiv = document.createElement('div');
+        sourcesDiv.style.cssText = 'margin-top:10px; padding-top:8px; border-top:1px solid var(--border); font-size:11px; color:var(--text-muted); display:flex; gap:6px; flex-wrap:wrap; align-items:center;';
+        sourcesDiv.innerHTML = '<span style="font-weight:600; color:var(--primary);">Grounded in:</span> ' +
+          sources.map(s => `<span style="background:var(--primary-soft); color:var(--primary); padding:2px 8px; border-radius:12px; font-size:10.5px;">${s.title}</span>`).join(' ');
+        bubble.appendChild(sourcesDiv);
+      }
+
       row.appendChild(bubble);
       thread.appendChild(row);
       thread.scrollTop = thread.scrollHeight;

@@ -953,24 +953,44 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
       try {
-        const res = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: drawerChatHistory.slice(-10),
-            page: 'widget'
-          })
-        });
+        let res = null;
+        if (global.askBizAssist) {
+          res = await global.askBizAssist(drawerChatHistory);
+        } else {
+          const fetchRes = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: drawerChatHistory.slice(-10),
+              page: 'widget'
+            })
+          });
+          const data = await fetchRes.json().catch(() => ({}));
+          res = {
+            reply: data.reply,
+            sources: data.sources || [],
+            grounded: !!data.grounded,
+            fallback: !fetchRes.ok || data.fallback || !data.reply
+          };
+        }
 
-        const data = await res.json().catch(() => ({}));
         let botText = '';
-        if (!res.ok || data.fallback || !data.reply) {
+        if (res.fallback || !res.reply) {
           botText = getOfflineKeywordReply(text);
         } else {
-          botText = data.reply;
+          botText = res.reply;
         }
         
         thinkingBubble.textContent = botText;
+
+        if (Array.isArray(res.sources) && res.sources.length > 0 && res.grounded) {
+          const sourcesDiv = document.createElement('div');
+          sourcesDiv.style.cssText = 'margin-top:8px; padding-top:6px; border-top:1px solid var(--shell-line, #E4E4E7); font-size:10.5px; color:var(--shell-muted, #71717A); display:flex; gap:4px; flex-wrap:wrap; align-items:center;';
+          sourcesDiv.innerHTML = '<span style="font-weight:600; color:var(--primary, #7C3AED);">Grounded in:</span> ' +
+            res.sources.map(s => `<span style="background:var(--primary-soft, #EDE9FE); color:var(--primary, #7C3AED); padding:1px 6px; border-radius:10px; font-size:10px;">${s.title}</span>`).join(' ');
+          thinkingBubble.appendChild(sourcesDiv);
+        }
+
         drawerChatHistory.push({ role: 'assistant', content: botText });
         if (global.sessionStorage) {
           global.sessionStorage.setItem('bizassist.drawer_history', JSON.stringify(drawerChatHistory.slice(-20)));

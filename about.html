@@ -1981,6 +1981,7 @@
   <!-- Supabase Client SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
+  <script src="assets/rag-client.js"></script>
 
   <!-- ==========================================================================
        VANILLA JS SCRIPT (All hooks & interactions preserved)
@@ -2429,27 +2430,47 @@
       if (sendBtn) sendBtn.disabled = true;
 
       try {
-        const response = await fetch('/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            messages: chatConversation.slice(-10).map(m => ({ role: m.role, content: m.content }))
-          })
-        });
+        let res = null;
+        if (window.askBizAssist) {
+          res = await window.askBizAssist(chatConversation);
+        } else {
+          const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              messages: chatConversation.slice(-10).map(m => ({ role: m.role, content: m.content }))
+            })
+          });
+          const data = await response.json().catch(() => ({}));
+          res = {
+            reply: data.reply,
+            sources: data.sources || [],
+            grounded: !!data.grounded,
+            fallback: !response.ok || data.fallback || !data.reply
+          };
+        }
 
-        const data = await response.json().catch(() => ({}));
         if (typingEl && typingEl.parentNode) typingEl.remove();
 
         let fullBotReply = '';
-        if (!response.ok || data.fallback || !data.reply) {
+        if (res.fallback || !res.reply) {
           fullBotReply = "I am running in offline mode. BizAssist AI automates ticket classification and response drafts in under 120ms. You can track tickets (e.g. #BA-1042) or connect to human support.";
         } else {
-          fullBotReply = data.reply;
+          fullBotReply = res.reply;
         }
 
         const botBubble = document.createElement('div');
         botBubble.className = 'chat-bubble bot';
         botBubble.textContent = fullBotReply;
+
+        if (Array.isArray(res.sources) && res.sources.length > 0 && res.grounded) {
+          const sourcesDiv = document.createElement('div');
+          sourcesDiv.style.cssText = 'margin-top:8px; padding-top:6px; border-top:1px solid var(--border); font-size:10.5px; color:var(--text-muted); display:flex; gap:4px; flex-wrap:wrap; align-items:center;';
+          sourcesDiv.innerHTML = '<span style="font-weight:600; color:var(--primary);">Grounded in:</span> ' +
+            res.sources.map(s => `<span style="background:var(--primary-soft); color:var(--primary); padding:1px 6px; border-radius:10px; font-size:10px;">${s.title}</span>`).join(' ');
+          botBubble.appendChild(sourcesDiv);
+        }
+
         box.appendChild(botBubble);
         box.scrollTop = box.scrollHeight;
 
