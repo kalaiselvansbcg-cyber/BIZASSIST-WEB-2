@@ -12,6 +12,7 @@ yarn.lock
 # Logs and Scratch files
 *.log
 .scratch/
+scratch/
 tmp/
 temp/
 
@@ -22,6 +23,5 @@ temp/
 *.sublime-workspace
 
 # Environment
-.env
-.env.local
-
+.env*
+!.env.example

@@ -62,7 +62,7 @@
       const sb = this.getClient();
       if (!sb) return { data: null, error: 'Supabase client not initialized' };
 
-      const ticketCode = ticket.ticket_code || ('NX-' + Math.floor(4100 + Math.random() * 900));
+      const ticketCode = ticket.ticket_code || ('BA-' + Math.floor(4100 + Math.random() * 900));
       const payload = {
         ticket_code: ticketCode,
         subject: ticket.subject || 'Support Request',

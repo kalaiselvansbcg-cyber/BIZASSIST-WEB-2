@@ -11,7 +11,7 @@
    ========================================================================== */
 
 :root {
-  /* Brand Colours (Monochrome Clean B&W) */
+  /* Brand Colours */
   --primary: #000000;
   --primary-hover: #222222;
   --primary-light: #F5F5F5;
@@ -21,22 +21,36 @@
   --ai-gradient: #111111;
   --ai-gradient-subtle: #F5F5F5;
 
-  /* Semantic Colours (Neutral Monochrome) */
-  --prio-urgent: #000000;
-  --prio-urgent-bg: #000000;
-  --prio-urgent-border: #000000;
-  --prio-high: #333333;
-  --prio-high-bg: #F5F5F5;
-  --prio-high-border: #111111;
-  --prio-normal: #666666;
-  --prio-normal-bg: #FFFFFF;
-  --prio-normal-border: #E5E5E5;
-  --status-resolved: #111111;
-  --status-resolved-bg: #EAEAEA;
-  --status-resolved-border: #D4D4D4;
-  --status-waiting: #444444;
-  --status-waiting-bg: #F5F5F5;
-  --status-waiting-border: #E5E5E5;
+  /* Standard Semantic Tokens (Task 2) */
+  --background: #FFFFFF;
+  --border: #E5E5E5;
+  --text: #000000;
+  --danger: #DC2626;
+  --danger-bg: #FEF2F2;
+  --danger-border: #FECACA;
+  --warning: #D97706;
+  --warning-bg: #FFFBEB;
+  --warning-border: #FDE68A;
+  --success: #16A34A;
+  --success-bg: #F0FDF4;
+  --success-border: #BBF7D0;
+
+  /* Semantic Priority & Status Colours (Accessible WCAG AA 4.5:1) */
+  --prio-urgent: #DC2626;
+  --prio-urgent-bg: #FEF2F2;
+  --prio-urgent-border: #FECACA;
+  --prio-high: #D97706;
+  --prio-high-bg: #FFFBEB;
+  --prio-high-border: #FDE68A;
+  --prio-normal: #4B5563;
+  --prio-normal-bg: #F3F4F6;
+  --prio-normal-border: #E5E7EB;
+  --status-resolved: #16A34A;
+  --status-resolved-bg: #F0FDF4;
+  --status-resolved-border: #BBF7D0;
+  --status-waiting: #4B5563;
+  --status-waiting-bg: #F3F4F6;
+  --status-waiting-border: #E5E7EB;
 
   /* Neutrals (Light Mode - White & Very Light Grey) */
   --bg: #FFFFFF;
@@ -88,21 +102,34 @@
   --ai-gradient: #FFFFFF;
   --ai-gradient-subtle: #141414;
 
-  --prio-urgent: #FFFFFF;
-  --prio-urgent-bg: #FFFFFF;
-  --prio-urgent-border: #FFFFFF;
-  --prio-high: #CCCCCC;
-  --prio-high-bg: #141414;
-  --prio-high-border: #333333;
-  --prio-normal: #888888;
-  --prio-normal-bg: #000000;
-  --prio-normal-border: #262626;
-  --status-resolved: #FFFFFF;
-  --status-resolved-bg: #262626;
-  --status-resolved-border: #444444;
-  --status-waiting: #AAAAAA;
-  --status-waiting-bg: #141414;
-  --status-waiting-border: #333333;
+  --background: #000000;
+  --border: #262626;
+  --text: #FFFFFF;
+  --danger: #EF4444;
+  --danger-bg: #450A0A;
+  --danger-border: #7F1D1D;
+  --warning: #F59E0B;
+  --warning-bg: #451A03;
+  --warning-border: #78350F;
+  --success: #22C55E;
+  --success-bg: #052E16;
+  --success-border: #14532D;
+
+  --prio-urgent: #EF4444;
+  --prio-urgent-bg: #450A0A;
+  --prio-urgent-border: #7F1D1D;
+  --prio-high: #F59E0B;
+  --prio-high-bg: #451A03;
+  --prio-high-border: #78350F;
+  --prio-normal: #9CA3AF;
+  --prio-normal-bg: #1F2937;
+  --prio-normal-border: #374151;
+  --status-resolved: #22C55E;
+  --status-resolved-bg: #052E16;
+  --status-resolved-border: #14532D;
+  --status-waiting: #9CA3AF;
+  --status-waiting-bg: #1F2937;
+  --status-waiting-border: #374151;
 
   --shadow-sm: none;
   --shadow: none;
@@ -222,7 +249,8 @@ p,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 9px 16px;
+  min-height: 44px;
+  padding: 10px 18px;
   background: var(--ink);
   color: var(--bg) !important;
   border: 1px solid var(--ink);
@@ -255,7 +283,8 @@ p,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 9px 16px;
+  min-height: 44px;
+  padding: 10px 18px;
   background: var(--surface);
   color: var(--ink) !important;
   border: 1px solid var(--ink);
@@ -272,6 +301,52 @@ p,
 .btn-secondary:hover {
   background: var(--surface-alt);
   border-color: var(--ink);
+}
+
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  background: var(--danger);
+  color: #FFFFFF !important;
+  border: 1px solid var(--danger);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.btn-danger:hover {
+  opacity: 0.9;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  background: transparent;
+  color: var(--ink) !important;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 150ms ease;
+}
+
+.btn-ghost:hover {
+  background: var(--surface-alt);
 }
 
 .btn-ai {
@@ -330,33 +405,33 @@ p,
 }
 
 .badge-urgent {
-  background: var(--ink);
-  color: var(--bg) !important;
-  border-color: var(--ink);
+  background: var(--prio-urgent-bg);
+  color: var(--prio-urgent) !important;
+  border-color: var(--prio-urgent-border);
 }
 
 .badge-high {
-  background: var(--surface-alt);
-  color: var(--ink);
-  border-color: var(--line-strong);
+  background: var(--prio-high-bg);
+  color: var(--prio-high) !important;
+  border-color: var(--prio-high-border);
 }
 
 .badge-normal {
-  background: transparent;
-  color: var(--muted);
-  border-color: var(--line);
+  background: var(--prio-normal-bg);
+  color: var(--prio-normal) !important;
+  border-color: var(--prio-normal-border);
 }
 
 .badge-resolved {
-  background: var(--surface-alt);
-  color: var(--ink);
-  border-color: var(--line);
+  background: var(--status-resolved-bg);
+  color: var(--status-resolved) !important;
+  border-color: var(--status-resolved-border);
 }
 
 .badge-waiting {
-  background: transparent;
-  color: var(--muted);
-  border-color: var(--line);
+  background: var(--status-waiting-bg);
+  color: var(--status-waiting) !important;
+  border-color: var(--status-waiting-border);
 }
 
 .badge-ai {
@@ -375,7 +450,19 @@ p,
 }
 
 .prio-dot.urgent {
-  background: var(--ink);
+  background: var(--prio-urgent);
+}
+
+.prio-dot.high {
+  background: var(--prio-high);
+}
+
+.prio-dot.normal {
+  background: var(--prio-normal);
+}
+
+.prio-dot.resolved {
+  background: var(--status-resolved);
 }
 
 .prio-dot.high {

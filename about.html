@@ -1131,12 +1131,12 @@
 
     <ul class="menu-links-list">
       <li class="menu-link-item"><a href="#try-it" onclick="toggleMenuOverlay(false)">01. Try Live Triage</a></li>
-      <li class="menu-link-item"><a href="#tracker" onclick="toggleMenuOverlay(false)">02. Ticket Tracker</a></li>
-      <li class="menu-link-item"><a href="#flow" onclick="toggleMenuOverlay(false)">03. Ticket Lifecycle</a></li>
+      <li class="menu-link-item"><a href="#tracker" onclick="toggleMenuOverlay(false)">02. Ticket Tracker &amp; Lifecycle</a></li>
+      <li class="menu-link-item"><a href="#features-overview" onclick="toggleMenuOverlay(false)">03. Platform Capabilities</a></li>
       <li class="menu-link-item"><a href="#insights" onclick="toggleMenuOverlay(false)">04. Manager Insights</a></li>
       <li class="menu-link-item"><a href="#features" onclick="toggleMenuOverlay(false)">05. Platform Workspaces</a></li>
       <li class="menu-link-item"><a href="#goals" onclick="toggleMenuOverlay(false)">06. System Goals</a></li>
-      <li class="menu-link-item"><a href="#contact" onclick="toggleMenuOverlay(false)">07. Contact & Enterprise</a></li>
+      <li class="menu-link-item"><a href="#contact" onclick="toggleMenuOverlay(false)">07. Contact &amp; Enterprise</a></li>
     </ul>
 
     <div class="menu-overlay-footer">
@@ -2642,9 +2642,16 @@
 
     function submitDemoForm(e) {
       e.preventDefault();
-      const name = document.getElementById('demo-name').value;
-      const email = document.getElementById('demo-email')?.value || '';
+      const name = document.getElementById('demo-name').value.trim();
+      const email = (document.getElementById('demo-email')?.value || '').trim();
       const size = document.getElementById('demo-size')?.value || '';
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        showToast("Please enter a valid work email address.");
+        document.getElementById('demo-email')?.focus();
+        return;
+      }
 
       if (window.BizAssistSupabase && window.BizAssistSupabase.isConnected()) {
         window.BizAssistSupabase.submitDemoRequest({
@@ -2661,6 +2668,18 @@
       closeDemoModal();
       showToast("Thank you, " + name + "! Demonstration request received.");
     }
+
+    // Modal accessibility: Close on backdrop click & Escape key
+    if (demoModal) {
+      demoModal.addEventListener('click', (e) => {
+        if (e.target === demoModal) closeDemoModal();
+      });
+    }
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && demoModal && demoModal.classList.contains('is-open')) {
+        closeDemoModal();
+      }
+    });
 
     // Pricing annual/monthly toggle
     let isAnnualPricing = false;

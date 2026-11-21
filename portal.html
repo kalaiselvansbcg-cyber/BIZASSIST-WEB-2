@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Ticket Portal — BizAssist AI</title>
-  
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/theme.css">
   <link rel="stylesheet" href="css/shell.css">
-  
+
   <style>
     body {
       background-color: var(--bg);
@@ -84,6 +85,7 @@
       position: relative;
       margin: 24px 0 20px 0;
     }
+
     .stepper-wrap::before {
       content: '';
       position: absolute;
@@ -94,6 +96,7 @@
       background: var(--line);
       z-index: 1;
     }
+
     .step-box {
       display: flex;
       flex-direction: column;
@@ -103,6 +106,7 @@
       z-index: 2;
       text-align: center;
     }
+
     .step-dot {
       width: 28px;
       height: 28px;
@@ -117,22 +121,26 @@
       justify-content: center;
       transition: all 200ms ease;
     }
+
     .step-box.completed .step-dot {
       background: var(--status-resolved);
       border-color: var(--status-resolved);
       color: #FFFFFF;
     }
+
     .step-box.active .step-dot {
       background: var(--primary);
       border-color: var(--primary);
       color: #FFFFFF;
       box-shadow: 0 0 0 4px var(--primary-light);
     }
+
     .step-label {
       font-size: 11.5px;
       font-weight: 600;
       color: var(--muted);
     }
+
     .step-box.active .step-label {
       color: var(--primary);
       font-weight: 700;
@@ -146,6 +154,7 @@
       border-top-left-radius: var(--radius);
       border-top-right-radius: var(--radius);
     }
+
     .wizard-step-tab {
       flex: 1;
       padding: 12px 16px;
@@ -159,11 +168,13 @@
       justify-content: center;
       gap: 6px;
     }
+
     .wizard-step-tab.active {
       color: var(--primary);
       border-bottom-color: var(--primary);
       background: var(--surface);
     }
+
     .wizard-step-tab.completed {
       color: var(--status-resolved);
     }
@@ -172,6 +183,7 @@
       display: none;
       padding: 24px;
     }
+
     .wizard-pane.active {
       display: block;
       animation: modalPop 150ms ease;
@@ -199,9 +211,11 @@
       padding: 14px;
       margin-top: 12px;
     }
+
     .deflection-box.visible {
       display: block;
     }
+
     .deflection-card {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -220,6 +234,7 @@
       cursor: pointer;
       transition: all 150ms ease;
     }
+
     .dropzone:hover {
       border-color: var(--primary);
       background: var(--primary-light);
@@ -231,6 +246,7 @@
       gap: 8px;
       margin: 12px 0;
     }
+
     .csat-star-btn {
       width: 40px;
       height: 40px;
@@ -243,7 +259,9 @@
       cursor: pointer;
       transition: all 120ms ease;
     }
-    .csat-star-btn:hover, .csat-star-btn.selected {
+
+    .csat-star-btn:hover,
+    .csat-star-btn.selected {
       background: var(--ink);
       border-color: var(--ink);
       color: var(--bg);
@@ -256,6 +274,7 @@
       margin-top: 12px;
       font-size: 13px;
     }
+
     .ticket-table th {
       padding: 10px 12px;
       text-align: left;
@@ -266,27 +285,36 @@
       color: var(--muted);
       border-bottom: 1px solid var(--line);
     }
+
     .ticket-table td {
       padding: 12px;
       border-bottom: 1px solid var(--line);
       color: var(--ink);
     }
+
     .ticket-table tr:hover td {
       background: var(--surface-alt);
       cursor: pointer;
     }
   </style>
 </head>
+
 <body>
 
   <main class="container">
-    
+
     <!-- Hero Header -->
     <header class="portal-hero">
+      <div style="margin-bottom:12px;">
+        <a href="index.html" class="btn-ghost" style="padding:6px 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px; text-decoration:none;">
+          ← Return to Home Hub
+        </a>
+      </div>
       <span class="badge-pill badge-ai" style="margin-bottom:8px;">Customer Self-Service Hub</span>
       <h1 class="portal-title">Transparent Support Operations</h1>
       <p class="portal-sub">
-        Raise inquiries, inspect real-time AI triage milestones, track engineering assignment, and review verified documentation with zero waiting time.
+        Raise inquiries, inspect real-time AI triage milestones, track engineering assignment, and review verified
+        documentation with zero waiting time.
       </p>
 
       <!-- Contact Support Bar -->
@@ -296,32 +324,37 @@
         </div>
         <div style="display:flex; gap:10px; flex-wrap:wrap;">
           <a href="tel:+910000000000" id="portal-call-btn" class="btn-primary" style="font-size:12px;">Call Support</a>
-          <a href="https://wa.me/910000000000" id="portal-wa-btn" target="_blank" rel="noopener" class="btn-secondary" style="font-size:12px;">WhatsApp Us</a>
-          <button type="button" class="btn-secondary" style="font-size:12px;" onclick="BizAssistShell.openCallbackModal()">Schedule Call Back</button>
+          <a href="https://wa.me/910000000000" id="portal-wa-btn" target="_blank" rel="noopener" class="btn-secondary"
+            style="font-size:12px;">WhatsApp Us</a>
+          <button type="button" class="btn-secondary" style="font-size:12px;"
+            onclick="BizAssistShell.openCallbackModal()">Schedule Call Back</button>
         </div>
       </div>
     </header>
 
     <!-- Main Grid -->
     <div class="portal-grid">
-      
+
       <!-- Left Column: Active Ticket Tracker & History -->
       <section style="display:flex; flex-direction:column; gap:24px;">
-        
+
         <!-- Active Ticket Detail & Visual Timeline -->
         <div class="card-modern" id="active-ticket-card">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;">
             <div>
               <div style="display:flex; align-items:center; gap:8px;">
                 <span class="ticket-id-copy" id="active-ticket-code">#BA-1042</span>
                 <span class="badge-pill" id="active-ticket-priority">HIGH</span>
                 <span class="badge-pill badge-ai" id="active-ticket-category">Account & Security</span>
+                <span class="badge-pill" id="active-ticket-status">IN PROGRESS</span>
               </div>
               <h2 style="font-size:18px; margin-top:8px; font-weight:700;" id="active-ticket-subject">
                 Enterprise SSO integration failure with Okta SAML 2.0
               </h2>
             </div>
-            <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="refreshTicketStatus()">Refresh Status</button>
+            <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:11px;"
+              onclick="refreshTicketStatus()">Refresh Status</button>
           </div>
 
           <div style="font-size:12px; color:var(--muted); margin-bottom:16px;" id="active-ticket-meta">
@@ -356,31 +389,37 @@
           <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
             <!-- Customer Initial Ingestion -->
             <div style="background:var(--surface-alt); border:1px solid var(--line); border-radius:8px; padding:14px;">
-              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:6px;">
+              <div
+                style="display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:6px;">
                 <span style="font-weight:600;" id="active-ticket-author">ALEX RIVERA (YOU)</span>
                 <span id="active-ticket-time">48m ago</span>
               </div>
               <p style="font-size:13px; line-height:1.5;" id="active-ticket-desc">
-                Our staging Okta IdP cert was rotated but SAML assertion verification is failing with invalid signature on the metadata endpoint.
+                Our staging Okta IdP cert was rotated but SAML assertion verification is failing with invalid signature
+                on the metadata endpoint.
               </p>
               <div id="active-ticket-attachments" style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;"></div>
             </div>
 
             <!-- Agent Latest Public Reply -->
-            <div style="background:var(--surface); border:1px solid var(--primary); border-radius:8px; padding:14px;" id="active-ticket-reply-box">
-              <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--primary); margin-bottom:6px;">
+            <div style="background:var(--surface); border:1px solid var(--primary); border-radius:8px; padding:14px;"
+              id="active-ticket-reply-box">
+              <div
+                style="display:flex; justify-content:space-between; font-size:11px; color:var(--primary); margin-bottom:6px;">
                 <span style="font-weight:700;" id="active-ticket-agent">AGENT SARAH JENKINS (SUPPORT SPECIALIST)</span>
                 <span>LATEST UPDATE</span>
               </div>
               <p style="font-size:13px; line-height:1.55;" id="active-ticket-reply-text">
-                Hi Alex, I reviewed your Okta metadata endpoint. The x509 cert fingerprint needs manual re-sync in your SSO settings panel. I have refreshed the cache on our auth gateway.
+                Hi Alex, I reviewed your Okta metadata endpoint. The x509 cert fingerprint needs manual re-sync in your
+                SSO settings panel. I have refreshed the cache on our auth gateway.
               </p>
             </div>
 
             <!-- Customer Reply Box (Allows direct response to open ticket) -->
             <div id="customer-reply-area" style="margin-top:6px;">
               <div style="display:flex; gap:8px;">
-                <input type="text" id="customer-reply-input" class="input-modern" placeholder="Add a reply or update for the assigned support agent...">
+                <input type="text" id="customer-reply-input" class="input-modern"
+                  placeholder="Add a reply or update for the assigned support agent...">
                 <button type="button" class="btn-primary" onclick="submitCustomerReply()">Reply</button>
               </div>
             </div>
@@ -391,10 +430,12 @@
             </div>
 
             <!-- CSAT 5-Star Rating Survey (Shown when Resolved) -->
-            <div id="csat-card" style="display:none; background:var(--surface-alt); border:1px solid var(--line); border-radius:8px; padding:16px; margin-top:8px;">
+            <div id="csat-card"
+              style="display:none; background:var(--surface-alt); border:1px solid var(--line); border-radius:8px; padding:16px; margin-top:8px;">
               <div style="font-weight:700; font-size:14px; color:var(--ink);">Rate your support experience</div>
-              <p style="font-size:12px; color:var(--muted); margin-top:2px;">This inquiry has been marked Resolved. How satisfied are you with our assistance?</p>
-              
+              <p style="font-size:12px; color:var(--muted); margin-top:2px;">This inquiry has been marked Resolved. How
+                satisfied are you with our assistance?</p>
+
               <div class="csat-stars" id="csat-star-group">
                 <button type="button" class="csat-star-btn" onclick="selectCsat(1)">1</button>
                 <button type="button" class="csat-star-btn" onclick="selectCsat(2)">2</button>
@@ -403,7 +444,9 @@
                 <button type="button" class="csat-star-btn selected" onclick="selectCsat(5)">5</button>
               </div>
 
-              <textarea id="csat-comment-input" class="input-modern" placeholder="Optional comments regarding your experience..." style="min-height:50px; margin-bottom:8px;"></textarea>
+              <textarea id="csat-comment-input" class="input-modern"
+                placeholder="Optional comments regarding your experience..."
+                style="min-height:50px; margin-bottom:8px;"></textarea>
               <button type="button" class="btn-primary" onclick="submitCsatRating()">Submit CSAT Rating</button>
             </div>
 
@@ -412,9 +455,13 @@
 
         <!-- Support History Table with Status Filter -->
         <div class="card-modern">
-          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
-            <h2 style="font-size:16px; font-weight:700;">Your Support History</h2>
-            
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <h2 style="font-size:16px; font-weight:700;">Your Support History</h2>
+              <span class="badge-pill badge-ai" id="portal-history-count">14 RECORDS</span>
+            </div>
+
             <!-- Segmented status filter -->
             <div class="segmented-control">
               <button type="button" class="segmented-btn active" onclick="filterHistory('all', this)">All</button>
@@ -443,7 +490,7 @@
 
       <!-- Right Column: 3-Step Guided Intake Wizard & Knowledge Base -->
       <section style="display:flex; flex-direction:column; gap:24px;">
-        
+
         <!-- 3-Step Guided Ticket Intake Wizard -->
         <div class="card-modern" style="padding:0; overflow:hidden;">
           <div class="wizard-steps-indicator">
@@ -461,10 +508,13 @@
           <!-- Step 1: What's going on? -->
           <div class="wizard-pane active" id="wizard-pane-1">
             <h3 style="font-size:16px; font-weight:700; margin-bottom:6px;">Step 1: What is going on?</h3>
-            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Describe the issue you are facing. Our AI evaluates category and urgency as you type.</p>
+            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Describe the issue you are facing. Our
+              AI evaluates category and urgency as you type.</p>
 
             <label class="mono-label" for="wizard-subject">Inquiry Subject</label>
-            <input type="text" id="wizard-subject" class="input-modern" placeholder="e.g. Invoicing VAT mismatch on monthly billing..." oninput="handleWizardIntentDetection(this.value)" style="margin-top:4px;">
+            <input type="text" id="wizard-subject" class="input-modern"
+              placeholder="e.g. Invoicing VAT mismatch on monthly billing..."
+              oninput="handleWizardIntentDetection(this.value)" style="margin-top:4px;">
 
             <!-- Real-time AI classification pill -->
             <div class="ai-intent-indicator" id="ai-intent-pill" style="display:none;">
@@ -474,24 +524,29 @@
 
             <!-- Deflection Suggestions Box -->
             <div class="deflection-box" id="deflection-box">
-              <div style="font-weight:700; font-size:12px; color:var(--status-resolved);">Suggested Instant Solutions (Self-Service)</div>
+              <div style="font-weight:700; font-size:12px; color:var(--status-resolved);">Suggested Instant Solutions
+                (Self-Service)</div>
               <div id="deflection-articles-list"></div>
             </div>
 
             <div style="margin-top:14px;">
               <label class="mono-label" for="wizard-quick-desc">Brief Overview</label>
-              <textarea id="wizard-quick-desc" class="input-modern" placeholder="Provide quick background on what broke or what you need..." style="min-height:70px; margin-top:4px;"></textarea>
+              <textarea id="wizard-quick-desc" class="input-modern"
+                placeholder="Provide quick background on what broke or what you need..."
+                style="min-height:70px; margin-top:4px;"></textarea>
             </div>
 
             <div style="margin-top:18px; text-align:right;">
-              <button type="button" class="btn-primary" onclick="goToWizardStep(2)">Next: Details & Attachments →</button>
+              <button type="button" class="btn-primary" onclick="goToWizardStep(2)">Next: Details & Attachments
+                →</button>
             </div>
           </div>
 
           <!-- Step 2: Details & Attachments -->
           <div class="wizard-pane" id="wizard-pane-2">
             <h3 style="font-size:16px; font-weight:700; margin-bottom:6px;">Step 2: Details & Attachments</h3>
-            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Confirm category classification and attach error logs or screenshots.</p>
+            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Confirm category classification and
+              attach error logs or screenshots.</p>
 
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
               <div>
@@ -508,20 +563,23 @@
               <div>
                 <label class="mono-label" for="wizard-priority">Urgency / Severity</label>
                 <select id="wizard-priority" class="input-modern" style="margin-top:4px;">
-                  <option value="Normal">Normal (8h SLA)</option>
-                  <option value="High">High (1h SLA)</option>
-                  <option value="Urgent">Urgent (15m SLA)</option>
+                  <option value="Normal">P3 - Normal (8h SLA)</option>
+                  <option value="High">P2 - High (1h SLA)</option>
+                  <option value="Urgent">P1 - Urgent (15m SLA)</option>
                 </select>
               </div>
             </div>
 
             <label class="mono-label">Attachments (Screenshots, PDFs, Error Logs)</label>
-            <div class="dropzone" style="margin-top:4px;" onclick="document.getElementById('file-upload-input').click()">
+            <div class="dropzone" style="margin-top:4px;"
+              onclick="document.getElementById('file-upload-input').click()">
               <div style="font-weight:600; font-size:13px; color:var(--ink);">Click or drag files here</div>
-              <div style="font-size:11px; color:var(--muted); margin-top:2px;">Supports PNG, JPEG, WebP, PDF (Up to 3 files, max 5MB)</div>
+              <div style="font-size:11px; color:var(--muted); margin-top:2px;">Supports PNG, JPEG, WebP, PDF (Up to 3
+                files, max 5MB)</div>
             </div>
-            <input type="file" id="file-upload-input" style="display:none;" multiple accept="image/*,.pdf,.txt" onchange="handleWizardFileUpload(event)">
-            
+            <input type="file" id="file-upload-input" style="display:none;" multiple accept="image/*,.pdf,.txt"
+              onchange="handleWizardFileUpload(event)">
+
             <div id="wizard-upload-preview" style="display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;"></div>
 
             <div style="display:flex; justify-content:space-between; margin-top:20px;">
@@ -533,7 +591,8 @@
           <!-- Step 3: Review & Submit -->
           <div class="wizard-pane" id="wizard-pane-3">
             <h3 style="font-size:16px; font-weight:700; margin-bottom:6px;">Step 3: Review & Submit</h3>
-            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Inspect your ticket card before sending it into the AI Triage queue.</p>
+            <p style="font-size:12.5px; color:var(--muted); margin-bottom:14px;">Inspect your ticket card before sending
+              it into the AI Triage queue.</p>
 
             <div style="background:var(--surface-alt); border:1px solid var(--line); border-radius:8px; padding:16px;">
               <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
@@ -541,13 +600,15 @@
                 <span class="badge-pill" id="review-badge-priority">Normal</span>
               </div>
               <div style="font-weight:700; font-size:15px; color:var(--ink);" id="review-subject">Inquiry Subject</div>
-              <p style="font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5;" id="review-desc">Description text...</p>
+              <p style="font-size:13px; color:var(--ink-soft); margin-top:6px; line-height:1.5;" id="review-desc">
+                Description text...</p>
               <div id="review-attachments" style="margin-top:8px; font-size:11px; color:var(--muted);"></div>
             </div>
 
             <div style="display:flex; justify-content:space-between; margin-top:20px;">
               <button type="button" class="btn-secondary" onclick="goToWizardStep(2)">← Edit Details</button>
-              <button type="button" class="btn-primary" style="background:var(--ai-gradient); border:none;" onclick="submitWizardTicket()">
+              <button type="button" class="btn-primary" style="background:var(--ai-gradient); border:none;"
+                onclick="submitWizardTicket()">
                 Submit Ticket to AI Triage ✦
               </button>
             </div>
@@ -562,9 +623,11 @@
             <span class="badge-pill badge-ai">12 ARTICLES</span>
           </div>
 
-          <input type="text" id="kb-search-input" class="input-modern" placeholder="Search documentation..." oninput="renderKbArticles(this.value)" style="margin-bottom:12px;">
+          <input type="text" id="kb-search-input" class="input-modern" placeholder="Search documentation..."
+            oninput="renderKbArticles(this.value)" style="margin-bottom:12px;">
 
-          <div id="kb-articles-list" style="display:flex; flex-direction:column; gap:8px; max-height:360px; overflow-y:auto;">
+          <div id="kb-articles-list"
+            style="display:flex; flex-direction:column; gap:8px; max-height:360px; overflow-y:auto;">
             <!-- Rendered via JS -->
           </div>
         </div>
@@ -634,14 +697,28 @@
           attContainer.innerHTML = '';
         }
 
+        // Reopen / CSAT / Status visibility
+        const isResolved = active.status === 'Resolved' || active.stage === 'Resolved';
+        const sBadge = document.getElementById('active-ticket-status');
+        if (sBadge) {
+          sBadge.textContent = isResolved ? 'RESOLVED' : (active.stage === 'Replied' ? 'IN PROGRESS' : (active.stage || 'ACTIVE')).toUpperCase();
+          sBadge.className = `badge-pill ${isResolved ? 'badge-resolved' : 'badge-normal'}`;
+        }
+
         // Stepper: 1. Submitted -> 2. AI Triaged -> 3. Assigned -> 4. In Progress -> 5. Resolved
         const stages = ['Raised', 'Categorised', 'Assigned', 'Replied', 'Resolved'];
-        const stageIndex = stages.indexOf(active.stage);
+        let stageIndex = stages.indexOf(active.stage);
+        if (isResolved) stageIndex = 4;
+        else if (stageIndex < 0) stageIndex = 0;
+
         const stepperBoxes = document.querySelectorAll('#active-ticket-stepper .step-box');
         stepperBoxes.forEach((box, i) => {
           box.classList.remove('completed', 'active');
           const dot = box.querySelector('.step-dot');
-          if (i < stageIndex) {
+          if (isResolved) {
+            box.classList.add('completed');
+            dot.textContent = '✓';
+          } else if (i < stageIndex) {
             box.classList.add('completed');
             dot.textContent = '✓';
           } else if (i === stageIndex) {
@@ -663,7 +740,6 @@
         }
 
         // Reopen / CSAT visibility
-        const isResolved = active.status === 'Resolved' || active.stage === 'Resolved';
         document.getElementById('customer-reply-area').style.display = isResolved ? 'none' : 'block';
         document.getElementById('reopen-ticket-area').style.display = isResolved ? 'block' : 'none';
 
@@ -695,16 +771,21 @@
         filtered = allTickets.filter(t => t.status === 'Resolved');
       }
 
+      const countBadge = document.getElementById('portal-history-count');
+      if (countBadge) {
+        countBadge.textContent = `${filtered.length} RECORDS`;
+      }
+
       tbody.innerHTML = filtered.map(t => {
         const isResolved = t.status === 'Resolved';
-        const badgeCls = isResolved ? 'badge-resolved' : (t.priority === 'Urgent' ? 'badge-urgent' : 'badge-normal');
+        const badgeCls = isResolved ? 'badge-resolved' : (t.priority === 'Urgent' ? 'badge-urgent' : (t.priority === 'High' ? 'badge-high' : 'badge-normal'));
         return `
           <tr onclick="selectActiveTicket('${t.id}')">
             <td><strong style="color:var(--primary);">#${t.code}</strong></td>
             <td><strong>${t.subject}</strong></td>
             <td>${t.category}</td>
             <td>${t.priority}</td>
-            <td><span class="badge-pill ${badgeCls}">${t.stage}</span></td>
+            <td><span class="badge-pill ${badgeCls}">${isResolved ? 'Resolved' : t.stage}</span></td>
           </tr>
         `;
       }).join('');
@@ -958,4 +1039,5 @@
     });
   </script>
 </body>
+
 </html>

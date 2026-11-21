@@ -869,6 +869,7 @@
             <option value="1440">Snooze Tomorrow</option>
           </select>
 
+          <button type="button" class="btn-secondary" onclick="renderDashboard(); if(window.BizAssistShowToast) BizAssistShowToast('Queue and SLA status refreshed.');">Refresh Status ↻</button>
           <button type="button" class="btn-secondary" onclick="escalateActiveTicket()">Escalate Tier-3</button>
           <button type="button" class="btn-primary" onclick="resolveActiveTicket()">Mark Resolved</button>
           <button type="button" class="btn-ai" onclick="toggleCopilotDrawer()" title="Open AI Copilot Drawer">AI Copilot ✦</button>
@@ -1391,26 +1392,8 @@
       document.getElementById('cust-company').textContent = `${t.company} · ${t.plan || 'Enterprise'}`;
       document.getElementById('cust-arr').textContent = `ARR: ${t.arr || '$120,000 / yr'}`;
 
-      // SLA Countdown
-      const now = Date.now();
-      const elapsed = (now - new Date(t.createdAt).getTime()) / 60000;
-      const rem = Math.round(t.slaMinutes - elapsed);
-      const timerEl = document.getElementById('sla-timer-text');
-      const pillEl = document.getElementById('sla-status-pill');
-
-      if (t.status === 'Resolved') {
-        timerEl.textContent = 'Resolved';
-        pillEl.textContent = 'Resolved';
-        pillEl.className = 'sla-chip safe';
-      } else if (rem < 0) {
-        timerEl.textContent = `Breached (-${Math.abs(rem)}m)`;
-        pillEl.textContent = 'Breached';
-        pillEl.className = 'sla-chip critical';
-      } else {
-        timerEl.textContent = `${rem}m left`;
-        pillEl.textContent = rem < 15 ? 'Critical (<15m)' : 'On Track';
-        pillEl.className = rem < 15 ? 'sla-chip critical' : 'sla-chip safe';
-      }
+      // Live SLA Countdown Timer (Task 2 / Inconsistency #6)
+      startLiveSlaCountdown(t);
 
       // Sentiment
       document.getElementById('cust-sentiment-display').textContent = t.sentimentTrend || t.sentiment || 'Neutral';
@@ -1461,6 +1444,66 @@
           </div>
         `).join('');
       }
+    }
+
+    let liveSlaInterval = null;
+    function startLiveSlaCountdown(t) {
+      if (liveSlaInterval) clearInterval(liveSlaInterval);
+      const timerEl = document.getElementById('sla-timer-text');
+      const pillEl = document.getElementById('sla-status-pill');
+      const targetSub = document.getElementById('sla-target-sub');
+      if (!timerEl || !pillEl) return;
+
+      if (targetSub) {
+        targetSub.textContent = `Target: ${t.slaMinutes}m First Response SLA commitment`;
+      }
+
+      function updateCountdown() {
+        if (t.status === 'Resolved' || t.stage === 'Resolved') {
+          timerEl.textContent = 'Resolved';
+          timerEl.style.color = 'var(--status-resolved, #16A34A)';
+          pillEl.textContent = 'Resolved';
+          pillEl.className = 'sla-chip safe';
+          return;
+        }
+
+        const createdMs = new Date(t.createdAt).getTime();
+        const targetMs = createdMs + (t.slaMinutes * 60 * 1000);
+        const nowMs = Date.now();
+        const remainingMs = targetMs - nowMs;
+
+        if (remainingMs <= 0) {
+          const overdueSec = Math.floor(Math.abs(remainingMs) / 1000);
+          const oMin = Math.floor(overdueSec / 60);
+          const oSec = overdueSec % 60;
+          timerEl.textContent = `-${oMin}m ${oSec.toString().padStart(2, '0')}s`;
+          timerEl.style.color = '#DC2626';
+          pillEl.textContent = 'Breached';
+          pillEl.className = 'sla-chip critical';
+        } else {
+          const totalSec = Math.floor(remainingMs / 1000);
+          const min = Math.floor(totalSec / 60);
+          const sec = totalSec % 60;
+          timerEl.textContent = `${min}m ${sec.toString().padStart(2, '0')}s`;
+
+          if (totalSec < 300) { // under 5 minutes -> critical red
+            timerEl.style.color = '#DC2626';
+            pillEl.textContent = 'Critical (<5m)';
+            pillEl.className = 'sla-chip critical';
+          } else if (totalSec < 900) { // under 15 minutes -> warning amber
+            timerEl.style.color = '#D97706';
+            pillEl.textContent = 'Warning (<15m)';
+            pillEl.className = 'sla-chip warning';
+          } else {
+            timerEl.style.color = 'var(--ink)';
+            pillEl.textContent = 'On Track';
+            pillEl.className = 'sla-chip safe';
+          }
+        }
+      }
+
+      updateCountdown();
+      liveSlaInterval = setInterval(updateCountdown, 1000);
     }
 
     function selectTicket(id) {

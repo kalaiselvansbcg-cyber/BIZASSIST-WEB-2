@@ -313,6 +313,7 @@
 
         <div style="display:flex; gap:8px;">
           <button type="button" class="btn-action secondary" onclick="downloadChatTranscript()">Download Transcript</button>
+          <button type="button" class="btn-action secondary" onclick="clearUserData()">Clear my data</button>
           <button type="button" class="btn-action secondary" onclick="clearChatThread()">Clear History</button>
           <button type="button" class="btn-action" onclick="BizAssistShell.openCallbackModal()">Request Call Back</button>
         </div>
@@ -344,6 +345,12 @@
         <input type="text" class="chat-input-field" id="user-msg-input" placeholder="Ask a question or track #BA-1042... (Press / to search)" autocomplete="off">
         <button type="submit" id="btn-send-chat" class="btn-action" style="padding:0 24px;">Send</button>
       </form>
+
+      <!-- Privacy Note & Data Deletion Action (Task 3) -->
+      <div class="chat-privacy-note" style="font-size:12px; color:var(--muted); padding:8px 28px 12px 28px; background:#FFFFFF; display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--line);">
+        <span>🔒 Don't enter passwords or card numbers. Messages are sent to Google Gemini to generate replies.</span>
+        <button type="button" onclick="clearUserData()" style="background:none; border:none; color:var(--ink); font-size:11.5px; text-decoration:underline; cursor:pointer; padding:0;">Clear my data</button>
+      </div>
     </main>
 
   </div>
@@ -358,6 +365,54 @@
     'use strict';
 
     let conversationHistory = [];
+
+    /**
+     * Clears all user-generated data from localStorage and sessionStorage.
+     * Resets chat history, demo state, and ticket overrides to defaults.
+     * Shows confirmation before proceeding.
+     */
+    function clearUserData() {
+      const confirmed = window.confirm("This will permanently delete your chat history and tickets from this browser. Continue?");
+      if (!confirmed) return false;
+
+      try {
+        // 1. Session storage
+        sessionStorage.removeItem('bizassist.chat_history');
+        sessionStorage.removeItem('bizassist.drawer_history');
+        sessionStorage.removeItem('bizassist_chat_history');
+        sessionStorage.removeItem('bizassist.tour_active');
+        sessionStorage.removeItem('bizassist.tour_step');
+
+        // 2. Local storage
+        localStorage.removeItem('bizassist.data');
+        localStorage.removeItem('bizassist.chat_history');
+        localStorage.removeItem('bizassist.demo_state');
+        localStorage.removeItem('bizassist_tickets');
+        localStorage.removeItem('bizassist.custom_tickets');
+
+        // 3. Clear form inputs
+        document.querySelectorAll('input:not([type="submit"]):not([type="button"]):not([type="radio"]):not([type="checkbox"]), textarea').forEach(el => {
+          if (el.id !== 'tracker-input-id') el.value = '';
+        });
+
+        // 4. Reset store
+        if (window.BizAssistStore && typeof window.BizAssistStore.resetStore === 'function') {
+          window.BizAssistStore.resetStore();
+        }
+
+        clearChatThread();
+        if (window.BizAssistShowToast) {
+          window.BizAssistShowToast("All personal data, chat history, and ticket overrides cleared.");
+        } else {
+          alert("All personal data, chat history, and ticket overrides cleared.");
+        }
+        return true;
+      } catch (err) {
+        console.error('Failed to clear user data:', err);
+        return false;
+      }
+    }
+    window.clearUserData = clearUserData;
 
     function renderKnowledgeSidebar(filter = '') {
       if (!window.BizAssistStore) return;
@@ -491,71 +546,59 @@
         return;
       }
 
-      // 3. Server invocation via /api/chat with streaming SSE
+      // 3. Server invocation via /api/chat with typing indicator and textContent rendering
       const thread = document.getElementById('chat-thread');
-      const row = document.createElement('div');
-      row.className = 'msg-row bot';
-      const bubble = document.createElement('div');
-      bubble.className = 'msg-bubble bot';
-      bubble.textContent = 'Formulating response...';
-      row.appendChild(bubble);
-      thread.appendChild(row);
+      const btnSend = document.getElementById('btn-send-chat');
+      if (btnSend) btnSend.disabled = true;
+      input.disabled = true;
+
+      // Typing indicator (three bouncing dots)
+      const typingRow = document.createElement('div');
+      typingRow.className = 'msg-row bot';
+      typingRow.id = 'chat-typing-indicator';
+      const typingBubble = document.createElement('div');
+      typingBubble.className = 'msg-bubble bot';
+      typingBubble.innerHTML = '<span style="display:inline-flex; gap:4px; align-items:center; font-style:italic; color:var(--muted);">Thinking<span>.</span><span>.</span><span>.</span></span>';
+      typingRow.appendChild(typingBubble);
+      thread.appendChild(typingRow);
       thread.scrollTop = thread.scrollHeight;
 
       try {
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: conversationHistory })
+          body: JSON.stringify({
+            messages: conversationHistory.slice(-10),
+            page: 'chatbot'
+          })
         });
 
-        if (res.ok) {
-          const reader = res.body.getReader();
-          const decoder = new TextDecoder();
-          let fullText = '';
-          bubble.textContent = '';
+        // Remove typing indicator
+        document.getElementById('chat-typing-indicator')?.remove();
 
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const dataStr = line.slice(6);
-                if (dataStr === '[DONE]') break;
-                try {
-                  const parsed = JSON.parse(dataStr);
-                  const delta = parsed.delta || parsed.text || '';
-                  if (delta) {
-                    fullText += delta;
-                    bubble.textContent = fullText;
-                    thread.scrollTop = thread.scrollHeight;
-                  }
-                } catch (e) {}
-              }
-            }
-          }
+        const data = await res.json().catch(() => ({}));
+        let botText = data.reply || data.text || '';
 
-          if (fullText) {
-            conversationHistory.push({ role: 'assistant', content: fullText });
-          } else {
-            bubble.textContent = 'Thank you for reaching out. You can raise a ticket in the Customer Portal or track existing tickets #BA-1042, #BA-2089, or #BA-3310.';
-          }
-        } else {
-          bubble.innerHTML = `
-            I am currently operating in prototype mode. You can check ticket status (#BA-1042, #BA-2089, #BA-3310), search articles, or request a call back from support.
-            <div class="biz-chat-card-actions" style="margin-top:10px;">
-              <button type="button" class="btn-action secondary" onclick="BizAssistShell.openCallbackModal()">Request Call Back</button>
-            </div>
-          `;
+        if (!botText) {
+          botText = 'Thank you for reaching out. You can check ticket status (#BA-1042, #BA-2089, #BA-3310), search articles, or request a call back from support.';
         }
+
+        // Render with textContent for complete XSS safety
+        appendMessage('bot', botText, false);
+        conversationHistory.push({ role: 'assistant', content: botText });
+        sessionStorage.setItem('bizassist.chat_history', JSON.stringify(conversationHistory.slice(-20)));
+
       } catch (err) {
-        bubble.innerHTML = `
-          Prototype Assistant: To check ticket status, enter #BA-1042, #BA-2089, or #BA-3310. For direct support, call ${site.supportPhoneDisplay || site.supportPhone}.
-        `;
+        document.getElementById('chat-typing-indicator')?.remove();
+        const fallbackMsg = `Prototype Assistant: To check ticket status, enter #BA-1042, #BA-2089, or #BA-3310. For direct support, call ${site.supportPhoneDisplay || site.supportPhone || '+91 00000 00000'}.`;
+        appendMessage('bot', fallbackMsg, false);
+        conversationHistory.push({ role: 'assistant', content: fallbackMsg });
+      } finally {
+        if (btnSend) btnSend.disabled = false;
+        input.disabled = false;
+        input.focus();
+        thread.scrollTop = thread.scrollHeight;
       }
-      thread.scrollTop = thread.scrollHeight;
     }
 
     function appendMessage(role, content, isHtml = false) {
@@ -576,6 +619,20 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       renderKnowledgeSidebar();
+
+      // Restore saved chat history
+      try {
+        const saved = sessionStorage.getItem('bizassist.chat_history');
+        if (saved) {
+          const list = JSON.parse(saved);
+          if (Array.isArray(list) && list.length > 0) {
+            conversationHistory = list;
+            list.forEach(m => {
+              appendMessage(m.role === 'user' ? 'user' : 'bot', m.content, false);
+            });
+          }
+        }
+      } catch (e) {}
     });
   </script>
 </body>

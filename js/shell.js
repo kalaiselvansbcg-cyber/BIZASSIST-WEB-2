@@ -112,9 +112,9 @@
 
         <nav class="biz-shell-nav" aria-label="Main Navigation">
           ${navLinks.map(link => {
-            const isActive = currentRoute === link.href ? 'active' : '';
-            return `<a href="${link.href}" class="biz-shell-nav-link ${isActive}">${link.label}</a>`;
-          }).join('')}
+      const isActive = currentRoute === link.href ? 'active' : '';
+      return `<a href="${link.href}" class="biz-shell-nav-link ${isActive}">${link.label}</a>`;
+    }).join('')}
         </nav>
 
         <div class="biz-shell-actions">
@@ -465,6 +465,7 @@
         <div class="biz-floating-chat-header">
           <div style="font-size:14px; font-weight:700;">BizAssist AI Assistant</div>
           <div style="display:flex; align-items:center; gap:8px;">
+            <button type="button" class="biz-chat-bubble-tool-btn" onclick="window.clearUserData()" title="Clear personal data and chat history">Clear Data</button>
             <button type="button" class="biz-chat-bubble-tool-btn" onclick="BizAssistShell.downloadTranscript()" title="Download conversation transcript">Export</button>
             <button type="button" onclick="BizAssistShell.toggleFloatingChat()" aria-label="Close Assistant" style="background:none; border:none; font-size:16px; cursor:pointer; color:var(--muted);">✕</button>
           </div>
@@ -486,8 +487,13 @@
 
         <form class="biz-floating-chat-input-row" onsubmit="BizAssistShell.handleDrawerSubmit(event)">
           <input type="text" id="biz-drawer-input" class="biz-floating-chat-input" placeholder="Ask a question or track #BA-..." autocomplete="off">
-          <button type="submit" class="biz-floating-chat-send">Send</button>
+          <button type="submit" id="biz-drawer-send-btn" class="biz-floating-chat-send">Send</button>
         </form>
+
+        <div class="biz-floating-chat-privacy" style="font-size:10.5px; color:var(--shell-muted, #71717A); padding:6px 14px 10px 14px; background:var(--shell-surface, #FFFFFF); border-top:1px solid var(--shell-line, #E4E4E7); display:flex; justify-content:space-between; align-items:center;">
+          <span>Don't enter passwords or card numbers. Messages are sent to Google Gemini to generate replies.</span>
+          <button type="button" onclick="window.clearUserData()" style="background:none; border:none; color:var(--shell-ink, #18181B); font-size:10px; text-decoration:underline; cursor:pointer; padding:0; margin-left:6px; flex-shrink:0;">Clear my data</button>
+        </div>
       </div>
     `;
     document.body.appendChild(wrap);
@@ -497,7 +503,7 @@
     init: function () {
       const path = global.location.pathname;
       const isPublic = path === '/' || path.endsWith('index.html') || path.endsWith('login.html') || path.endsWith('about.html') || path.endsWith('about');
-      
+
       const session = global.BizAssistAuth ? global.BizAssistAuth.getSession() : null;
       if (session && !isPublic) {
         renderShellHeader(session);
@@ -641,7 +647,7 @@
       if (!menu) return;
       const isOpen = menu.classList.toggle('is-open');
       if (btn) btn.setAttribute('aria-expanded', String(isOpen));
-      
+
       const notifMenu = document.getElementById('biz-notif-menu');
       if (notifMenu) notifMenu.classList.remove('is-open');
     },
@@ -652,7 +658,7 @@
       if (!menu) return;
       const isOpen = menu.classList.toggle('is-open');
       if (btn) btn.setAttribute('aria-expanded', String(isOpen));
-      
+
       const userMenu = document.getElementById('biz-user-menu');
       if (userMenu) userMenu.classList.remove('is-open');
     },
@@ -817,16 +823,16 @@
 
             <div class="biz-chat-tracker" style="margin:10px 0;">
               ${STAGES.map((s, idx) => {
-                let cls = '';
-                if (idx < currentIdx) cls = 'completed';
-                else if (idx === currentIdx) cls = 'active';
-                return `
+            let cls = '';
+            if (idx < currentIdx) cls = 'completed';
+            else if (idx === currentIdx) cls = 'active';
+            return `
                   <div class="biz-chat-tracker-step ${cls}">
                     <div class="biz-chat-tracker-dot"></div>
                     <span>${s}</span>
                   </div>
                 `;
-              }).join('')}
+          }).join('')}
             </div>
 
             <div class="biz-chat-card-actions">
@@ -885,7 +891,11 @@
         return;
       }
 
-      // Server /api/chat invocation with streaming
+      // Server /api/chat invocation with typing indicator and textContent rendering
+      const sendBtn = document.getElementById('biz-drawer-send-btn');
+      if (sendBtn) sendBtn.disabled = true;
+      input.disabled = true;
+
       const thinkingBubble = document.createElement('div');
       thinkingBubble.className = 'biz-chat-bubble bot';
       thinkingBubble.textContent = 'Thinking...';
@@ -896,61 +906,95 @@
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: drawerChatHistory })
+          body: JSON.stringify({
+            messages: drawerChatHistory.slice(-10),
+            page: 'widget'
+          })
         });
 
-        if (res.ok) {
-          const reader = res.body.getReader();
-          const decoder = new TextDecoder();
-          let fullText = '';
-          thinkingBubble.textContent = '';
-
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
-            const chunk = decoder.decode(value, { stream: true });
-            const lines = chunk.split('\n');
-            for (const line of lines) {
-              if (line.startsWith('data: ')) {
-                const dataStr = line.slice(6);
-                if (dataStr === '[DONE]') break;
-                try {
-                  const parsed = JSON.parse(dataStr);
-                  if (parsed.delta) {
-                    fullText += parsed.delta;
-                    thinkingBubble.textContent = fullText;
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                  }
-                } catch (e) {}
-              }
-            }
-          }
-
-          if (fullText) {
-            drawerChatHistory.push({ role: 'assistant', content: fullText });
-            const toolsBar = document.createElement('div');
-            toolsBar.className = 'biz-chat-bubble-tools';
-            toolsBar.innerHTML = `<button type="button" class="biz-chat-bubble-tool-btn" onclick="navigator.clipboard.writeText('${fullText.replace(/'/g, "\\'").replace(/\n/g, ' ')}')">Copy</button>`;
-            thinkingBubble.appendChild(toolsBar);
-          } else {
-            thinkingBubble.textContent = 'Thank you for reaching out. You can raise a ticket in the Customer Portal or track existing tickets #BA-1042, #BA-3310, or #BA-2089.';
-          }
-        } else {
-          thinkingBubble.innerHTML = `
-            I am currently operating in prototype mode. You can check ticket status (#BA-1042, #BA-3310, #BA-2089), search articles, or request a call back from support.
-            <div class="biz-chat-card-actions">
-              <button type="button" class="biz-chat-card-btn secondary" onclick="BizAssistShell.openCallbackModal()">Schedule Call Back</button>
-            </div>
-          `;
+        const data = await res.json().catch(() => ({}));
+        const botText = data.reply || data.text || 'Thank you for reaching out. You can raise a ticket in the Customer Portal or track existing tickets #BA-1042, #BA-3310, or #BA-2089.';
+        
+        thinkingBubble.textContent = botText;
+        drawerChatHistory.push({ role: 'assistant', content: botText });
+        if (global.sessionStorage) {
+          global.sessionStorage.setItem('bizassist.drawer_history', JSON.stringify(drawerChatHistory.slice(-20)));
         }
+
+        const toolsBar = document.createElement('div');
+        toolsBar.className = 'biz-chat-bubble-tools';
+        const copyBtn = document.createElement('button');
+        copyBtn.type = 'button';
+        copyBtn.className = 'biz-chat-bubble-tool-btn';
+        copyBtn.textContent = 'Copy';
+        copyBtn.onclick = () => navigator.clipboard.writeText(botText);
+        toolsBar.appendChild(copyBtn);
+        thinkingBubble.appendChild(toolsBar);
+
       } catch (err) {
-        thinkingBubble.innerHTML = `
-          Prototype Mode: To check status, enter ticket ID (e.g. #BA-1042). For phone assistance, call ${site.supportPhoneDisplay || site.supportPhone}.
-        `;
+        thinkingBubble.textContent = `Prototype Mode: To check status, enter ticket ID (e.g. #BA-1042). For direct support, call ${site.supportPhoneDisplay || site.supportPhone || '+91 00000 00000'}.`;
+      } finally {
+        if (sendBtn) sendBtn.disabled = false;
+        input.disabled = false;
+        input.focus();
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
       }
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
   };
+
+  /**
+   * Clears all user-generated data from localStorage and sessionStorage.
+   * Resets chat history, demo state, and ticket overrides to defaults.
+   * Shows confirmation before proceeding.
+   */
+  function clearUserData() {
+    const confirmed = global.confirm("This will permanently delete your chat history and tickets from this browser. Continue?");
+    if (!confirmed) return false;
+
+    try {
+      if (global.sessionStorage) {
+        global.sessionStorage.removeItem('bizassist.chat_history');
+        global.sessionStorage.removeItem('bizassist.drawer_history');
+        global.sessionStorage.removeItem('bizassist_chat_history');
+        global.sessionStorage.removeItem('bizassist.tour_active');
+        global.sessionStorage.removeItem('bizassist.tour_step');
+      }
+
+      if (global.localStorage) {
+        global.localStorage.removeItem('bizassist.data');
+        global.localStorage.removeItem('bizassist.chat_history');
+        global.localStorage.removeItem('bizassist.demo_state');
+        global.localStorage.removeItem('bizassist_tickets');
+        global.localStorage.removeItem('bizassist.custom_tickets');
+      }
+
+      document.querySelectorAll('input:not([type="submit"]):not([type="button"]):not([type="radio"]):not([type="checkbox"]), textarea').forEach(el => {
+        if (el.id !== 'tracker-input-id') el.value = '';
+      });
+
+      if (global.BizAssistStore && typeof global.BizAssistStore.resetStore === 'function') {
+        global.BizAssistStore.resetStore();
+      }
+
+      if (global.BizAssistShowToast) {
+        global.BizAssistShowToast("All personal data, chat history, and ticket overrides cleared.");
+      } else {
+        alert("All personal data, chat history, and ticket overrides cleared.");
+      }
+
+      setTimeout(() => {
+        global.location.reload();
+      }, 500);
+
+      return true;
+    } catch (err) {
+      console.error('Failed to clear user data:', err);
+      return false;
+    }
+  }
+
+  global.clearUserData = clearUserData;
+  BizAssistShell.clearUserData = clearUserData;
 
   global.BizAssistShell = BizAssistShell;
 
