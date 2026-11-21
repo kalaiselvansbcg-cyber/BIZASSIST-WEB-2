@@ -565,7 +565,7 @@
             </div>
 
             <div style="font-size:12px; color:var(--secondary); line-height:1.45; margin-bottom:12px;">
-              <strong>Assigned Engineer:</strong> ${t.assignedTo} (${t.assignedTeam})<br>
+              <strong>Assigned Engineer:</strong> ${t.assignedTo && t.assignedTo !== 'Unassigned' ? `${t.assignedTo} (${t.assignedTeam})` : 'Unassigned (In Triage Queue)'}<br>
               <strong>Latest Update:</strong> ${t.suggestedReply || t.aiSummary}
             </div>
 
@@ -620,7 +620,7 @@
         if (window.askBizAssist) {
           res = await window.askBizAssist(conversationHistory);
         } else {
-          const fetchRes = await fetch('/api/chat', {
+          let fetchRes = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -628,6 +628,22 @@
               page: 'chatbot'
             })
           });
+
+          // Transparent fallback to deployed endpoint when testing locally without a serverless runner
+          if (fetchRes.status === 404 && (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:')) {
+            try {
+              const prodRes = await fetch('https://bizassist69.vercel.app/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  messages: conversationHistory.slice(-10),
+                  page: 'chatbot'
+                })
+              });
+              if (prodRes.ok) fetchRes = prodRes;
+            } catch (_) {}
+          }
+
           const data = await fetchRes.json().catch(() => ({}));
           res = {
             reply: data.reply,

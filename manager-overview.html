@@ -616,6 +616,31 @@
       document.getElementById('kpi-deflections').textContent = deflDisplay;
       document.getElementById('kpi-csat').textContent = metrics.avgCsat;
 
+      const unassignedTickets = allTickets.filter(t => (t.assignedTo === 'Unassigned' || !t.assignedTo) && t.status !== 'Resolved');
+      const unassignedCount = unassignedTickets.length;
+      
+      const openSub = document.getElementById('kpi-open-sub');
+      if (openSub) {
+        if (unassignedCount > 0) {
+          openSub.textContent = `${unassignedCount} unassigned in triage queue`;
+        } else {
+          openSub.textContent = 'Distributed across active roster';
+        }
+      }
+
+      // Dynamic Rebalance Recommendation Banner
+      const banner = document.getElementById('rebalance-recommendation-banner');
+      if (banner) {
+        const bannerText = banner.querySelector('div');
+        if (bannerText) {
+          if (unassignedCount > 0) {
+            bannerText.innerHTML = `💡 <strong>AI Workload Alert:</strong> ${unassignedCount} incoming tickets are currently unassigned in the triage queue. Click Auto-Rebalance to distribute evenly across active agents.`;
+          } else {
+            bannerText.innerHTML = `✓ <strong>Workload Balanced:</strong> All active tickets are currently assigned across the support engineering roster.`;
+          }
+        }
+      }
+
       // Render Workload Roster
       const roster = [
         { name: 'Sarah Jenkins', team: 'Tier-2 Infrastructure', status: 'active', avgTime: '32m' },

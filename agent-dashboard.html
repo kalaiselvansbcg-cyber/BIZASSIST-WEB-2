@@ -803,7 +803,14 @@
       <div id="bulk-action-bar" class="bulk-bar">
         <span id="bulk-selected-count">0 selected</span>
         <div style="display:flex; gap:6px;">
-          <button type="button" class="bulk-btn" onclick="bulkAssign('Sarah Jenkins')">Assign Sarah</button>
+          <select class="bulk-btn" style="padding:2px 6px; background:var(--surface);" onchange="if(this.value){bulkAssign(this.value); this.value='';}">
+            <option value="">Assign To...</option>
+            <option value="Sarah Jenkins">Sarah Jenkins</option>
+            <option value="Marcus Vance">Marcus Vance</option>
+            <option value="Maya Lin">Maya Lin</option>
+            <option value="Alex Chen">Alex Chen</option>
+            <option value="Unassigned">Unassigned</option>
+          </select>
           <button type="button" class="bulk-btn" onclick="bulkResolve()">Resolve</button>
           <button type="button" class="bulk-btn" onclick="bulkExport()">Export CSV</button>
         </div>
@@ -855,11 +862,11 @@
 
         <div class="header-actions-group">
           <select id="assignee-select" class="queue-select-tool" style="padding:6px 10px;" onchange="handleAssigneeChange(this.value)">
+            <option value="Unassigned">Unassigned (Triage Queue)</option>
             <option value="Sarah Jenkins">Sarah Jenkins (Agent)</option>
             <option value="Marcus Vance">Marcus Vance (FinOps)</option>
             <option value="Maya Lin">Maya Lin (Infra)</option>
             <option value="Alex Chen">Alex Chen (DevEx)</option>
-            <option value="Unassigned">Unassigned</option>
           </select>
 
           <!-- Snooze Menu -->
@@ -1368,12 +1375,15 @@
 
       // Public reply if dispatched
       if (t.suggestedReply && t.stage !== 'Raised') {
+        const isAssigned = t.assignedTo && t.assignedTo !== 'Unassigned';
+        const authorLabel = isAssigned ? `${t.assignedTo} (Support Specialist)` : 'AI Suggested Reply (Pending Approval)';
+        const avatarText = isAssigned ? t.assignedTo.split(' ').map(w => w[0]).join('').slice(0, 2) : '✦';
         threadHtml += `
           <div class="msg-bubble-wrap">
-            <div class="msg-avatar" style="background:var(--primary-light); color:var(--primary);">SJ</div>
+            <div class="msg-avatar" style="background:var(--primary-light); color:var(--primary); font-size:11px;">${avatarText}</div>
             <div class="msg-content-card" style="border-color:var(--primary);">
               <div class="msg-header">
-                <span class="msg-author-name" style="color:var(--primary);">${t.assignedTo || 'Sarah Jenkins'} (Support Specialist)</span>
+                <span class="msg-author-name" style="color:var(--primary);">${authorLabel}</span>
                 <span>${new Date(t.updatedAt).toLocaleTimeString()}</span>
               </div>
               <div class="msg-body">${t.suggestedReply}</div>

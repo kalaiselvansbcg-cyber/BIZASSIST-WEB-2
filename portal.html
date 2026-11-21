@@ -407,7 +407,7 @@
               id="active-ticket-reply-box">
               <div
                 style="display:flex; justify-content:space-between; font-size:11px; color:var(--primary); margin-bottom:6px;">
-                <span style="font-weight:700;" id="active-ticket-agent">AGENT SARAH JENKINS (SUPPORT SPECIALIST)</span>
+                <span style="font-weight:700;" id="active-ticket-agent">AI TRIAGE & SUPPORT OPERATIONS</span>
                 <span>LATEST UPDATE</span>
               </div>
               <p style="font-size:13px; line-height:1.55;" id="active-ticket-reply-text">
@@ -735,7 +735,10 @@
         const replyBox = document.getElementById('active-ticket-reply-box');
         if (active.suggestedReply && active.stage !== 'Raised') {
           replyBox.style.display = 'block';
-          document.getElementById('active-ticket-agent').textContent = `AGENT ${(active.assignedTo || 'SARAH JENKINS').toUpperCase()} (SUPPORT SPECIALIST)`;
+          const agentLabel = (active.assignedTo && active.assignedTo !== 'Unassigned')
+            ? `AGENT ${active.assignedTo.toUpperCase()} (SUPPORT SPECIALIST)`
+            : 'AI TRIAGE & SUPPORT OPERATIONS';
+          document.getElementById('active-ticket-agent').textContent = agentLabel;
           document.getElementById('active-ticket-reply-text').textContent = active.suggestedReply;
         } else {
           replyBox.style.display = 'none';

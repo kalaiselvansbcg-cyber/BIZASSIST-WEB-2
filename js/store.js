@@ -10,7 +10,7 @@
   'use strict';
 
   const STORAGE_KEY = 'bizassist.data';
-  const STORE_VERSION = 'v4_redesign';
+  const STORE_VERSION = 'v5_unassigned';
 
   // 12 Starter Knowledge Base Articles
   const STARTER_ARTICLES = [
@@ -197,12 +197,12 @@
       priority: 'High',
       priorityReason: 'Staging environment blocked; customer deploying to production in 48 hours.',
       status: 'High',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Frustrated',
       sentimentTrend: 'Frustrated -> Neutral',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'Tier-2 Infrastructure',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Alex Rivera',
       contactEmail: 'alex.r@acme.com',
       company: 'Acme Corp',
@@ -217,12 +217,12 @@
       tags: ['SAML', 'SSO', 'Okta', 'Security', 'Enterprise'],
       attachments: [{ name: 'okta-saml-error.png', size: '245 KB', type: 'image/png', url: '' }],
       internalNotes: [
-        { id: 'note-1', author: 'Sarah Jenkins', text: 'Verified Okta cert fingerprint mismatch in gateway auth logs. Cache purged.', createdAt: new Date(Date.now() - 18 * 60 * 1000).toISOString() }
+        { id: 'note-1', author: 'Triage System', text: 'Verified Okta cert fingerprint mismatch in gateway auth logs. Queued for agent assignment.', createdAt: new Date(Date.now() - 18 * 60 * 1000).toISOString() }
       ],
       timeline: [
         { id: 'ev-1', type: 'created', description: 'Ticket created via Web Portal', actor: 'Alex Rivera', timestamp: new Date(Date.now() - 48 * 60 * 1000).toISOString() },
         { id: 'ev-2', type: 'triage', description: 'AI categorized as Account & Security, Priority High (60m SLA)', actor: 'AI Engine', timestamp: new Date(Date.now() - 47 * 60 * 1000).toISOString() },
-        { id: 'ev-3', type: 'assigned', description: 'Assigned to Sarah Jenkins', actor: 'System Routing', timestamp: new Date(Date.now() - 35 * 60 * 1000).toISOString() }
+        { id: 'ev-3', type: 'triage', description: 'Ticket triaged and queued for agent review', actor: 'System Routing', timestamp: new Date(Date.now() - 35 * 60 * 1000).toISOString() }
       ],
       csat: null
     },
@@ -235,12 +235,12 @@
       priority: 'Urgent',
       priorityReason: 'Production latency spike affecting real-time payment notifications.',
       status: 'Urgent',
-      stage: 'Replied',
+      stage: 'Categorised',
       channel: 'Chatbot',
       sentiment: 'Critical',
       sentimentTrend: 'Critical -> Neutral',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'Tier-3 Infrastructure SRE',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Maya Patel',
       contactEmail: 'maya@orbitio.dev',
       company: 'OrbitIO',
@@ -255,7 +255,7 @@
       tags: ['Webhooks', 'Latency', 'Outage', 'P1'],
       attachments: [],
       internalNotes: [
-        { id: 'note-1', author: 'Sarah Jenkins', text: 'P1 incident room opened. Scaled up proxy workers from 8 to 12.', createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString() }
+        { id: 'note-1', author: 'Triage System', text: 'P1 incident room opened. Scaled up proxy workers from 8 to 12.', createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString() }
       ],
       timeline: [
         { id: 'ev-1', type: 'created', description: 'Ticket created via Chatbot assistant', actor: 'Maya Patel', timestamp: new Date(Date.now() - 8 * 60 * 1000).toISOString() },
@@ -276,8 +276,8 @@
       channel: 'Inbound Email',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Marcus Vance',
-      assignedTeam: 'Billing & FinOps',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Elena Rostova',
       contactEmail: 'elena@cloudcore.io',
       company: 'CloudCore Systems',
@@ -307,12 +307,12 @@
       priority: 'Urgent',
       priorityReason: 'Subscription expires tonight; workspace will be downgraded to free tier.',
       status: 'Urgent',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Frustrated',
       sentimentTrend: 'Frustrated',
-      assignedTo: 'Marcus Vance',
-      assignedTeam: 'Billing & FinOps',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Liam O’Connor',
       contactEmail: 'liam@fintechhub.net',
       company: 'FintechHub',
@@ -341,12 +341,12 @@
       priority: 'High',
       priorityReason: 'Duplicate or related SSO cert rotation across multiple company domains.',
       status: 'High',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'Tier-2 Infrastructure',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Devon Lee',
       contactEmail: 'devon.l@acme.com',
       company: 'Acme Corp',
@@ -361,7 +361,7 @@
       tags: ['SAML', 'SSO', 'DuplicateCandidate', 'Acme'],
       attachments: [],
       internalNotes: [
-        { id: 'note-1', author: 'Sarah Jenkins', text: 'Candidate for merge into #BA-1042.', createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString() }
+        { id: 'note-1', author: 'Triage System', text: 'Candidate for merge into #BA-1042.', createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString() }
       ],
       timeline: [
         { id: 'ev-1', type: 'created', description: 'Ticket created via Web Portal', actor: 'Devon Lee', timestamp: new Date(Date.now() - 32 * 60 * 1000).toISOString() }
@@ -377,12 +377,12 @@
       priority: 'Normal',
       priorityReason: 'Batch process can retry; production traffic unaffected.',
       status: 'Waiting on Customer',
-      stage: 'Replied',
+      stage: 'Categorised',
       channel: 'WhatsApp',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Alex Chen',
-      assignedTeam: 'Developer Experience',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Carlos Gomez',
       contactEmail: 'carlos@vortexdata.co',
       company: 'Vortex Data',
@@ -398,8 +398,7 @@
       attachments: [],
       internalNotes: [],
       timeline: [
-        { id: 'ev-1', type: 'created', description: 'Ticket created via WhatsApp integration', actor: 'Carlos Gomez', timestamp: new Date(Date.now() - 140 * 60 * 1000).toISOString() },
-        { id: 'ev-2', type: 'reply', description: 'Waiting for customer feedback on bulk endpoint', actor: 'Alex Chen', timestamp: new Date(Date.now() - 45 * 60 * 1000).toISOString() }
+        { id: 'ev-1', type: 'created', description: 'Ticket created via WhatsApp integration', actor: 'Carlos Gomez', timestamp: new Date(Date.now() - 140 * 60 * 1000).toISOString() }
       ],
       csat: null
     },
@@ -416,8 +415,8 @@
       channel: 'Phone',
       sentiment: 'Positive',
       sentimentTrend: 'Neutral -> Positive',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'Security Operations',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'David Kim',
       contactEmail: 'david.k@bytewave.co',
       company: 'ByteWave Labs',
@@ -434,7 +433,7 @@
       internalNotes: [],
       timeline: [
         { id: 'ev-1', type: 'created', description: 'Ticket created via Phone call', actor: 'David Kim', timestamp: new Date(Date.now() - 420 * 60 * 1000).toISOString() },
-        { id: 'ev-2', type: 'resolved', description: 'Ticket marked resolved', actor: 'Sarah Jenkins', timestamp: new Date(Date.now() - 90 * 60 * 1000).toISOString() }
+        { id: 'ev-2', type: 'resolved', description: 'Ticket marked resolved', actor: 'Self-Service Automation', timestamp: new Date(Date.now() - 90 * 60 * 1000).toISOString() }
       ],
       csat: { rating: 5, comment: 'Incredible speed resolving our security key lockout.', submittedAt: new Date(Date.now() - 85 * 60 * 1000).toISOString() }
     },
@@ -447,12 +446,12 @@
       priority: 'Normal',
       priorityReason: 'Analytical export workaround available through background job.',
       status: 'Normal',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Alex Chen',
-      assignedTeam: 'Platform Analytics',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Chloe Dupont',
       contactEmail: 'chloe.d@solas.tech',
       company: 'Solas Tech',
@@ -481,12 +480,12 @@
       priority: 'Urgent',
       priorityReason: 'Production business intelligence reporting pipeline halted.',
       status: 'Urgent',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Critical',
       sentimentTrend: 'Critical',
-      assignedTo: 'Maya Lin',
-      assignedTeam: 'Data Infrastructure',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Sanjay Gupta',
       contactEmail: 'sanjay@prismhealth.io',
       company: 'Prism Health',
@@ -501,7 +500,7 @@
       tags: ['Snowflake', 'Integrations', 'P1', 'DataPipeline'],
       attachments: [],
       internalNotes: [
-        { id: 'note-1', author: 'Maya Lin', text: 'Checked connector logs: JWT token generation failed due to expired private key.', createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString() }
+        { id: 'note-1', author: 'Triage System', text: 'Checked connector logs: JWT token generation failed due to expired private key.', createdAt: new Date(Date.now() - 3 * 60 * 1000).toISOString() }
       ],
       timeline: [
         { id: 'ev-1', type: 'created', description: 'Ticket created via Web Portal', actor: 'Sanjay Gupta', timestamp: new Date(Date.now() - 13 * 60 * 1000).toISOString() }
@@ -522,7 +521,7 @@
       sentiment: 'Positive',
       sentimentTrend: 'Positive',
       assignedTo: 'Unassigned',
-      assignedTeam: 'Enterprise Accounts',
+      assignedTeam: 'Unassigned',
       contactName: 'Rachel Green',
       contactEmail: 'rachel.g@monolith.co',
       company: 'Monolith Global',
@@ -551,12 +550,12 @@
       priority: 'High',
       priorityReason: 'Affects mobile customer intake across all iOS 18 users.',
       status: 'High',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Frustrated',
       sentimentTrend: 'Frustrated',
-      assignedTo: 'Alex Chen',
-      assignedTeam: 'Mobile SDK Team',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Zoe Martinez',
       contactEmail: 'zoe@appflow.io',
       company: 'AppFlow Technologies',
@@ -585,12 +584,12 @@
       priority: 'Normal',
       priorityReason: 'Billing discrepancy requires accounting credit.',
       status: 'Waiting on Customer',
-      stage: 'Replied',
+      stage: 'Categorised',
       channel: 'Inbound Email',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Marcus Vance',
-      assignedTeam: 'Billing & FinOps',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Arthur Dent',
       contactEmail: 'arthur@galaxycorp.uk',
       company: 'Galaxy Corp',
@@ -606,8 +605,7 @@
       attachments: [],
       internalNotes: [],
       timeline: [
-        { id: 'ev-1', type: 'created', description: 'Ticket created via Inbound Email', actor: 'Arthur Dent', timestamp: new Date(Date.now() - 280 * 60 * 1000).toISOString() },
-        { id: 'ev-2', type: 'reply', description: 'Voided duplicate charge and sent amended invoice', actor: 'Marcus Vance', timestamp: new Date(Date.now() - 60 * 60 * 1000).toISOString() }
+        { id: 'ev-1', type: 'created', description: 'Ticket created via Inbound Email', actor: 'Arthur Dent', timestamp: new Date(Date.now() - 280 * 60 * 1000).toISOString() }
       ],
       csat: null
     },
@@ -620,12 +618,12 @@
       priority: 'High',
       priorityReason: 'Inbound customer communication drops during business hours.',
       status: 'High',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'WhatsApp',
       sentiment: 'Frustrated',
       sentimentTrend: 'Frustrated',
-      assignedTo: 'Maya Lin',
-      assignedTeam: 'Messaging Infrastructure',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Fatima Al-Sayed',
       contactEmail: 'fatima@mena-retail.com',
       company: 'MENA Retail Group',
@@ -654,12 +652,12 @@
       priority: 'Normal',
       priorityReason: 'Security feature request.',
       status: 'Normal',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Positive',
       sentimentTrend: 'Positive',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'Security Operations',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Tobias Fünke',
       contactEmail: 'tobias@bluetech.co',
       company: 'BlueTech Solutions',
@@ -688,12 +686,12 @@
       priority: 'Normal',
       priorityReason: 'Post-migration non-blocking verification.',
       status: 'Normal',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Alex Chen',
-      assignedTeam: 'Migration Engineering',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Nadia Benali',
       contactEmail: 'nadia@casbah.ma',
       company: 'Casbah Media',
@@ -722,12 +720,12 @@
       priority: 'High',
       priorityReason: 'Potential security vulnerability report.',
       status: 'High',
-      stage: 'Replied',
+      stage: 'Categorised',
       channel: 'Inbound Email',
       sentiment: 'Neutral',
       sentimentTrend: 'Neutral',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'AppSec Team',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Kasper V.',
       contactEmail: 'kasper@sectest.nl',
       company: 'Independent Researcher',
@@ -742,7 +740,7 @@
       tags: ['AppSec', 'Vulnerability', 'Security'],
       attachments: [],
       internalNotes: [
-        { id: 'note-1', author: 'Sarah Jenkins', text: 'Checked AppSec queue. PGP key instructions shared.', createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString() }
+        { id: 'note-1', author: 'Triage System', text: 'Checked AppSec queue. PGP key instructions shared.', createdAt: new Date(Date.now() - 15 * 60 * 1000).toISOString() }
       ],
       timeline: [
         { id: 'ev-1', type: 'created', description: 'Ticket created via Inbound Email', actor: 'Kasper V.', timestamp: new Date(Date.now() - 40 * 60 * 1000).toISOString() }
@@ -758,12 +756,12 @@
       priority: 'Urgent',
       priorityReason: 'Customers getting browser SSL security warnings on portal.',
       status: 'Urgent',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Web Portal',
       sentiment: 'Critical',
       sentimentTrend: 'Critical',
-      assignedTo: 'Sarah Jenkins',
-      assignedTeam: 'Edge Network Operations',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Brian Stride',
       contactEmail: 'brian@stride.co',
       company: 'Stride Logistics',
@@ -792,12 +790,12 @@
       priority: 'Normal',
       priorityReason: 'Locale preference configuration.',
       status: 'Normal',
-      stage: 'Assigned',
+      stage: 'Categorised',
       channel: 'Chatbot',
       sentiment: 'Positive',
       sentimentTrend: 'Positive',
-      assignedTo: 'Marcus Vance',
-      assignedTeam: 'AI Model Alignment',
+      assignedTo: 'Unassigned',
+      assignedTeam: 'Unassigned',
       contactName: 'Hannah Weber',
       contactEmail: 'hannah.w@berlin-tech.de',
       company: 'Berlin Tech Group',

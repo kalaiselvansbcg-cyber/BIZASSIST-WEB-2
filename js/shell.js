@@ -511,7 +511,8 @@
     if (match && global.BizAssistStore) {
       const t = global.BizAssistStore.getTicket(match[1]);
       if (t) {
-        return `Ticket #${t.code} (${t.subject}): Status is ${t.stage}. Priority is ${t.priority}, assigned to ${t.assignedTo} (${t.assignedTeam}).`;
+        const assignStr = t.assignedTo && t.assignedTo !== 'Unassigned' ? `assigned to ${t.assignedTo} (${t.assignedTeam})` : 'currently unassigned (in triage queue)';
+        return `Ticket #${t.code} (${t.subject}): Status is ${t.stage}. Priority is ${t.priority}, ${assignStr}.`;
       }
     }
 
@@ -957,7 +958,7 @@
         if (global.askBizAssist) {
           res = await global.askBizAssist(drawerChatHistory);
         } else {
-          const fetchRes = await fetch('/api/chat', {
+          let fetchRes = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -965,6 +966,22 @@
               page: 'widget'
             })
           });
+
+          // Transparent fallback to deployed endpoint when testing locally without a serverless runner
+          if (fetchRes.status === 404 && (location.hostname === 'localhost' || location.hostname === '127.0.0.1' || location.protocol === 'file:')) {
+            try {
+              const prodRes = await fetch('https://bizassist69.vercel.app/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  messages: drawerChatHistory.slice(-10),
+                  page: 'widget'
+                })
+              });
+              if (prodRes.ok) fetchRes = prodRes;
+            } catch (_) {}
+          }
+
           const data = await fetchRes.json().catch(() => ({}));
           res = {
             reply: data.reply,
